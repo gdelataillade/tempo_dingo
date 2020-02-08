@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "248089384291",
+    "firebase_url": "https://tempo-dingo-db.firebaseio.com",
+    "project_id": "tempo-dingo-db",
+    "storage_bucket": "tempo-dingo-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248089384291:android:11a49fd1b434379c37af56",
+        "android_client_info": {
+          "package_name": "com.example.tempo_dingo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248089384291-u083id7p8qvi0lvr0ijnl6fbcei56932.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tempo_dingo",
+            "certificate_hash": "d6f9fde8db0ed04062bf684418922ee5b0a4395f"
+          }
+        },
+        {
+          "client_id": "248089384291-p7ved6vhdq93fp47phi692thfjp3rm9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBflEk4D71BmdS7VYyeN8KnzFFnXn0d2Ak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248089384291-p7ved6vhdq93fp47phi692thfjp3rm9o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "248089384291-qo5fhrcqglcdbsb7d8mjt3aaoj5a9808.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tempoDingo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
