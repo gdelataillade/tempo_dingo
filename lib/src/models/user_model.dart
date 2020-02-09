@@ -11,20 +11,6 @@ class UserModel {
   List<String> _favorite;
   bool _darkTheme;
 
-  UserModel.fromJson(Map<String, dynamic> parsedJson) {
-    _email = parsedJson['email'];
-    _password = parsedJson['password'];
-    _fullName = parsedJson['fullName'];
-    _stars = parsedJson['stars'];
-    _language = parsedJson['language'];
-    _staySignedIn = parsedJson['staySignedIn'];
-    _vibration = parsedJson['vibration'];
-    _songs = parsedJson['songs'];
-    _artists = parsedJson['artists'];
-    _favorite = parsedJson['favorite'];
-    _darkTheme = parsedJson['darkTheme'];
-  }
-
   String get email => _email;
   String get password => _password;
   String get fullName => _fullName;
