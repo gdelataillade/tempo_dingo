@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
+
+const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
 
 class LogIn extends StatefulWidget {
   LogIn({Key key}) : super(key: key);
@@ -35,6 +38,34 @@ class _LogInForm extends StatefulWidget {
 }
 
 class __LogInFormState extends State<_LogInForm> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  String _email = "";
+  String _password = "";
+
+  void _initControllers() {
+    _emailController.addListener(_emailListener);
+    _passwordController.addListener(_passwordListener);
+  }
+
+  void _emailListener() {
+    _emailController.text.isEmpty
+        ? _email = ""
+        : _email = _emailController.text;
+  }
+
+  void _passwordListener() {
+    _passwordController.text.isEmpty
+        ? _password = ""
+        : _password = _passwordController.text;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initControllers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,8 +73,8 @@ class __LogInFormState extends State<_LogInForm> {
       children: <Widget>[
         Text("Already have an account?",
             style: Theme.of(context).textTheme.title),
-        FormInput(Icons.email, "Email"),
-        FormInput(Icons.vpn_key, "Password"),
+        FormInput(Icons.email, "Email", _emailController),
+        FormInput(Icons.vpn_key, "Password", _passwordController),
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.topRight,
@@ -55,8 +86,14 @@ class __LogInFormState extends State<_LogInForm> {
             Checkbox(value: false),
             Text("Keep me signed in", style: Theme.of(context).textTheme.body1),
           ],
-        )
+        ),
+        Button("Sign in", _submit),
       ],
     );
+  }
+
+  void _submit() {
+    print(_email);
+    print(_password);
   }
 }

@@ -5,8 +5,9 @@ const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
 class FormInput extends StatefulWidget {
   final IconData icon;
   final String placeholder;
+  final TextEditingController controller;
 
-  const FormInput(this.icon, this.placeholder);
+  const FormInput(this.icon, this.placeholder, this.controller);
 
   @override
   _FormInputState createState() => _FormInputState();
@@ -24,6 +25,7 @@ class _FormInputState extends State<FormInput> {
           borderRadius: BorderRadius.all(const Radius.circular(5)),
         ),
         child: TextField(
+          controller: widget.controller,
           cursorColor: mainTheme,
           decoration: InputDecoration(
             prefixIcon: Icon(widget.icon, color: mainTheme),
