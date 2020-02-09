@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^0.1.2
   cloud_firestore: ^0.13.0+1
+  firebase_auth: ^0.15.4
+  rxdart: ^0.18.0
+  http: ^0.12.0+1
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +21,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Apple
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Regular.ttf
+    - family: Apple-Semibold
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Semibold.ttf
