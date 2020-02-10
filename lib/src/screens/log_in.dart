@@ -59,6 +59,7 @@ class __LogInFormState extends State<_LogInForm> {
   bool _staySignedIn = false;
   bool _inputsAreValid = false;
   bool _hidePassword = true;
+  bool _authFailed = false;
 
   void _initControllers() {
     _emailController.addListener(_emailListener);
@@ -110,9 +111,9 @@ class __LogInFormState extends State<_LogInForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Login", style: Theme.of(context).textTheme.title),
-        FormInput(Icons.email, "Email", _emailController),
+        FormInput(Icons.email, "Email", _emailController, _authFailed),
         FormInputPassword(Icons.vpn_key, "Password", _passwordController,
-            _hidePassword, _toggleHidePassword),
+            _authFailed, _hidePassword, _toggleHidePassword),
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.topRight,
@@ -155,13 +156,13 @@ class __LogInFormState extends State<_LogInForm> {
         .where("email", isEqualTo: _email)
         .getDocuments();
     if (snapshot.documents.isEmpty)
-      print("No results");
+      setState(() => _authFailed = true);
     else {
       print(snapshot.documents[0].data["fullName"]);
       if (snapshot.documents[0].data["password"] == _password)
         print("Auth granted");
       else
-        print("Email or password incorrect");
+        setState(() => _authFailed = true);
     }
   }
 }

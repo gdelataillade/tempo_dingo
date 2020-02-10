@@ -6,8 +6,14 @@ class FormInput extends StatefulWidget {
   final IconData icon;
   final String placeholder;
   final TextEditingController controller;
+  final bool authFailed;
 
-  const FormInput(this.icon, this.placeholder, this.controller);
+  const FormInput(
+    this.icon,
+    this.placeholder,
+    this.controller,
+    this.authFailed,
+  );
 
   @override
   _FormInputState createState() => _FormInputState();
@@ -23,6 +29,10 @@ class _FormInputState extends State<FormInput> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(const Radius.circular(5)),
+          border: Border.all(
+            color: widget.authFailed ? Colors.red : Colors.transparent,
+            width: 1,
+          ),
         ),
         child: TextField(
           autocorrect: false,
@@ -31,7 +41,8 @@ class _FormInputState extends State<FormInput> {
           decoration: InputDecoration(
             prefixIcon: Icon(widget.icon, color: mainTheme),
             hintText: widget.placeholder,
-            hintStyle: TextStyle(color: mainTheme),
+            hintStyle:
+                TextStyle(color: widget.authFailed ? Colors.red : mainTheme),
             border: InputBorder.none,
           ),
         ),
@@ -44,11 +55,18 @@ class FormInputPassword extends StatefulWidget {
   final IconData icon;
   final String placeholder;
   final TextEditingController controller;
+  final bool authFailed;
   final bool hide;
   final Function() callback;
 
   const FormInputPassword(
-      this.icon, this.placeholder, this.controller, this.hide, this.callback);
+    this.icon,
+    this.placeholder,
+    this.controller,
+    this.authFailed,
+    this.hide,
+    this.callback,
+  );
 
   @override
   _FormInputPasswordState createState() => _FormInputPasswordState();
@@ -64,6 +82,10 @@ class _FormInputPasswordState extends State<FormInputPassword> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(const Radius.circular(5)),
+          border: Border.all(
+            color: widget.authFailed ? Colors.red : Colors.transparent,
+            width: 1,
+          ),
         ),
         child: TextField(
           autocorrect: false,
@@ -79,7 +101,8 @@ class _FormInputPasswordState extends State<FormInputPassword> {
               onPressed: widget.callback,
             ),
             hintText: widget.placeholder,
-            hintStyle: TextStyle(color: mainTheme),
+            hintStyle:
+                TextStyle(color: widget.authFailed ? Colors.red : mainTheme),
             border: InputBorder.none,
           ),
         ),
