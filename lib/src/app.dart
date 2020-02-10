@@ -29,6 +29,11 @@ class MyApp extends StatelessWidget {
             fontSize: 16,
             fontFamily: 'Apple',
           ),
+          body2: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontFamily: 'Apple',
+          ),
         ),
       ),
       home: Scaffold(
