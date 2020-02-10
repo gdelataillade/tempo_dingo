@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
 
@@ -14,27 +16,29 @@ class LogIn extends StatefulWidget {
 class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(35),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 50),
-          Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
-          Text("v1.0.0", style: Theme.of(context).textTheme.body1),
-          const SizedBox(height: 50),
-          _LogInForm(),
-          const SizedBox(height: 15),
-          Center(
-            child: Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width - 100,
-              color: Colors.white,
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(35),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 50),
+            Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
+            Text("v1.0.0", style: Theme.of(context).textTheme.body1),
+            const SizedBox(height: 50),
+            _LogInForm(),
+            const SizedBox(height: 15),
+            Center(
+              child: Container(
+                height: 1,
+                width: MediaQuery.of(context).size.width - 100,
+                color: Colors.white,
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          _Register(),
-        ],
+            const SizedBox(height: 15),
+            _Register(),
+          ],
+        ),
       ),
     );
   }
@@ -137,9 +141,18 @@ class __LogInFormState extends State<_LogInForm> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     print(_email);
     print(_password);
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection("users")
+        .where("email", isEqualTo: _email)
+        .getDocuments();
+    print(snapshot.documents[0].data["fullName"]);
+    if (snapshot.documents[0].data["password"] == _password)
+      print("Auth granted");
+    else
+      print("Email or password incorrect");
   }
 }
 
