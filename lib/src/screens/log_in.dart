@@ -28,13 +28,7 @@ class _LogInState extends State<LogIn> {
             const SizedBox(height: 50),
             _LogInForm(),
             const SizedBox(height: 15),
-            Center(
-              child: Container(
-                height: 1,
-                width: MediaQuery.of(context).size.width - 100,
-                color: Colors.white,
-              ),
-            ),
+            _Separator(),
             const SizedBox(height: 15),
             _Register(),
           ],
@@ -164,6 +158,32 @@ class __LogInFormState extends State<_LogInForm> {
       else
         setState(() => _authFailed = true);
     }
+  }
+}
+
+class _Separator extends StatelessWidget {
+  const _Separator({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            height: 1,
+            width: MediaQuery.of(context).size.width / 2 - 60,
+            color: Colors.white,
+          ),
+          Text("OR"),
+          Container(
+            height: 1,
+            width: MediaQuery.of(context).size.width / 2 - 60,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
   }
 }
 
