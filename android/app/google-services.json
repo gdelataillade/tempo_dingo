@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:248089384291:android:11a49fd1b434379c37af56",
+        "mobilesdk_app_id": "1:248089384291:android:3ac06da72dd8f3c137af56",
         "android_client_info": {
-          "package_name": "com.example.tempo_dingo"
+          "package_name": "com.gdelataillade.tempo_dingo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "248089384291-u083id7p8qvi0lvr0ijnl6fbcei56932.apps.googleusercontent.com",
+          "client_id": "248089384291-ob71k6q48fadkhe5frluq5cfued72a7u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.tempo_dingo",
+            "package_name": "com.gdelataillade.tempo_dingo",
             "certificate_hash": "d6f9fde8db0ed04062bf684418922ee5b0a4395f"
           }
         },
@@ -40,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "248089384291-qo5fhrcqglcdbsb7d8mjt3aaoj5a9808.apps.googleusercontent.com",
+              "client_id": "248089384291-takiagovp05vsu7k97um19a8hq3gmo9t.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.tempoDingo"
+                "bundle_id": "com.gdelataillade.tempoDingo"
               }
             }
           ]

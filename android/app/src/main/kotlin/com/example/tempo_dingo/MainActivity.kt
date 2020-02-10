@@ -1,4 +1,4 @@
-package com.example.tempo_dingo
+package com.gdelataillade.tempo_dingo
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
