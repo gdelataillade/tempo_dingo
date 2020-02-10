@@ -42,6 +42,7 @@ class __LogInFormState extends State<_LogInForm> {
   TextEditingController _passwordController = TextEditingController();
   String _email = "";
   String _password = "";
+  bool _staySignedIn = false;
 
   void _initControllers() {
     _emailController.addListener(_emailListener);
@@ -83,7 +84,20 @@ class __LogInFormState extends State<_LogInForm> {
         ),
         Row(
           children: <Widget>[
-            Checkbox(value: false),
+            Theme(
+              data: Theme.of(context)
+                  .copyWith(unselectedWidgetColor: Colors.white),
+              child: Checkbox(
+                value: _staySignedIn,
+                activeColor: Colors.white,
+                checkColor: mainTheme,
+                onChanged: (bool value) {
+                  setState(() {
+                    _staySignedIn = value;
+                  });
+                },
+              ),
+            ),
             Text("Keep me signed in", style: Theme.of(context).textTheme.body1),
           ],
         ),
