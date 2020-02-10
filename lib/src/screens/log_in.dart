@@ -58,6 +58,7 @@ class __LogInFormState extends State<_LogInForm> {
   String _password = "";
   bool _staySignedIn = false;
   bool _inputsAreValid = false;
+  bool _hidePassword = true;
 
   void _initControllers() {
     _emailController.addListener(_emailListener);
@@ -110,7 +111,8 @@ class __LogInFormState extends State<_LogInForm> {
       children: <Widget>[
         Text("Login", style: Theme.of(context).textTheme.title),
         FormInput(Icons.email, "Email", _emailController),
-        FormInput(Icons.vpn_key, "Password", _passwordController),
+        FormInputPassword(Icons.vpn_key, "Password", _passwordController,
+            _hidePassword, _toggleHidePassword),
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.topRight,
@@ -135,24 +137,32 @@ class __LogInFormState extends State<_LogInForm> {
           ],
         ),
         _inputsAreValid
-            ? Button("Sign in", () {})
+            ? Button("Sign in", _submit)
             : DarkButton("Sign in", _submit),
       ],
     );
   }
 
+  void _toggleHidePassword() {
+    setState(() => _hidePassword = !_hidePassword);
+  }
+
   void _submit() async {
-    print(_email);
-    print(_password);
+    print("Email: $_email");
+    print("Password: $_password");
     QuerySnapshot snapshot = await Firestore.instance
         .collection("users")
         .where("email", isEqualTo: _email)
         .getDocuments();
-    print(snapshot.documents[0].data["fullName"]);
-    if (snapshot.documents[0].data["password"] == _password)
-      print("Auth granted");
-    else
-      print("Email or password incorrect");
+    if (snapshot.documents.isEmpty)
+      print("No results");
+    else {
+      print(snapshot.documents[0].data["fullName"]);
+      if (snapshot.documents[0].data["password"] == _password)
+        print("Auth granted");
+      else
+        print("Email or password incorrect");
+    }
   }
 }
 
