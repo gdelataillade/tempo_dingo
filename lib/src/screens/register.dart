@@ -147,12 +147,26 @@ class __RegisterFormState extends State<_RegisterForm> {
           _passwordFail,
         ),
         const SizedBox(height: 30),
+        _showErrorMessage(),
         Button("Register", _submit),
       ],
     );
   }
 
+  Widget _showErrorMessage() {
+    if (_errorMessage.length != 0)
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Text(
+          _errorMessage,
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+    return Container();
+  }
+
   void _submit() async {
+    _resetFails();
     if (_password != _confirmPassword) {
       setState(() {
         _errorMessage = "Your passwords do not match.";
@@ -211,6 +225,12 @@ class __RegisterFormState extends State<_RegisterForm> {
         await Firestore.instance.collection('users').document(_email).get();
 
     return snapshot.data == null ? false : true;
+  }
+
+  void _resetFails() {
+    _fullNameFail = false;
+    _emailFail = false;
+    _passwordFail = false;
   }
 }
 
