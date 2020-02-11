@@ -15,17 +15,17 @@ class Register extends StatelessWidget {
     return Scaffold(
       backgroundColor: mainTheme,
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(35),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _Header(),
-              const SizedBox(height: 10),
-              _RegisterForm(),
-              // _TermsAndConditions(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _Header(),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(35),
+              child: _RegisterForm(),
+            ),
+            // _TermsAndConditions(),
+          ],
         ),
       ),
     );
@@ -45,9 +45,23 @@ class __HeaderState extends State<_Header> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 50),
-        Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
-        Text("v1.0.0", style: Theme.of(context).textTheme.body1),
+        const SizedBox(height: 40),
+        IconButton(
+          icon: Icon(Icons.keyboard_arrow_left),
+          color: Colors.white,
+          iconSize: 40,
+          onPressed: () => Navigator.pop(context),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(left: 35),
+          child:
+              Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 35),
+          child: Text("v1.0.0", style: Theme.of(context).textTheme.body1),
+        ),
       ],
     );
   }
@@ -121,7 +135,12 @@ class __RegisterFormState extends State<_RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Text(
+          "Create your account",
+          style: Theme.of(context).textTheme.title,
+        ),
         FormInput(
           Icons.people,
           "Full name",
