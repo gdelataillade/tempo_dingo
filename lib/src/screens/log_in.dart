@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:tempo_dingo/src/screens/register.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
 
@@ -81,8 +82,7 @@ class __LogInFormState extends State<_LogInForm> {
   }
 
   bool _checkValidInputs() {
-    if (_emailController.text.length >= 4 &&
-        _passwordController.text.length >= 4) return true;
+    if (_email.length >= 4 && _password.length >= 4) return true;
     return false;
   }
 
@@ -202,7 +202,10 @@ class __RegisterState extends State<_Register> {
       children: <Widget>[
         Text("New member?", style: Theme.of(context).textTheme.title),
         const SizedBox(height: 15),
-        Button("Register", () {}),
+        Button("Register", () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Register()));
+        }),
       ],
     );
   }
