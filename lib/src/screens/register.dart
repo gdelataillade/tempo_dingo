@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
+import 'package:tempo_dingo/src/config/register_config.dart';
 
 const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
 
@@ -22,6 +23,7 @@ class Register extends StatelessWidget {
               _Header(),
               const SizedBox(height: 10),
               _RegisterForm(),
+              // _TermsAndConditions(),
             ],
           ),
         ),
@@ -68,6 +70,8 @@ class __RegisterFormState extends State<_RegisterForm> {
   String _password = "";
   String _confirmPassword = "";
   String _errorMessage = "";
+  bool _fullNameFail = false;
+  bool _emailFail = false;
   bool _passwordFail = false;
 
   void _initControllers() {
@@ -78,7 +82,7 @@ class __RegisterFormState extends State<_RegisterForm> {
   }
 
   void _fullNameListener() {
-    _emailController.text.isEmpty
+    _fullNameController.text.isEmpty
         ? _fullName = ""
         : _fullName = _fullNameController.text;
   }
@@ -122,13 +126,13 @@ class __RegisterFormState extends State<_RegisterForm> {
           Icons.people,
           "Full name",
           _fullNameController,
-          false,
+          _fullNameFail,
         ),
         FormInput(
           Icons.email,
           "Email",
           _emailController,
-          false,
+          _emailFail,
         ),
         FormInput(
           Icons.vpn_key,
@@ -148,12 +152,85 @@ class __RegisterFormState extends State<_RegisterForm> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     if (_password != _confirmPassword) {
       setState(() {
         _errorMessage = "Your passwords do not match.";
         _passwordFail = true;
       });
+    } else if (_fullName.length == 0) {
+      setState(() {
+        _errorMessage = "Full name incomplete.";
+        _fullNameFail = true;
+      });
+    } else if (_email.length == 0) {
+      setState(() {
+        _errorMessage = "Email is invalid.";
+        _emailFail = true;
+      });
+    } else if (_password.length == 0) {
+      setState(() {
+        _errorMessage = "Password is invalid.";
+        _passwordFail = true;
+      });
+    } else {
+      final bool alreadyExists = await _checkIfAlreadyExists();
+
+      if (alreadyExists) {
+        setState(() {
+          _errorMessage = "Email already exists.";
+          _emailFail = true;
+        });
+      } else {
+        await Firestore.instance
+            .collection('users')
+            .document(_email)
+            .setData(_buildData())
+            .catchError((err) => print(err))
+            .whenComplete(() => print("Completed"));
+      }
     }
+    _errorMessage.length > 0 ?? print(_errorMessage);
+  }
+
+  Map<String, dynamic> _buildData() => {
+        "creation": DateTime.now(),
+        "darkTheme": darkTheme,
+        "email": _email,
+        "password": _password,
+        "fullName": _fullName,
+        "language": language,
+        "stars": stars,
+        "staySignedIn": staySignedIn,
+        "vibration": vibration,
+        "library": library,
+      };
+
+  Future<bool> _checkIfAlreadyExists() async {
+    DocumentSnapshot snapshot =
+        await Firestore.instance.collection('users').document(_email).get();
+
+    return snapshot.data == null ? false : true;
+  }
+}
+
+class _TermsAndConditions extends StatefulWidget {
+  _TermsAndConditions({Key key}) : super(key: key);
+
+  @override
+  __TermsAndConditionsState createState() => __TermsAndConditionsState();
+}
+
+class __TermsAndConditionsState extends State<_TermsAndConditions> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        "Terms and conditions",
+        style: TextStyle(
+          fontSize: 13,
+        ),
+      ),
+    );
   }
 }
