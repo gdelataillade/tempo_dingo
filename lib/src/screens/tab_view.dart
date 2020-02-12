@@ -3,14 +3,14 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
 const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class TabView extends StatefulWidget {
+  TabView({Key key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _TabViewState createState() => _TabViewState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   TabController _tabController;
   VoidCallback _onChangeTab;
   static int _currentTabIndex = 1;
