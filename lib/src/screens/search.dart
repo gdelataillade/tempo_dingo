@@ -18,9 +18,12 @@ class _SearchState extends State<Search> {
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: <Widget>[
-            Text(
-              "Search",
-              style: Theme.of(context).textTheme.headline,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Search",
+                style: Theme.of(context).textTheme.headline,
+              ),
             ),
             _SearchInput(),
             _SearchBody(),

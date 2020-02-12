@@ -15,8 +15,17 @@ class _LibraryState extends State<Library> {
     return Scaffold(
       backgroundColor: mainTheme,
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
-          children: <Widget>[],
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Library",
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ),
+          ],
         ),
       ),
     );
