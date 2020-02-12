@@ -15,10 +15,46 @@ class _SearchState extends State<Search> {
     return Scaffold(
       backgroundColor: mainTheme,
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
-          children: <Widget>[],
+          children: <Widget>[
+            Text(
+              "Search",
+              style: Theme.of(context).textTheme.headline,
+            ),
+            _SearchInput(),
+            _SearchBody(),
+          ],
         ),
       ),
     );
+  }
+}
+
+class _SearchInput extends StatefulWidget {
+  _SearchInput({Key key}) : super(key: key);
+
+  @override
+  __SearchInputState createState() => __SearchInputState();
+}
+
+class __SearchInputState extends State<_SearchInput> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _SearchBody extends StatefulWidget {
+  _SearchBody({Key key}) : super(key: key);
+
+  @override
+  __SearchBodyState createState() => __SearchBodyState();
+}
+
+class __SearchBodyState extends State<_SearchBody> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
