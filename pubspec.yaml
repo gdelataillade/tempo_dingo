@@ -29,3 +29,6 @@ flutter:
     - family: Apple-Semibold
       fonts:
         - asset: assets/fonts/SF-Pro-Display-Semibold.ttf
+    - family: Apple-Bold
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Semibold.ttf

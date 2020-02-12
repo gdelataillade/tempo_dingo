@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
           headline: TextStyle(
             color: Colors.white,
             fontSize: 45,
-            fontFamily: 'Apple',
-            fontWeight: FontWeight.bold,
+            fontFamily: 'Apple-Bold',
+            fontWeight: FontWeight.w700,
           ),
           title: TextStyle(
             color: Colors.white,
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         backgroundColor: mainTheme,
+        // body: LogIn(),
         body: TabView(),
       ),
     );
