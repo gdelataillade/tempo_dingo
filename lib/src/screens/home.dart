@@ -34,7 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
-        bottomNavigationBar: _TabBar(_tabController),
+        bottomNavigationBar: _TabBar(_tabController, _currentTabIndex),
         body: _TabBarViewWidgets(_tabController),
       ),
     );
@@ -65,9 +65,10 @@ class __TabBarViewWidgetsState extends State<_TabBarViewWidgets> {
 }
 
 class _TabBar extends StatefulWidget {
-  final TabController _dataController;
+  final TabController dataController;
+  final int currentTabIndex;
 
-  const _TabBar(this._dataController);
+  const _TabBar(this.dataController, this.currentTabIndex);
 
   @override
   __TabBarState createState() => __TabBarState();
@@ -76,14 +77,60 @@ class _TabBar extends StatefulWidget {
 class __TabBarState extends State<_TabBar> {
   @override
   Widget build(BuildContext context) {
-    return TabBar(
-      indicatorColor: mainTheme,
-      tabs: <Widget>[
-        Tab(icon: Icon(FeatherIcons.search, color: Colors.black)),
-        Tab(icon: Icon(FeatherIcons.home, color: Colors.black)),
-        Tab(icon: Icon(FeatherIcons.music, color: Colors.black)),
-      ],
-      controller: widget._dataController,
+    return Material(
+      color: mainTheme,
+      child: TabBar(
+        indicatorColor: Colors.transparent,
+        indicatorWeight: 20,
+        tabs: <Widget>[
+          Tab(
+            icon: Icon(
+              FeatherIcons.search,
+              color: Colors.white,
+              size: widget.currentTabIndex == 0 ? 30 : 24,
+            ),
+            child: Text(
+              "Search",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: "Apple-Semibold",
+                fontSize: widget.currentTabIndex == 0 ? 16 : 14,
+              ),
+            ),
+          ),
+          Tab(
+            icon: Icon(
+              FeatherIcons.home,
+              color: Colors.white,
+              size: widget.currentTabIndex == 1 ? 30 : 24,
+            ),
+            child: Text(
+              "Home",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: "Apple-Semibold",
+                fontSize: widget.currentTabIndex == 1 ? 16 : 14,
+              ),
+            ),
+          ),
+          Tab(
+            icon: Icon(
+              FeatherIcons.music,
+              color: Colors.white,
+              size: widget.currentTabIndex == 2 ? 30 : 24,
+            ),
+            child: Text(
+              "Library",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: "Apple-Semibold",
+                fontSize: widget.currentTabIndex == 2 ? 16 : 14,
+              ),
+            ),
+          ),
+        ],
+        controller: widget.dataController,
+      ),
     );
   }
 }
