@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
+import 'package:tempo_dingo/src/screens/home.dart';
+import 'package:tempo_dingo/src/screens/library.dart';
+import 'package:tempo_dingo/src/screens/search.dart';
+
 const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
 
 class TabView extends StatefulWidget {
@@ -55,9 +59,9 @@ class __TabBarViewWidgetsState extends State<_TabBarViewWidgets> {
     return TabBarView(
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
-        Container(color: Colors.blue),
-        Container(color: Colors.red),
-        Container(color: Colors.yellow),
+        Search(),
+        Home(),
+        Library(),
       ],
       controller: widget._dataController,
     );

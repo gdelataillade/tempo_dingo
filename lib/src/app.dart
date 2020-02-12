@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tempo_dingo/src/screens/home.dart';
+import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/screens/log_in.dart';
 
 const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         backgroundColor: mainTheme,
-        body: Home(),
+        body: TabView(),
       ),
     );
   }
