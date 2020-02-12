@@ -14,7 +14,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainTheme,
-      body: SingleChildScrollView(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
     );
   }
 }

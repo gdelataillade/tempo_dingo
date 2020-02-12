@@ -14,7 +14,11 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainTheme,
-      body: SingleChildScrollView(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
     );
   }
 }

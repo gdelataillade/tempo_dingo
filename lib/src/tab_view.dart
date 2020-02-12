@@ -38,6 +38,31 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.settings),
+                color: Colors.white,
+                onPressed: () {},
+              );
+            },
+          ),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("42", style: Theme.of(context).textTheme.body1),
+                Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
+              ],
+            ),
+            IconButton(
+              icon: Icon(Icons.people),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ],
+        ),
         bottomNavigationBar: _TabBar(_tabController, _currentTabIndex),
         body: _TabBarViewWidgets(_tabController),
       ),

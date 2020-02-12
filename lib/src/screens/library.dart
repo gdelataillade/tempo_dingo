@@ -14,7 +14,11 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainTheme,
-      body: SingleChildScrollView(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
     );
   }
 }
