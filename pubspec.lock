@@ -177,6 +177,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1+1"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
   matcher:
     dependency: transitive
     description:
@@ -245,6 +252,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  spotify:
+    dependency: "direct main"
+    description:
+      name: spotify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   stack_trace:
     dependency: transitive
     description:
