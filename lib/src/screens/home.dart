@@ -19,9 +19,12 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(
-              "Tempo Dingo",
-              style: Theme.of(context).textTheme.headline,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Tempo Dingo",
+                style: Theme.of(context).textTheme.headline,
+              ),
             ),
             _Artists(),
             _QuickPlay(),
