@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/widgets/track_card.dart';
 
 class Library extends StatefulWidget {
   Library({Key key}) : super(key: key);
@@ -49,8 +50,8 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                           color: _tabIndex == 0
                               ? Colors.white
                               : Color.fromRGBO(153, 162, 189, 1),
-                          fontSize: 20,
-                          fontFamily: 'Apple-Semibold',
+                          fontSize: 25,
+                          fontFamily: 'Apple-Bold',
                         )),
                   ),
                   Tab(
@@ -59,18 +60,18 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                           color: _tabIndex == 1
                               ? Colors.white
                               : Color.fromRGBO(153, 162, 189, 1),
-                          fontSize: 20,
-                          fontFamily: 'Apple-Semibold',
+                          fontSize: 25,
+                          fontFamily: 'Apple-Bold',
                         )),
                   ),
                   Tab(
-                    child: Text("Favourite",
+                    child: Text("Favorite",
                         style: TextStyle(
                           color: _tabIndex == 2
                               ? Colors.white
                               : Color.fromRGBO(153, 162, 189, 1),
-                          fontSize: 20,
-                          fontFamily: 'Apple-Semibold',
+                          fontSize: 25,
+                          fontFamily: 'Apple-Bold',
                         )),
                   ),
                 ],
@@ -82,14 +83,106 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                Container(color: Colors.red),
-                Container(color: Colors.blue),
-                Container(color: Colors.yellow),
+                _Songs(),
+                _Artists(),
+                _Favorites(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+Widget card1 = TrackCard(
+  "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
+  "Little Wing",
+  "Jimi Hendrix",
+  () => print("like"),
+);
+
+Widget card2 = TrackCard(
+  "https://i.scdn.co/image/4dd3a9aa1a8dc5b9a49397caa67aff6ae8e7b642",
+  "Someday",
+  "The Strokes",
+  () => print("like"),
+);
+
+List<Widget> _tracks = [
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+  card1,
+  card2,
+];
+
+class _Songs extends StatefulWidget {
+  _Songs({Key key}) : super(key: key);
+
+  @override
+  __SongsState createState() => __SongsState();
+}
+
+class __SongsState extends State<_Songs> {
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        itemCount: _tracks.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () => print("play"),
+            child: _tracks[index],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _Artists extends StatefulWidget {
+  _Artists({Key key}) : super(key: key);
+
+  @override
+  __ArtistsState createState() => __ArtistsState();
+}
+
+class __ArtistsState extends State<_Artists> {
+  @override
+  Widget build(BuildContext context) {
+    return Column();
+  }
+}
+
+class _Favorites extends StatefulWidget {
+  _Favorites({Key key}) : super(key: key);
+
+  @override
+  __FavoritesState createState() => __FavoritesState();
+}
+
+class __FavoritesState extends State<_Favorites> {
+  @override
+  Widget build(BuildContext context) {
+    return Column();
   }
 }
