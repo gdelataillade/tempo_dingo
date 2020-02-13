@@ -138,7 +138,7 @@ class __LogInFormState extends State<_LogInForm> {
         ),
         _inputsAreValid
             ? Button("Sign in", _submit)
-            : DarkButton("Sign in", _submit),
+            : DarkButton("Sign in", () {}),
       ],
     );
   }

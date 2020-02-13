@@ -42,21 +42,24 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                icon: Icon(Icons.settings),
+                icon: Icon(FeatherIcons.settings),
                 color: Colors.white,
                 onPressed: () {},
               );
             },
           ),
           actions: <Widget>[
-            Row(
-              children: <Widget>[
-                Text("42", style: Theme.of(context).textTheme.body1),
-                Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Row(
+                children: <Widget>[
+                  Text("42", style: Theme.of(context).textTheme.body1),
+                  Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
+                ],
+              ),
             ),
             IconButton(
-              icon: Icon(Icons.people),
+              icon: Icon(FeatherIcons.user),
               color: Colors.white,
               onPressed: () {},
             ),
