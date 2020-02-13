@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
 import 'package:tempo_dingo/src/screens/register.dart';
-import 'package:tempo_dingo/src/widgets/button.dart';
+import 'package:tempo_dingo/src/screens/password_forgotten.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
+import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class LogIn extends StatefulWidget {
@@ -104,14 +106,18 @@ class __LogInFormState extends State<_LogInForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Login", style: Theme.of(context).textTheme.title),
-        FormInput(Icons.email, "Email", _emailController, _authFailed),
+        FormInput(FeatherIcons.mail, "Email", _emailController, _authFailed),
         FormInputPassword(Icons.vpn_key, "Password", _passwordController,
             _authFailed, _hidePassword, _toggleHidePassword),
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.topRight,
-          child: Text("Forgot your password?",
-              style: Theme.of(context).textTheme.body2),
+          child: GestureDetector(
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PasswordForgotten())),
+            child: Text("Forgot your password?",
+                style: Theme.of(context).textTheme.body2),
+          ),
         ),
         Row(
           children: <Widget>[
@@ -201,10 +207,10 @@ class __RegisterState extends State<_Register> {
       children: <Widget>[
         Text("New member?", style: Theme.of(context).textTheme.title),
         const SizedBox(height: 15),
-        Button("Register", () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Register()));
-        }),
+        Button(
+            "Register",
+            () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Register()))),
       ],
     );
   }
