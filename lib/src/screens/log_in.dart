@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tempo_dingo/src/screens/register.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
-
-const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
+import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class LogIn extends StatefulWidget {
   LogIn({Key key}) : super(key: key);

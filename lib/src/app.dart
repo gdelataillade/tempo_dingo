@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/screens/log_in.dart';
-
-const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
+import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -40,9 +40,24 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         backgroundColor: mainTheme,
-        // body: LogIn(),
-        body: TabView(),
+        body: _CheckLogIn(),
       ),
     );
+  }
+}
+
+class _CheckLogIn extends StatefulWidget {
+  _CheckLogIn({Key key}) : super(key: key);
+
+  @override
+  __CheckLogInState createState() => __CheckLogInState();
+}
+
+class __CheckLogInState extends State<_CheckLogIn> {
+  final bool _isLoggedIn = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoggedIn ? TabView() : LogIn();
   }
 }

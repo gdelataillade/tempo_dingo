@@ -4,8 +4,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:tempo_dingo/src/screens/home.dart';
 import 'package:tempo_dingo/src/screens/library.dart';
 import 'package:tempo_dingo/src/screens/search.dart';
-
-const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
+import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class TabView extends StatefulWidget {
   TabView({Key key}) : super(key: key);

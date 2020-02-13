@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
 import 'package:tempo_dingo/src/config/register_config.dart';
-
-const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
+import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class Register extends StatelessWidget {
   const Register({Key key}) : super(key: key);

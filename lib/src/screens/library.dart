@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const Color mainTheme = Color.fromRGBO(38, 45, 64, 1);
+import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class Library extends StatefulWidget {
   Library({Key key}) : super(key: key);
