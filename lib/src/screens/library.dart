@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
 class Library extends StatefulWidget {
@@ -159,6 +160,28 @@ class __SongsState extends State<_Songs> {
   }
 }
 
+Widget artist = ArtistCard(
+  "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
+  "Jimi Hendrix",
+);
+
+List<Widget> artists = [
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+  artist,
+];
+
 class _Artists extends StatefulWidget {
   _Artists({Key key}) : super(key: key);
 
@@ -167,9 +190,45 @@ class _Artists extends StatefulWidget {
 }
 
 class __ArtistsState extends State<_Artists> {
+  int _artistIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Column();
+    _artistIndex = 0;
+    return Scrollbar(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        itemCount: (artists.length / 3).round(),
+        itemBuilder: (BuildContext context, int index) {
+          Widget row = Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => print("Artist"),
+                  child: artists[_artistIndex],
+                ),
+                artists.length > _artistIndex + 1
+                    ? GestureDetector(
+                        onTap: () => print("Artist"),
+                        child: artists[_artistIndex + 1],
+                      )
+                    : Container(width: 80, height: 80),
+                artists.length > _artistIndex + 2
+                    ? GestureDetector(
+                        onTap: () => print("Artist"),
+                        child: artists[_artistIndex + 2],
+                      )
+                    : Container(width: 80, height: 80),
+              ],
+            ),
+          );
+          _artistIndex += 3;
+          return row;
+        },
+      ),
+    );
   }
 }
 
