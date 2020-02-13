@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tempo_dingo/main.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
