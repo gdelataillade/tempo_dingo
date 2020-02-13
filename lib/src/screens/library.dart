@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/config/mock_data.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
@@ -96,45 +97,6 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
   }
 }
 
-Widget card1 = TrackCard(
-  "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
-  "Little Wing",
-  "Jimi Hendrix",
-  () => print("like"),
-);
-
-Widget card2 = TrackCard(
-  "https://i.scdn.co/image/4dd3a9aa1a8dc5b9a49397caa67aff6ae8e7b642",
-  "Someday",
-  "The Strokes",
-  () => print("like"),
-);
-
-List<Widget> _tracks = [
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-  card1,
-  card2,
-];
-
 class _Songs extends StatefulWidget {
   _Songs({Key key}) : super(key: key);
 
@@ -148,39 +110,17 @@ class __SongsState extends State<_Songs> {
     return Scrollbar(
       child: ListView.builder(
         padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: _tracks.length,
+        itemCount: tracks.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () => print("play"),
-            child: _tracks[index],
+            child: tracks[index],
           );
         },
       ),
     );
   }
 }
-
-Widget artist = ArtistCard(
-  "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
-  "Jimi Hendrix",
-);
-
-List<Widget> artists = [
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-  artist,
-];
 
 class _Artists extends StatefulWidget {
   _Artists({Key key}) : super(key: key);

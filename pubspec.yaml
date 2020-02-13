@@ -21,6 +21,7 @@ dependencies:
   email_validator: ^1.0.4
   flutter_email_sender: ^2.2.2
   random_string: ^2.0.1
+  carousel_slider: ^1.4.1
 
 dev_dependencies:
   flutter_test:
