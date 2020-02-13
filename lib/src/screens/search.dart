@@ -11,9 +11,9 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      body: SingleChildScrollView(
+    return Container(
+      color: mainTheme,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: <Widget>[

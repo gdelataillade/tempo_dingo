@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tempo_dingo/main.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
@@ -12,9 +13,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      body: SingleChildScrollView(
+    return Container(
+      color: mainTheme,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

@@ -12,9 +12,9 @@ class Library extends StatefulWidget {
 class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      body: SingleChildScrollView(
+    return Container(
+      color: mainTheme,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: <Widget>[
@@ -25,6 +25,7 @@ class _LibraryState extends State<Library> {
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
+            // Default
           ],
         ),
       ),
