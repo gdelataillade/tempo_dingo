@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
+import 'package:tempo_dingo/src/widgets/header.dart';
 import 'package:tempo_dingo/src/config/register_config.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
@@ -17,7 +19,7 @@ class Register extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _Header(),
+            Header(),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(35),
@@ -27,41 +29,6 @@ class Register extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Header extends StatefulWidget {
-  const _Header({Key key}) : super(key: key);
-
-  @override
-  __HeaderState createState() => __HeaderState();
-}
-
-class __HeaderState extends State<_Header> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const SizedBox(height: 40),
-        IconButton(
-          icon: Icon(Icons.keyboard_arrow_left),
-          color: Colors.white,
-          iconSize: 40,
-          onPressed: () => Navigator.pop(context),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.only(left: 35),
-          child:
-              Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 35),
-          child: Text("v1.0.0", style: Theme.of(context).textTheme.body1),
-        ),
-      ],
     );
   }
 }
@@ -147,7 +114,7 @@ class __RegisterFormState extends State<_RegisterForm> {
           _fullNameFail,
         ),
         FormInput(
-          Icons.email,
+          FeatherIcons.mail,
           "Email",
           _emailController,
           _emailFail,
