@@ -96,17 +96,24 @@ class __EmailFormState extends State<_EmailForm> {
     );
   }
 
-  void _sendNewPassword() async {
+  Future<void> _sendNewPassword() async {
+    print(_email);
     if (EmailValidator.validate(_email)) {
       final String newPassword = randomAlphaNumeric(10);
+      print(newPassword);
       final Email email = Email(
-        body: "New password: $newPassword",
+        body:
+            "Hey Gautier, can you send me a new password please?\nMy email: $_email",
         subject: 'Tempo Dingo - Reset password',
-        recipients: [_email],
-        cc: ['gautier2406@gmail.com'],
+        recipients: ["gautier2406@gmail.com"],
+        cc: [_email],
         isHTML: false,
       );
-      await FlutterEmailSender.send(email);
+      try {
+        await FlutterEmailSender.send(email);
+      } catch (error) {
+        print(error);
+      }
     } else {
       setState(() {
         _emailFail = true;
