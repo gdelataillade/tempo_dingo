@@ -108,7 +108,7 @@ class __RegisterFormState extends State<_RegisterForm> {
           style: Theme.of(context).textTheme.title,
         ),
         FormInput(
-          Icons.people,
+          FeatherIcons.user,
           "Full name",
           _fullNameController,
           _fullNameFail,

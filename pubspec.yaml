@@ -9,12 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^0.1.2
+  feather_icons_flutter: ^4.7.4
+
   cloud_firestore: ^0.13.0+1
   firebase_auth: ^0.15.4
   rxdart: ^0.18.0
   http: ^0.12.0+1
-  feather_icons_flutter: ^4.7.4
   spotify: ^0.2.0
 
 dev_dependencies:
