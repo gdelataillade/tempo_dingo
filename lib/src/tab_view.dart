@@ -41,27 +41,32 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
           elevation: 0,
           leading: Builder(
             builder: (BuildContext context) {
-              return IconButton(
-                icon: Icon(FeatherIcons.settings),
-                color: Colors.white,
-                onPressed: () {},
-              );
+              return GestureDetector(
+                  child: Icon(FeatherIcons.settings, color: Colors.white),
+                  onTap: () {});
             },
           ),
           actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
+            GestureDetector(
+              onTap: () => print("Profile"),
               child: Row(
                 children: <Widget>[
-                  Text("42", style: Theme.of(context).textTheme.body1),
-                  Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(
+                      children: <Widget>[
+                        Text("42", style: Theme.of(context).textTheme.body1),
+                        Icon(Icons.star,
+                            color: Color.fromRGBO(248, 207, 95, 1)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Icon(FeatherIcons.user, color: Colors.white),
+                  ),
                 ],
               ),
-            ),
-            IconButton(
-              icon: Icon(FeatherIcons.user),
-              color: Colors.white,
-              onPressed: () {},
             ),
           ],
         ),
@@ -110,57 +115,63 @@ class __TabBarState extends State<_TabBar> {
   Widget build(BuildContext context) {
     return Material(
       color: mainTheme,
-      child: TabBar(
-        indicatorColor: Colors.transparent,
-        indicatorWeight: 20,
-        tabs: <Widget>[
-          Tab(
-            icon: Icon(
-              FeatherIcons.search,
-              color: Colors.white,
-              size: widget.currentTabIndex == 0 ? 30 : 24,
-            ),
-            child: Text(
-              "Search",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: "Apple-Semibold",
-                fontSize: widget.currentTabIndex == 0 ? 16 : 14,
+      child: Theme(
+        data: ThemeData(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: TabBar(
+          indicatorColor: Colors.transparent,
+          indicatorWeight: 20,
+          tabs: <Widget>[
+            Tab(
+              icon: Icon(
+                FeatherIcons.search,
+                color: Colors.white,
+                size: widget.currentTabIndex == 0 ? 30 : 24,
+              ),
+              child: Text(
+                "Search",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Apple-Semibold",
+                  fontSize: widget.currentTabIndex == 0 ? 16 : 14,
+                ),
               ),
             ),
-          ),
-          Tab(
-            icon: Icon(
-              FeatherIcons.home,
-              color: Colors.white,
-              size: widget.currentTabIndex == 1 ? 30 : 24,
-            ),
-            child: Text(
-              "Home",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: "Apple-Semibold",
-                fontSize: widget.currentTabIndex == 1 ? 16 : 14,
+            Tab(
+              icon: Icon(
+                FeatherIcons.home,
+                color: Colors.white,
+                size: widget.currentTabIndex == 1 ? 30 : 24,
+              ),
+              child: Text(
+                "Home",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Apple-Semibold",
+                  fontSize: widget.currentTabIndex == 1 ? 16 : 14,
+                ),
               ),
             ),
-          ),
-          Tab(
-            icon: Icon(
-              FeatherIcons.music,
-              color: Colors.white,
-              size: widget.currentTabIndex == 2 ? 30 : 24,
-            ),
-            child: Text(
-              "Library",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: "Apple-Semibold",
-                fontSize: widget.currentTabIndex == 2 ? 16 : 14,
+            Tab(
+              icon: Icon(
+                FeatherIcons.music,
+                color: Colors.white,
+                size: widget.currentTabIndex == 2 ? 30 : 24,
+              ),
+              child: Text(
+                "Library",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Apple-Semibold",
+                  fontSize: widget.currentTabIndex == 2 ? 16 : 14,
+                ),
               ),
             ),
-          ),
-        ],
-        controller: widget.dataController,
+          ],
+          controller: widget.dataController,
+        ),
       ),
     );
   }
