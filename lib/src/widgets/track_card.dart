@@ -33,9 +33,22 @@ class _TrackCardState extends State<TrackCard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.network(widget.imgUrl, width: 65, height: 65),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                  color: mainTheme.withOpacity(0.3),
+                  spreadRadius: 0.5,
+                  blurRadius: 5,
+                  offset: Offset(1, 1),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(widget.imgUrl, width: 65, height: 65),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
