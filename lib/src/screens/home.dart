@@ -225,20 +225,6 @@ class __CarouselSlideState extends State<_CarouselSlide> {
               ),
             ],
           ),
-          // Padding(
-          //   padding:
-          //       EdgeInsets.only(left: MediaQuery.of(context).size.width - 200),
-          //   child: GestureDetector(
-          //     onTap: () => print("play"),
-          //     child: Text(
-          //       "Play >",
-          //       style: TextStyle(
-          //         color: mainTheme,
-          //         fontFamily: 'Apple',
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
