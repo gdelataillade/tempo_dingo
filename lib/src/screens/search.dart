@@ -53,7 +53,8 @@ class _SearchState extends State<Search> {
               ),
             ),
             _SearchInput(_controller),
-            _SearchBody(),
+            const SizedBox(height: 20),
+            _showRecommendations ? Recommendations() : _SearchResult(),
           ],
         ),
       ),
@@ -96,14 +97,28 @@ class __SearchInputState extends State<_SearchInput> {
   }
 }
 
-class _SearchBody extends StatefulWidget {
-  _SearchBody({Key key}) : super(key: key);
+class Recommendations extends StatefulWidget {
+  const Recommendations();
 
   @override
-  __SearchBodyState createState() => __SearchBodyState();
+  _RecommendationsState createState() => _RecommendationsState();
 }
 
-class __SearchBodyState extends State<_SearchBody> {
+class _RecommendationsState extends State<Recommendations> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _SearchResult extends StatefulWidget {
+  const _SearchResult();
+
+  @override
+  __SearchResultState createState() => __SearchResultState();
+}
+
+class __SearchResultState extends State<_SearchResult> {
   @override
   Widget build(BuildContext context) {
     return Container();
