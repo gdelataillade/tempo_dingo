@@ -1,8 +1,11 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:device_info/device_info.dart';
+import 'package:tempo_dingo/src/config/device_info.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/screens/profile.dart';
-import 'package:tempo_dingo/src/widgets/header.dart';
 
 class Settings extends StatefulWidget {
   const Settings();
@@ -31,9 +34,11 @@ class _SettingsState extends State<Settings> {
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             _AudioSlider(),
+            const SizedBox(height: 20),
             _DebugInfo(),
+            const SizedBox(height: 20),
             _Footer(),
           ],
         ),
@@ -99,34 +104,92 @@ class __AudioSliderState extends State<_AudioSlider> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("Audio Volume ${_audio.round()}"),
+        Text("Audio Volume ${_audio.round()}",
+            style: Theme.of(context).textTheme.title),
         Slider(
           value: _audio,
           min: 0,
           max: 10,
-          divisions: 10,
+          // divisions: 10,
           activeColor: Colors.white,
           inactiveColor: Colors.white,
-          onChanged: (value) {
-            setState(() {
-              _audio = value;
-              print(_audio);
-            });
-          },
+          onChanged: (value) => setState(() => _audio = value),
         ),
       ],
     );
   }
 }
 
-class _DebugInfo extends StatelessWidget {
-  const _DebugInfo({Key key}) : super(key: key);
+class _DebugInfo extends StatefulWidget {
+  const _DebugInfo();
+
+  @override
+  __DebugInfoState createState() => __DebugInfoState();
+}
+
+class __DebugInfoState extends State<_DebugInfo> {
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> _deviceData = <String, dynamic>{};
+  int _width = 0;
+  int _height = 0;
+
+  void _getDeviceResolution() {
+    ui.Size size = ui.window.physicalSize;
+    setState(() {
+      _width = size.width.round();
+      _height = size.height.round();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+    _getDeviceResolution();
+  }
+
+  Future<void> initPlatformState() async {
+    Map<String, dynamic> deviceData;
+
+    if (Platform.isAndroid) {
+      deviceData = readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+    } else if (Platform.isIOS) {
+      deviceData = readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+    }
+    if (!mounted) return;
+    setState(() => _deviceData = deviceData);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("Debug info:"),
+        Text("Debug info:", style: Theme.of(context).textTheme.title),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Device:"),
+                Text("Screen size:"),
+                Text("App version:"),
+              ],
+            ),
+            _deviceData.isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                          "${_deviceData['name']} ${_deviceData['systemName']} ${_deviceData['systemVersion']}"),
+                      Text("${_width}x$_height"),
+                      Text(appVersion)
+                    ],
+                  )
+                : Container(),
+          ],
+        ),
       ],
     );
   }
