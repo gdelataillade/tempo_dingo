@@ -37,6 +37,8 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 20),
             _AudioSlider(),
             const SizedBox(height: 20),
+            _SettingsFields(),
+            const SizedBox(height: 20),
             _DebugInfo(),
             const SizedBox(height: 20),
             _Footer(),
@@ -124,6 +126,51 @@ class __AudioSliderState extends State<_AudioSlider> {
   }
 }
 
+class _SettingsFields extends StatefulWidget {
+  const _SettingsFields();
+
+  @override
+  __SettingsFieldsState createState() => __SettingsFieldsState();
+}
+
+class __SettingsFieldsState extends State<_SettingsFields> {
+  bool _enableVibration = true;
+  bool _enableDarkTheme = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 35, right: 35),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Vibration"),
+              Switch(
+                activeColor: Colors.white,
+                value: _enableVibration,
+                onChanged: (value) => setState(() => _enableVibration = value),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Dark Theme"),
+              Switch(
+                activeColor: Colors.white,
+                value: _enableDarkTheme,
+                onChanged: (value) => setState(() => _enableDarkTheme = value),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _DebugInfo extends StatefulWidget {
   const _DebugInfo();
 
@@ -202,14 +249,9 @@ class __DebugInfoState extends State<_DebugInfo> {
   }
 }
 
-class _Footer extends StatefulWidget {
-  const _Footer();
+class _Footer extends StatelessWidget {
+  const _Footer({Key key}) : super(key: key);
 
-  @override
-  __FooterState createState() => __FooterState();
-}
-
-class __FooterState extends State<_Footer> {
   @override
   Widget build(BuildContext context) {
     return Column(
