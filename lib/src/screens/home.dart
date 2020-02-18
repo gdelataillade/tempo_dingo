@@ -99,7 +99,8 @@ class __QuickPlayState extends State<_QuickPlay> {
         ),
         const SizedBox(height: 10),
         CarouselSlider(
-          height: 350,
+          // height: 350,
+          height: 390,
           autoPlay: true,
           autoPlayInterval: Duration(seconds: 3),
           pauseAutoPlayOnTouch: Duration(seconds: 10),
@@ -146,7 +147,7 @@ class __CarouselSlideState extends State<_CarouselSlide> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      // height: 200,
       width: MediaQuery.of(context).size.width - 100,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -211,10 +212,10 @@ class __CarouselSlideState extends State<_CarouselSlide> {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
-                      color: mainTheme.withOpacity(0.3),
+                      color: mainTheme.withOpacity(0.5),
                       spreadRadius: 0.5,
-                      blurRadius: 5,
-                      offset: Offset(1, 1),
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
                     ),
                   ],
                 ),
