@@ -20,14 +20,14 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: mainTheme,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(35),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 40),
+            const SizedBox(height: 50),
             _Header(),
-            const SizedBox(height: 10),
-            Align(
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.only(left: 35),
               alignment: Alignment.centerLeft,
               child: Text(
                 "Settings",
@@ -58,6 +58,7 @@ class __HeaderState extends State<_Header> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -65,9 +66,9 @@ class __HeaderState extends State<_Header> {
             children: <Widget>[
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: Icon(Icons.chevron_left, color: Colors.white),
+                child: Icon(Icons.chevron_left, color: Colors.white, size: 30),
               ),
-              Text("Home"),
+              Text("Home", style: Theme.of(context).textTheme.title),
             ],
           ),
           Row(
@@ -102,20 +103,23 @@ class __AudioSliderState extends State<_AudioSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text("Audio Volume ${_audio.round()}",
-            style: Theme.of(context).textTheme.title),
-        Slider(
-          value: _audio,
-          min: 0,
-          max: 10,
-          // divisions: 10,
-          activeColor: Colors.white,
-          inactiveColor: Colors.white,
-          onChanged: (value) => setState(() => _audio = value),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 35, right: 35),
+      child: Column(
+        children: <Widget>[
+          Text("Audio Volume ${_audio.round()}",
+              style: Theme.of(context).textTheme.title),
+          Slider(
+            value: _audio,
+            min: 0,
+            max: 10,
+            // divisions: 10,
+            activeColor: Colors.white,
+            inactiveColor: Colors.white,
+            onChanged: (value) => setState(() => _audio = value),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -162,35 +166,38 @@ class __DebugInfoState extends State<_DebugInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text("Debug info:", style: Theme.of(context).textTheme.title),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("Device:"),
-                Text("Screen size:"),
-                Text("App version:"),
-              ],
-            ),
-            _deviceData.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                          "${_deviceData['name']} ${_deviceData['systemName']} ${_deviceData['systemVersion']}"),
-                      Text("${_width}x$_height"),
-                      Text(appVersion)
-                    ],
-                  )
-                : Container(),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 35, right: 35),
+      child: Column(
+        children: <Widget>[
+          Text("Debug info:", style: Theme.of(context).textTheme.title),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Device:"),
+                  Text("Screen size:"),
+                  Text("App version:"),
+                ],
+              ),
+              _deviceData.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            "${_deviceData['name']} ${_deviceData['systemName']} ${_deviceData['systemVersion']}"),
+                        Text("${_width}x$_height"),
+                        Text(appVersion)
+                      ],
+                    )
+                  : Container(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
