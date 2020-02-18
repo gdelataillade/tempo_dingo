@@ -14,11 +14,17 @@ class _HeaderState extends State<Header> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 40),
-        IconButton(
-          icon: Icon(Icons.keyboard_arrow_left),
-          color: Colors.white,
-          iconSize: 40,
-          onPressed: () => Navigator.pop(context),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.chevron_left),
+              color: Colors.white,
+              iconSize: 35,
+              onPressed: () => Navigator.pop(context),
+            ),
+            Text("Log in", style: Theme.of(context).textTheme.title),
+          ],
         ),
         const SizedBox(height: 10),
         Padding(
