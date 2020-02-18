@@ -5,6 +5,7 @@ import 'package:tempo_dingo/src/screens/home.dart';
 import 'package:tempo_dingo/src/screens/library.dart';
 import 'package:tempo_dingo/src/screens/search.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/screens/settings.dart';
 
 class TabView extends StatefulWidget {
   TabView({Key key}) : super(key: key);
@@ -43,7 +44,8 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
             builder: (BuildContext context) {
               return GestureDetector(
                   child: Icon(FeatherIcons.settings, color: Colors.white),
-                  onTap: () {});
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Settings())));
             },
           ),
           actions: <Widget>[
