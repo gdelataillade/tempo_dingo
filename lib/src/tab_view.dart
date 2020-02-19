@@ -3,6 +3,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
 import 'package:tempo_dingo/src/screens/home.dart';
 import 'package:tempo_dingo/src/screens/library.dart';
+import 'package:tempo_dingo/src/screens/profile.dart';
 import 'package:tempo_dingo/src/screens/search.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/screens/settings.dart';
@@ -50,7 +51,8 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
           ),
           actions: <Widget>[
             GestureDetector(
-              onTap: () => print("Profile"),
+              onTap: () => Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile())),
               child: Row(
                 children: <Widget>[
                   Padding(
