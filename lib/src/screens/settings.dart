@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:device_info/device_info.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+
 import 'package:tempo_dingo/src/config/device_info.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/screens/profile.dart';
@@ -15,6 +17,38 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> _deviceData = <String, dynamic>{};
+  int _width = 0;
+  int _height = 0;
+
+  void _getDeviceResolution() {
+    ui.Size size = ui.window.physicalSize;
+    setState(() {
+      _width = size.width.round();
+      _height = size.height.round();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+    _getDeviceResolution();
+  }
+
+  Future<void> initPlatformState() async {
+    Map<String, dynamic> deviceData;
+
+    if (Platform.isAndroid) {
+      deviceData = readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+    } else if (Platform.isIOS) {
+      deviceData = readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+    }
+    if (!mounted) return;
+    setState(() => _deviceData = deviceData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +71,9 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 20),
             _AudioSlider(),
             const SizedBox(height: 20),
-            _SettingsFields(),
+            _SettingsFields(_deviceData, _width, _height),
             const SizedBox(height: 20),
-            _DebugInfo(),
+            _DebugInfo(_deviceData, _width, _height),
             const SizedBox(height: 20),
             _Footer(),
           ],
@@ -64,14 +98,14 @@ class __HeaderState extends State<_Header> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Icon(Icons.chevron_left, color: Colors.white, size: 30),
-              ),
-              Text("Home", style: Theme.of(context).textTheme.title),
-            ],
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.chevron_left, color: Colors.white, size: 30),
+                Text("Home", style: Theme.of(context).textTheme.title),
+              ],
+            ),
           ),
           Row(
             children: <Widget>[
@@ -127,7 +161,11 @@ class __AudioSliderState extends State<_AudioSlider> {
 }
 
 class _SettingsFields extends StatefulWidget {
-  const _SettingsFields();
+  final Map<String, dynamic> deviceData;
+  final int width;
+  final int height;
+
+  const _SettingsFields(this.deviceData, this.width, this.height);
 
   @override
   __SettingsFieldsState createState() => __SettingsFieldsState();
@@ -137,11 +175,30 @@ class __SettingsFieldsState extends State<_SettingsFields> {
   bool _enableVibration = true;
   bool _enableDarkTheme = true;
 
+  Email _buildEmailReportBug() {
+    return Email(
+      body:
+          "Please write bug description:\n\n\n<--- Don't write below --->\nDevice: ${widget.deviceData['name']} ${widget.deviceData['systemName']} ${widget.deviceData['systemVersion']}\nScreen size: ${widget.width}x${widget.height}\nApp version: $appVersion",
+      subject: "Tempo Dingo - Bug report",
+      recipients: ["gautier2406@gmail.com"],
+    );
+  }
+
+  Email _buildEmailRecommendation() {
+    return Email(
+      body: "Please write your recommendation below:\n\n\n",
+      subject: "Tempo Dingo - Bug report",
+      recipients: ["gautier2406@gmail.com"],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,6 +222,31 @@ class __SettingsFieldsState extends State<_SettingsFields> {
               ),
             ],
           ),
+          Text("Language"),
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () async {
+              final Email email = _buildEmailReportBug();
+              try {
+                await FlutterEmailSender.send(email);
+              } catch (error) {
+                print(error);
+              }
+            },
+            child: Text("Report a bug"),
+          ),
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () async {
+              final Email email = _buildEmailRecommendation();
+              try {
+                await FlutterEmailSender.send(email);
+              } catch (error) {
+                print(error);
+              }
+            },
+            child: Text("Have any recommendation?"),
+          ),
         ],
       ),
     );
@@ -172,47 +254,20 @@ class __SettingsFieldsState extends State<_SettingsFields> {
 }
 
 class _DebugInfo extends StatefulWidget {
-  const _DebugInfo();
+  final Map<String, dynamic> deviceData;
+  final int width;
+  final int height;
+
+  const _DebugInfo(this.deviceData, this.width, this.height);
 
   @override
   __DebugInfoState createState() => __DebugInfoState();
 }
 
 class __DebugInfoState extends State<_DebugInfo> {
-  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-  Map<String, dynamic> _deviceData = <String, dynamic>{};
-  int _width = 0;
-  int _height = 0;
-
-  void _getDeviceResolution() {
-    ui.Size size = ui.window.physicalSize;
-    setState(() {
-      _width = size.width.round();
-      _height = size.height.round();
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-    _getDeviceResolution();
-  }
-
-  Future<void> initPlatformState() async {
-    Map<String, dynamic> deviceData;
-
-    if (Platform.isAndroid) {
-      deviceData = readAndroidBuildData(await deviceInfoPlugin.androidInfo);
-    } else if (Platform.isIOS) {
-      deviceData = readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
-    }
-    if (!mounted) return;
-    setState(() => _deviceData = deviceData);
-  }
-
   @override
   Widget build(BuildContext context) {
+    print(widget.deviceData);
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child: Column(
@@ -230,13 +285,13 @@ class __DebugInfoState extends State<_DebugInfo> {
                   Text("App version:"),
                 ],
               ),
-              _deviceData.isNotEmpty
+              widget.deviceData.isNotEmpty
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                            "${_deviceData['name']} ${_deviceData['systemName']} ${_deviceData['systemVersion']}"),
-                        Text("${_width}x$_height"),
+                            "${widget.deviceData['name']} ${widget.deviceData['systemName']} ${widget.deviceData['systemVersion']}"),
+                        Text("${widget.width}x${widget.height}"),
                         Text(appVersion)
                       ],
                     )

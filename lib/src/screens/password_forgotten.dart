@@ -1,6 +1,5 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:random_string/random_string.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
@@ -99,8 +98,6 @@ class __EmailFormState extends State<_EmailForm> {
   Future<void> _sendNewPassword() async {
     print(_email);
     if (EmailValidator.validate(_email)) {
-      final String newPassword = randomAlphaNumeric(10);
-      print(newPassword);
       final Email email = Email(
         body:
             "Hey Gautier, can you send me a new password please?\nMy email: $_email",
