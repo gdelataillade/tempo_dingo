@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:tempo_dingo/src/config/device_info.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
@@ -172,6 +173,7 @@ class _SettingsFields extends StatefulWidget {
 }
 
 class __SettingsFieldsState extends State<_SettingsFields> {
+  final String _gitHubUrl = "https://github.com/gdelataillade/tempo_dingo";
   bool _enableVibration = true;
   bool _enableDarkTheme = true;
   String _language = "US";
@@ -281,6 +283,24 @@ class __SettingsFieldsState extends State<_SettingsFields> {
             },
             child: Text("Have any recommendation?"),
           ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Made with Flutter in "),
+              GestureDetector(
+                onTap: () async {
+                  if (await canLaunch(_gitHubUrl)) {
+                    await launch(_gitHubUrl);
+                  } else {
+                    throw 'Could not launch $_gitHubUrl';
+                  }
+                },
+                child: Text("open source",
+                    style: TextStyle(decoration: TextDecoration.underline)),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -343,31 +363,31 @@ class _Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text.rich(
-          TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                text: "Privacy Policy",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-              TextSpan(
-                text: " - ",
-                children: <TextSpan>[],
-              ),
-              TextSpan(
-                text: "Terms of service",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-            ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text.rich(
+            TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: "Privacy Policy",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+                TextSpan(
+                  text: " - ",
+                  children: <TextSpan>[],
+                ),
+                TextSpan(
+                  text: "Terms of service",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Center(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          const SizedBox(height: 10),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text("Made with ", style: TextStyle(fontSize: 13)),
@@ -375,8 +395,8 @@ class _Footer extends StatelessWidget {
               Text(" by Gautier de Lataillade", style: TextStyle(fontSize: 13)),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
