@@ -174,6 +174,7 @@ class _SettingsFields extends StatefulWidget {
 class __SettingsFieldsState extends State<_SettingsFields> {
   bool _enableVibration = true;
   bool _enableDarkTheme = true;
+  String _language = "US";
 
   Email _buildEmailReportBug() {
     return Email(
@@ -189,6 +190,24 @@ class __SettingsFieldsState extends State<_SettingsFields> {
       body: "Please write your recommendation below:\n\n\n",
       subject: "Tempo Dingo - Bug report",
       recipients: ["gautier2406@gmail.com"],
+    );
+  }
+
+  Widget _buildFlag(String path, String language) {
+    return GestureDetector(
+      onTap: () {
+        if (_language != language) setState(() => _language = language);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(
+            color: _language == language ? Colors.white : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Image.asset(path, width: 40),
+      ),
     );
   }
 
@@ -229,11 +248,11 @@ class __SettingsFieldsState extends State<_SettingsFields> {
               Text("Language"),
               Row(
                 children: <Widget>[
-                  Image.asset('assets/images/united-states.png', width: 40),
+                  _buildFlag('assets/images/united-states.png', "US"),
                   const SizedBox(width: 5),
-                  Image.asset('assets/images/spain.png', width: 40),
+                  _buildFlag('assets/images/spain.png', "ES"),
                   const SizedBox(width: 5),
-                  Image.asset('assets/images/france.png', width: 40),
+                  _buildFlag('assets/images/france.png', "FR"),
                 ],
               ),
             ],
