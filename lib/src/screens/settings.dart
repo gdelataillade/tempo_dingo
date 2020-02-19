@@ -222,8 +222,23 @@ class __SettingsFieldsState extends State<_SettingsFields> {
               ),
             ],
           ),
-          Text("Language"),
           const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Language"),
+              Row(
+                children: <Widget>[
+                  Image.asset('assets/images/united-states.png', width: 40),
+                  const SizedBox(width: 5),
+                  Image.asset('assets/images/spain.png', width: 40),
+                  const SizedBox(width: 5),
+                  Image.asset('assets/images/france.png', width: 40),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
           GestureDetector(
             onTap: () async {
               final Email email = _buildEmailReportBug();
@@ -235,7 +250,7 @@ class __SettingsFieldsState extends State<_SettingsFields> {
             },
             child: Text("Report a bug"),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           GestureDetector(
             onTap: () async {
               final Email email = _buildEmailRecommendation();

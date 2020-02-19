@@ -30,6 +30,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/france.png
+    - assets/images/united-states.png
+    - assets/images/spain.png
   fonts:
     - family: Apple
       fonts:
