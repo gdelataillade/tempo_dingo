@@ -7,6 +7,7 @@ import 'package:tempo_dingo/src/screens/profile.dart';
 import 'package:tempo_dingo/src/screens/search.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/screens/settings.dart';
+import 'package:vibrate/vibrate.dart';
 
 class TabView extends StatefulWidget {
   TabView({Key key}) : super(key: key);
@@ -24,8 +25,13 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
-    _onChangeTab =
-        () => setState(() => _currentTabIndex = _tabController.index);
+    _onChangeTab = () {
+      if (_currentTabIndex != _tabController.index) {
+        Vibrate.feedback(FeedbackType.selection);
+        setState(() => _currentTabIndex = _tabController.index);
+        print("vibrate");
+      }
+    };
     _tabController.addListener(_onChangeTab);
   }
 
@@ -125,6 +131,7 @@ class __TabBarState extends State<_TabBar> {
           highlightColor: Colors.transparent,
         ),
         child: TabBar(
+          controller: widget.dataController,
           indicatorColor: Colors.transparent,
           indicatorWeight: 20,
           tabs: <Widget>[
@@ -174,7 +181,6 @@ class __TabBarState extends State<_TabBar> {
               ),
             ),
           ],
-          controller: widget.dataController,
         ),
       ),
     );
