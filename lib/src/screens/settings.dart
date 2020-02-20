@@ -5,6 +5,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vibrate/vibrate.dart';
 
 import 'package:tempo_dingo/src/config/device_info.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
@@ -147,14 +148,16 @@ class __AudioSliderState extends State<_AudioSlider> {
           Text("Audio Volume ${_audio.round()}",
               style: Theme.of(context).textTheme.title),
           Slider(
-            value: _audio,
-            min: 0,
-            max: 10,
-            // divisions: 10,
-            activeColor: Colors.white,
-            inactiveColor: Colors.white,
-            onChanged: (value) => setState(() => _audio = value),
-          ),
+              value: _audio,
+              min: 0,
+              max: 10,
+              // divisions: 10,
+              activeColor: Colors.white,
+              inactiveColor: Colors.white,
+              onChanged: (value) {
+                setState(() => _audio = value);
+                if (_audio % 1 == 0) Vibrate.feedback(FeedbackType.impact);
+              }),
         ],
       ),
     );
@@ -198,7 +201,10 @@ class __SettingsFieldsState extends State<_SettingsFields> {
   Widget _buildFlag(String path, String language) {
     return GestureDetector(
       onTap: () {
-        if (_language != language) setState(() => _language = language);
+        if (_language != language) {
+          Vibrate.feedback(FeedbackType.impact);
+          setState(() => _language = language);
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -221,15 +227,22 @@ class __SettingsFieldsState extends State<_SettingsFields> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          GestureDetector(
+            onTap: () async => Vibrate.vibrate(),
+            child: Text("Vibrate"),
+          ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text("Vibration"),
               Switch(
-                activeColor: Colors.white,
-                value: _enableVibration,
-                onChanged: (value) => setState(() => _enableVibration = value),
-              ),
+                  activeColor: Colors.white,
+                  value: _enableVibration,
+                  onChanged: (value) {
+                    if (_enableVibration) Vibrate.feedback(FeedbackType.impact);
+                    setState(() => _enableVibration = value);
+                  }),
             ],
           ),
           Row(
@@ -237,10 +250,12 @@ class __SettingsFieldsState extends State<_SettingsFields> {
             children: <Widget>[
               Text("Dark Theme"),
               Switch(
-                activeColor: Colors.white,
-                value: _enableDarkTheme,
-                onChanged: (value) => setState(() => _enableDarkTheme = value),
-              ),
+                  activeColor: Colors.white,
+                  value: _enableDarkTheme,
+                  onChanged: (value) {
+                    if (_enableDarkTheme) Vibrate.feedback(FeedbackType.impact);
+                    setState(() => _enableDarkTheme = value);
+                  }),
             ],
           ),
           const SizedBox(height: 10),
