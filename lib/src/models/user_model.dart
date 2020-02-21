@@ -27,7 +27,7 @@ class UserModel extends Model {
   bool get darkTheme => _darkTheme;
 
   Future<bool> login(String email, String password, bool stayLoggedIn) async {
-    QuerySnapshot snapshot = await Firestore.instance
+    final QuerySnapshot snapshot = await Firestore.instance
         .collection("users")
         .where("email", isEqualTo: _email)
         .getDocuments();
@@ -35,5 +35,21 @@ class UserModel extends Model {
     if (snapshot.documents.isEmpty) return false;
     if (snapshot.documents[0].data["password"] == password) return true;
     return false;
+  }
+
+  Future<void> register(String fullName, String email, String password,
+      Map<String, dynamic> data) async {
+    Firestore.instance
+        .collection('users')
+        .document(_email)
+        .setData(data)
+        .catchError((err) => print(err));
+  }
+
+  Future<bool> emailAlreadyExists(String email) async {
+    final DocumentSnapshot snapshot =
+        await Firestore.instance.collection('users').document(email).get();
+
+    return snapshot.data == null ? false : true;
   }
 }

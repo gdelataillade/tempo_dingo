@@ -152,9 +152,7 @@ class __LogInFormState extends State<_LogInForm> {
             _authFailed
                 ? Text(
                     "Email or password incorrect.",
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
+                    style: TextStyle(color: Colors.red),
                   )
                 : Container(),
             const SizedBox(height: 8),

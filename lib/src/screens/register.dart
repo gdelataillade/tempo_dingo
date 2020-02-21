@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
@@ -52,6 +54,7 @@ class __RegisterFormState extends State<_RegisterForm> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  UserModel _userModel;
   String _fullName = "";
   String _email = "";
   String _password = "";
@@ -107,41 +110,46 @@ class __RegisterFormState extends State<_RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Create your account",
-          style: Theme.of(context).textTheme.title,
-        ),
-        FormInput(
-          FeatherIcons.user,
-          "Full name",
-          _fullNameController,
-          _fullNameFail,
-        ),
-        FormInput(
-          FeatherIcons.mail,
-          "Email",
-          _emailController,
-          _emailFail,
-        ),
-        FormInput(
-          Icons.vpn_key,
-          "Password",
-          _passwordController,
-          _passwordFail,
-        ),
-        FormInput(
-          Icons.vpn_key,
-          "Confirm password",
-          _confirmPasswordController,
-          _passwordFail,
-        ),
-        const SizedBox(height: 30),
-        _showErrorMessage(),
-        Button("Register", _submit, false),
-      ],
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        _userModel = model;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Create your account",
+              style: Theme.of(context).textTheme.title,
+            ),
+            FormInput(
+              FeatherIcons.user,
+              "Full name",
+              _fullNameController,
+              _fullNameFail,
+            ),
+            FormInput(
+              FeatherIcons.mail,
+              "Email",
+              _emailController,
+              _emailFail,
+            ),
+            FormInput(
+              Icons.vpn_key,
+              "Password",
+              _passwordController,
+              _passwordFail,
+            ),
+            FormInput(
+              Icons.vpn_key,
+              "Confirm password",
+              _confirmPasswordController,
+              _passwordFail,
+            ),
+            const SizedBox(height: 30),
+            _showErrorMessage(),
+            Button("Register", _submit, false),
+          ],
+        );
+      },
     );
   }
 
@@ -180,21 +188,15 @@ class __RegisterFormState extends State<_RegisterForm> {
         _passwordFail = true;
       });
     } else {
-      final bool alreadyExists = await _checkIfAlreadyExists();
+      final bool alreadyExists = await _userModel.emailAlreadyExists(_email);
 
       if (alreadyExists) {
         setState(() {
           _errorMessage = "Email already exists.";
           _emailFail = true;
         });
-      } else {
-        await Firestore.instance
-            .collection('users')
-            .document(_email)
-            .setData(_buildData())
-            .catchError((err) => print(err))
-            .whenComplete(() => print("Completed"));
-      }
+      } else
+        _userModel.register(_fullName, _email, _password, _buildData());
     }
     _errorMessage.length > 0 ?? print(_errorMessage);
   }
@@ -211,13 +213,6 @@ class __RegisterFormState extends State<_RegisterForm> {
         "vibration": vibration,
         "library": library,
       };
-
-  Future<bool> _checkIfAlreadyExists() async {
-    DocumentSnapshot snapshot =
-        await Firestore.instance.collection('users').document(_email).get();
-
-    return snapshot.data == null ? false : true;
-  }
 
   void _resetFails() {
     _fullNameFail = false;
