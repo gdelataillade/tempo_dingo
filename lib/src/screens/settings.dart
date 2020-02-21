@@ -57,27 +57,6 @@ class _SettingsState extends State<Settings> {
       backgroundColor: mainTheme,
       appBar: AppBar(
         elevation: 1,
-        // leading: Builder(
-        //   builder: (BuildContext context) {
-        //     return GestureDetector(
-        //         child: Row(
-        //           children: <Widget>[
-        //             Icon(Icons.chevron_left, color: Colors.white, size: 30),
-        //             Text("Home", style: Theme.of(context).textTheme.title),
-        //           ],
-        //         ),
-        //         onTap: () => Navigator.pop(context));
-        //   },
-        // ),
-        // title: GestureDetector(
-        //     child: Row(
-        //       children: <Widget>[
-        //         Icon(Icons.chevron_left, color: Colors.white, size: 30),
-        //         Text("Home", style: Theme.of(context).textTheme.title),
-        //       ],
-        //     ),
-        //     onTap: () => Navigator.pop(context)),
-
         actions: <Widget>[
           GestureDetector(
             onTap: () => Navigator.push(
