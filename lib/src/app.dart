@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/screens/log_in.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+
+import 'models/user_model.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +16,10 @@ class MyApp extends StatelessWidget {
       theme: themeConfig,
       home: Scaffold(
         backgroundColor: mainTheme,
-        body: _CheckLogIn(),
+        body: ScopedModel<UserModel>(
+          model: UserModel(),
+          child: _CheckLogIn(),
+        ),
       ),
     );
   }

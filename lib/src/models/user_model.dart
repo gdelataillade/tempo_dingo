@@ -1,4 +1,6 @@
-class UserModel {
+import 'package:scoped_model/scoped_model.dart';
+
+class UserModel extends Model {
   String _email;
   String _password;
   String _fullName;
