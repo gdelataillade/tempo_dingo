@@ -26,6 +26,7 @@ dependencies:
   url_launcher: ^5.4.1
   vibrate: ^0.0.4
   scoped_model: ^1.0.1
+  shared_preferences: ^0.5.4+3
 
 dev_dependencies:
   flutter_test:

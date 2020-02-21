@@ -25,18 +25,42 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class _CheckLogIn extends StatefulWidget {
-  _CheckLogIn({Key key}) : super(key: key);
-
-  @override
-  __CheckLogInState createState() => __CheckLogInState();
-}
-
-class __CheckLogInState extends State<_CheckLogIn> {
-  bool _isLoggedIn = false;
-
+class _CheckLogIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _isLoggedIn ? TabView() : LogIn();
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return FutureBuilder(
+            future: model.initSharedPrefs(),
+            builder: (context, snapshotPrefs) {
+              switch (snapshotPrefs.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: loadingMainTheme);
+                default:
+                  if (snapshotPrefs.hasError) return Container();
+                  // return Container();
+                  return FutureBuilder(
+                      future: model.login(
+                        model.prefs.getString('email'),
+                        model.prefs.getString('password'),
+                        true,
+                      ),
+                      initialData: false,
+                      builder: (context, snapshotLogin) {
+                        switch (snapshotLogin.connectionState) {
+                          case ConnectionState.waiting:
+                            return Center(child: loadingWhite);
+                          default:
+                            if (snapshotLogin.hasError) return Container();
+                            print(snapshotLogin.data);
+                            return snapshotLogin.data == true
+                                ? TabView()
+                                : LogIn();
+                        }
+                      });
+              }
+            });
+      },
+    );
   }
 }

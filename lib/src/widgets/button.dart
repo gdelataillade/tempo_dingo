@@ -27,8 +27,7 @@ class _ButtonState extends State<Button> {
             child: widget.isLoading
                 ? SizedBox(
                     height: 30,
-                    child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(mainTheme)),
+                    child: loadingMainTheme,
                   )
                 : Text(
                     widget.text,

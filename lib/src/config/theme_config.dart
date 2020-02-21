@@ -30,3 +30,9 @@ final ThemeData themeConfig = ThemeData(
     ),
   ),
 );
+
+Widget loadingMainTheme = CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(mainTheme));
+
+Widget loadingWhite = CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(Colors.white));
