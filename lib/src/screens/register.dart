@@ -133,7 +133,7 @@ class __RegisterFormState extends State<_RegisterForm> {
         ),
         const SizedBox(height: 30),
         _showErrorMessage(),
-        Button("Register", _submit),
+        Button("Register", _submit, false),
       ],
     );
   }

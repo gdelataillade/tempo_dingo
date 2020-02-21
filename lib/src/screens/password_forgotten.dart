@@ -89,7 +89,7 @@ class __EmailFormState extends State<_EmailForm> {
         ),
         const SizedBox(height: 40),
         _emailValid
-            ? Button("Send new password", _sendNewPassword)
+            ? Button("Send new password", _sendNewPassword, false)
             : DarkButton("Send new password", () {}),
       ],
     );

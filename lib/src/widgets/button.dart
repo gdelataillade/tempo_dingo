@@ -4,8 +4,9 @@ import 'package:tempo_dingo/src/config/theme_config.dart';
 class Button extends StatefulWidget {
   final String text;
   final Function() callback;
+  final bool isLoading;
 
-  const Button(this.text, this.callback);
+  const Button(this.text, this.callback, this.isLoading);
 
   @override
   _ButtonState createState() => _ButtonState();
@@ -23,13 +24,20 @@ class _ButtonState extends State<Button> {
           width: MediaQuery.of(context).size.width - 200,
           height: 40,
           child: Center(
-              child: Text(
-            widget.text,
-            style: TextStyle(
-              fontSize: 20,
-              fontFamily: 'Apple',
-            ),
-          )),
+            child: widget.isLoading
+                ? SizedBox(
+                    height: 30,
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(mainTheme)),
+                  )
+                : Text(
+                    widget.text,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'Apple',
+                    ),
+                  ),
+          ),
         ),
       ),
     );

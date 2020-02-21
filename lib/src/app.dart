@@ -33,7 +33,7 @@ class _CheckLogIn extends StatefulWidget {
 }
 
 class __CheckLogInState extends State<_CheckLogIn> {
-  static const bool _isLoggedIn = true;
+  bool _isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
