@@ -149,6 +149,15 @@ class __LogInFormState extends State<_LogInForm> {
                     style: Theme.of(context).textTheme.body2),
               ],
             ),
+            _authFailed
+                ? Text(
+                    "Email or password incorrect.",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  )
+                : Container(),
+            const SizedBox(height: 8),
             _inputsAreValid
                 ? Button("Sign in", _submit, _isLoading)
                 : DarkButton("Sign in", () {}),
