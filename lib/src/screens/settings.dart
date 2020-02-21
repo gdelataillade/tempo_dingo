@@ -55,12 +55,59 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainTheme,
+      appBar: AppBar(
+        elevation: 1,
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return GestureDetector(
+        //         child: Row(
+        //           children: <Widget>[
+        //             Icon(Icons.chevron_left, color: Colors.white, size: 30),
+        //             Text("Home", style: Theme.of(context).textTheme.title),
+        //           ],
+        //         ),
+        //         onTap: () => Navigator.pop(context));
+        //   },
+        // ),
+        // title: GestureDetector(
+        //     child: Row(
+        //       children: <Widget>[
+        //         Icon(Icons.chevron_left, color: Colors.white, size: 30),
+        //         Text("Home", style: Theme.of(context).textTheme.title),
+        //       ],
+        //     ),
+        //     onTap: () => Navigator.pop(context)),
+
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Profile())),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: <Widget>[
+                      Text("42", style: Theme.of(context).textTheme.body1),
+                      Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(FeatherIcons.user, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 50),
-            _Header(),
+            // const SizedBox(height: 50),
+            // _Header(),
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.only(left: 35),
