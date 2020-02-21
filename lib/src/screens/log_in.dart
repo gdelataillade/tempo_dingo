@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 
 import 'package:tempo_dingo/src/screens/register.dart';
 import 'package:tempo_dingo/src/screens/password_forgotten.dart';
@@ -19,23 +21,25 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(35),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 50),
-            Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
-            Text("v1.0.0", style: Theme.of(context).textTheme.body1),
-            const SizedBox(height: 50),
-            _LogInForm(),
-            const SizedBox(height: 15),
-            _Separator(),
-            const SizedBox(height: 15),
-            _Register(),
-          ],
-        ),
-      ),
+      child: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+        return Container(
+          padding: const EdgeInsets.all(35),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 50),
+              Text("Tempo Dingo", style: Theme.of(context).textTheme.headline),
+              Text("v1.0.0", style: Theme.of(context).textTheme.body1),
+              const SizedBox(height: 50),
+              _LogInForm(),
+              const SizedBox(height: 15),
+              _Separator(),
+              const SizedBox(height: 15),
+              _Register(),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
@@ -50,12 +54,14 @@ class _LogInForm extends StatefulWidget {
 class __LogInFormState extends State<_LogInForm> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  UserModel _userModel;
   String _email = "";
   String _password = "";
   bool _staySignedIn = false;
   bool _inputsAreValid = false;
   bool _hidePassword = true;
   bool _authFailed = false;
+  bool _isLoading = false;
 
   void _initControllers() {
     _emailController.addListener(_emailListener);
@@ -102,44 +108,53 @@ class __LogInFormState extends State<_LogInForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text("Login", style: Theme.of(context).textTheme.title),
-        FormInput(FeatherIcons.mail, "Email", _emailController, _authFailed),
-        FormInputPassword(Icons.vpn_key, "Password", _passwordController,
-            _authFailed, _hidePassword, _toggleHidePassword),
-        const SizedBox(height: 5),
-        Align(
-          alignment: Alignment.topRight,
-          child: GestureDetector(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PasswordForgotten())),
-            child: Text("Forgot your password?",
-                style: Theme.of(context).textTheme.body2),
-          ),
-        ),
-        Row(
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        _userModel = model;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Theme(
-              data: Theme.of(context)
-                  .copyWith(unselectedWidgetColor: Colors.white),
-              child: Checkbox(
-                value: _staySignedIn,
-                activeColor: Colors.white,
-                checkColor: mainTheme,
-                onChanged: (bool value) {
-                  setState(() => _staySignedIn = value);
-                },
+            Text("Login", style: Theme.of(context).textTheme.title),
+            FormInput(
+                FeatherIcons.mail, "Email", _emailController, _authFailed),
+            FormInputPassword(Icons.vpn_key, "Password", _passwordController,
+                _authFailed, _hidePassword, _toggleHidePassword),
+            const SizedBox(height: 5),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PasswordForgotten())),
+                child: Text("Forgot your password?",
+                    style: Theme.of(context).textTheme.body2),
               ),
             ),
-            Text("Keep me signed in", style: Theme.of(context).textTheme.body2),
+            Row(
+              children: <Widget>[
+                Theme(
+                  data: Theme.of(context)
+                      .copyWith(unselectedWidgetColor: Colors.white),
+                  child: Checkbox(
+                    value: _staySignedIn,
+                    activeColor: Colors.white,
+                    checkColor: mainTheme,
+                    onChanged: (bool value) {
+                      setState(() => _staySignedIn = value);
+                    },
+                  ),
+                ),
+                Text("Keep me signed in",
+                    style: Theme.of(context).textTheme.body2),
+              ],
+            ),
+            _inputsAreValid
+                ? Button("Sign in", _submit, _isLoading)
+                : DarkButton("Sign in", () {}),
           ],
-        ),
-        _inputsAreValid
-            ? Button("Sign in", _submit)
-            : DarkButton("Sign in", () {}),
-      ],
+        );
+      },
     );
   }
 
@@ -148,21 +163,13 @@ class __LogInFormState extends State<_LogInForm> {
   }
 
   void _submit() async {
-    print("Email: $_email");
-    print("Password: $_password");
-    QuerySnapshot snapshot = await Firestore.instance
-        .collection("users")
-        .where("email", isEqualTo: _email)
-        .getDocuments();
-    if (snapshot.documents.isEmpty)
-      setState(() => _authFailed = true);
-    else {
-      print(snapshot.documents[0].data["fullName"]);
-      if (snapshot.documents[0].data["password"] == _password)
-        print("Auth granted");
-      else
-        setState(() => _authFailed = true);
-    }
+    setState(() => _isLoading = true);
+    bool _loggedIn = await _userModel.login(_email, _password, false);
+    setState(() => _isLoading = false);
+
+    _loggedIn
+        ? setState(() => _authFailed = false)
+        : setState(() => _authFailed = true);
   }
 }
 
@@ -208,9 +215,11 @@ class __RegisterState extends State<_Register> {
         Text("New member?", style: Theme.of(context).textTheme.title),
         const SizedBox(height: 15),
         Button(
-            "Register",
-            () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Register()))),
+          "Register",
+          () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Register())),
+          false,
+        ),
       ],
     );
   }

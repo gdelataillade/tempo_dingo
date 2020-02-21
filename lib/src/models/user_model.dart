@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
@@ -24,4 +25,15 @@ class UserModel extends Model {
   List<String> get artists => _artists;
   List<String> get favorite => _favorite;
   bool get darkTheme => _darkTheme;
+
+  Future<bool> login(String email, String password, bool stayLoggedIn) async {
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection("users")
+        .where("email", isEqualTo: _email)
+        .getDocuments();
+
+    if (snapshot.documents.isEmpty) return false;
+    if (snapshot.documents[0].data["password"] == password) return true;
+    return false;
+  }
 }
