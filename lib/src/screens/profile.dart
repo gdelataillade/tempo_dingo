@@ -42,16 +42,65 @@ class _ProfileState extends State<Profile> {
             ),
             backgroundColor: mainTheme,
             body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(_userModel.email),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(35),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Profile",
+                        style: Theme.of(context).textTheme.headline),
+                    const SizedBox(height: 10),
+                    Text(_userModel.fullName,
+                        style: Theme.of(context).textTheme.title),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("42", style: Theme.of(context).textTheme.headline),
+                        Icon(
+                          Icons.star,
+                          color: Color.fromRGBO(248, 207, 95, 1),
+                          size: 50,
+                        ),
+                      ],
+                    ),
+                    _Highscores(),
+                    _Shop(),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
     );
+  }
+}
+
+class _Highscores extends StatefulWidget {
+  _Highscores({Key key}) : super(key: key);
+
+  @override
+  __HighscoresState createState() => __HighscoresState();
+}
+
+class __HighscoresState extends State<_Highscores> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _Shop extends StatefulWidget {
+  _Shop({Key key}) : super(key: key);
+
+  @override
+  __ShopState createState() => __ShopState();
+}
+
+class __ShopState extends State<_Shop> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
