@@ -68,7 +68,6 @@ class UserModel extends Model {
     if (snapshot.documents[0].data["password"] == password) {
       _fillModelData(snapshot.documents[0], staySignedIn);
       _storeLoginInfo();
-      // notifyListeners();
       return true;
     }
     return false;

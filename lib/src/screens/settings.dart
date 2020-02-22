@@ -4,15 +4,19 @@ import 'dart:ui' as ui;
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibrate/vibrate.dart';
 
+import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/config/device_info.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/screens/profile.dart';
 
 class Settings extends StatefulWidget {
-  const Settings();
+  final UserModel userModel;
+
+  const Settings(this.userModel);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -23,6 +27,7 @@ class _SettingsState extends State<Settings> {
   Map<String, dynamic> _deviceData = <String, dynamic>{};
   int _width = 0;
   int _height = 0;
+  UserModel _userModel;
 
   void _getDeviceResolution() {
     ui.Size size = ui.window.physicalSize;
@@ -53,60 +58,67 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      appBar: AppBar(
-        elevation: 1,
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Profile())),
-            child: Row(
+    return ScopedModel<UserModel>(
+      model: widget.userModel,
+      child: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+        _userModel = model;
+        return Scaffold(
+          backgroundColor: mainTheme,
+          appBar: AppBar(
+            elevation: 1,
+            actions: <Widget>[
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(_userModel))),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        children: <Widget>[
+                          Text("42", style: Theme.of(context).textTheme.body1),
+                          Icon(Icons.star,
+                              color: Color.fromRGBO(248, 207, 95, 1)),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Icon(FeatherIcons.user, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Row(
-                    children: <Widget>[
-                      Text("42", style: Theme.of(context).textTheme.body1),
-                      Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
-                    ],
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.only(left: 35),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Settings",
+                    style: Theme.of(context).textTheme.headline,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(FeatherIcons.user, color: Colors.white),
-                ),
+                const SizedBox(height: 20),
+                _AudioSlider(),
+                const SizedBox(height: 20),
+                _SettingsFields(_deviceData, _width, _height),
+                const SizedBox(height: 20),
+                _DebugInfo(_deviceData, _width, _height),
+                const SizedBox(height: 20),
+                _Footer(),
               ],
             ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // const SizedBox(height: 50),
-            // _Header(),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.only(left: 35),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Settings",
-                style: Theme.of(context).textTheme.headline,
-              ),
-            ),
-            const SizedBox(height: 20),
-            _AudioSlider(),
-            const SizedBox(height: 20),
-            _SettingsFields(_deviceData, _width, _height),
-            const SizedBox(height: 20),
-            _DebugInfo(_deviceData, _width, _height),
-            const SizedBox(height: 20),
-            _Footer(),
-          ],
-        ),
-      ),
+        );
+      }),
     );
   }
 }
@@ -119,39 +131,46 @@ class _Header extends StatefulWidget {
 }
 
 class __HeaderState extends State<_Header> {
+  UserModel _userModel;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Row(
+    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+      _userModel = model;
+      return Container(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.chevron_left, color: Colors.white, size: 30),
+                  Text("Home", style: Theme.of(context).textTheme.title),
+                ],
+              ),
+            ),
+            Row(
               children: <Widget>[
-                Icon(Icons.chevron_left, color: Colors.white, size: 30),
-                Text("Home", style: Theme.of(context).textTheme.title),
+                Text("42"),
+                Icon(Icons.star, color: Colors.yellow),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Profile(_userModel)));
+                  },
+                  child: Icon(FeatherIcons.user, color: Colors.white),
+                ),
               ],
             ),
-          ),
-          Row(
-            children: <Widget>[
-              Text("42"),
-              Icon(Icons.star, color: Colors.yellow),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Profile()));
-                },
-                child: Icon(FeatherIcons.user, color: Colors.white),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 

@@ -1,25 +1,56 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+  final UserModel userModel;
+
+  const Profile(this.userModel);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  UserModel _userModel;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Gautier de Lataillade"),
-          ],
-        ),
+    return ScopedModel<UserModel>(
+      model: widget.userModel,
+      child: ScopedModelDescendant<UserModel>(
+        builder: (context, child, model) {
+          _userModel = model;
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 1,
+              actions: <Widget>[
+                GestureDetector(
+                  onTap: () => print(model.email),
+                  child: Row(
+                    children: <Widget>[
+                      Text("Logout", style: TextStyle(fontSize: 20)),
+                      const SizedBox(width: 5),
+                      Icon(FeatherIcons.logOut),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: mainTheme,
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(_userModel.email),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

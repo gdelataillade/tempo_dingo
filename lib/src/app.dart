@@ -38,7 +38,6 @@ class _CheckLogIn extends StatelessWidget {
                   return Center(child: loadingMainTheme);
                 default:
                   if (snapshotPrefs.hasError) return Container();
-                  // return Container();
                   return FutureBuilder(
                       future: model.login(
                         model.prefs.getString('email'),

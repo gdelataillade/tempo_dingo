@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 
 import 'package:tempo_dingo/src/screens/home.dart';
 import 'package:tempo_dingo/src/screens/library.dart';
@@ -17,6 +19,7 @@ class TabView extends StatefulWidget {
 }
 
 class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
+  UserModel _userModel;
   TabController _tabController;
   VoidCallback _onChangeTab;
   static int _currentTabIndex = 1;
@@ -43,47 +46,54 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: Builder(
-            builder: (BuildContext context) {
-              return GestureDetector(
-                  child: Icon(FeatherIcons.settings, color: Colors.white),
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Settings())));
-            },
-          ),
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Profile())),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Row(
-                      children: <Widget>[
-                        Text("42", style: Theme.of(context).textTheme.body1),
-                        Icon(Icons.star,
-                            color: Color.fromRGBO(248, 207, 95, 1)),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Icon(FeatherIcons.user, color: Colors.white),
-                  ),
-                ],
-              ),
+    return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+      _userModel = model;
+      return Center(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            leading: Builder(
+              builder: (BuildContext context) {
+                return GestureDetector(
+                    child: Icon(FeatherIcons.settings, color: Colors.white),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Settings(_userModel))));
+              },
             ),
-          ],
+            actions: <Widget>[
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(_userModel))),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        children: <Widget>[
+                          Text("42", style: Theme.of(context).textTheme.body1),
+                          Icon(Icons.star,
+                              color: Color.fromRGBO(248, 207, 95, 1)),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Icon(FeatherIcons.user, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: _TabBar(_tabController, _currentTabIndex),
+          body: _TabBarViewWidgets(_tabController),
         ),
-        bottomNavigationBar: _TabBar(_tabController, _currentTabIndex),
-        body: _TabBarViewWidgets(_tabController),
-      ),
-    );
+      );
+    });
   }
 }
 
