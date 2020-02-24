@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:tempo_dingo/src/models/user_model.dart';
 
+import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/screens/register.dart';
 import 'package:tempo_dingo/src/screens/password_forgotten.dart';
-import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
@@ -55,8 +53,11 @@ class _LogInForm extends StatefulWidget {
 class __LogInFormState extends State<_LogInForm> {
   TextEditingController _emailController =
       TextEditingController(text: 'gautier2406@gmail.com');
+  // TextEditingController();
   TextEditingController _passwordController =
+      // TextEditingController();
       TextEditingController(text: 'salutsalut');
+
   UserModel _userModel;
   String _email = "";
   String _password = "";

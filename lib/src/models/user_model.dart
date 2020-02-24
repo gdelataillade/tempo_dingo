@@ -3,7 +3,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserModel extends Model {
-  SharedPreferences _prefs;
   DocumentSnapshot _documentSnapshot;
   String _email;
   String _password;
@@ -16,8 +15,9 @@ class UserModel extends Model {
   List<String> _artists;
   List<String> _favorite;
   bool _darkTheme;
+  bool _isConnected = false;
+  bool _isSigningOut = false;
 
-  SharedPreferences get prefs => _prefs;
   DocumentSnapshot get documentSnapshot => _documentSnapshot;
   String get email => _email;
   String get password => _password;
@@ -30,16 +30,14 @@ class UserModel extends Model {
   List<String> get artists => _artists;
   List<String> get favorite => _favorite;
   bool get darkTheme => _darkTheme;
+  bool get isConnected => _isConnected;
+  bool get isSigningOut => _isSigningOut;
 
-  Future<SharedPreferences> initSharedPrefs() async {
-    print("init prefs");
-    _prefs = await SharedPreferences.getInstance();
-    return _prefs;
-  }
+  void _storeLoginInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  void _storeLoginInfo() {
-    _prefs.setString('email', _email);
-    _prefs.setString('password', _password);
+    prefs.setString('email', _email);
+    prefs.setString('password', _password);
   }
 
   void _fillModelData(DocumentSnapshot document, bool staySignedIn) {
@@ -58,17 +56,25 @@ class UserModel extends Model {
   }
 
   Future<bool> login(String email, String password, bool staySignedIn) async {
-    print("login");
     final QuerySnapshot snapshot = await Firestore.instance
         .collection("users")
-        .where("email", isEqualTo: _email)
+        .where("email", isEqualTo: email)
         .getDocuments();
 
-    if (snapshot.documents.isEmpty) return false;
+    if (snapshot.documents.length == 0) {
+      print("Login failed");
+      return false;
+    }
     if (snapshot.documents[0].data["password"] == password) {
       _fillModelData(snapshot.documents[0], staySignedIn);
       _storeLoginInfo();
+      _isConnected = true;
+      _isSigningOut = false;
+      print("Login success");
+      notifyListeners();
       return true;
+    } else {
+      print("Wrong passord: $password");
     }
     return false;
   }
@@ -87,5 +93,27 @@ class UserModel extends Model {
         await Firestore.instance.collection('users').document(email).get();
 
     return snapshot.data == null ? false : true;
+  }
+
+  void logout() async {
+    _documentSnapshot = null;
+    _email = "";
+    _password = "";
+    _fullName = "";
+    _stars = 0;
+    _language = "US";
+    _staySignedIn = false;
+    _vibration = true;
+    _songs = [];
+    _artists = [];
+    _favorite = [];
+    _darkTheme = true;
+    _isConnected = false;
+    _isSigningOut = true;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("email", null);
+    prefs.setString("password", null);
+    notifyListeners();
   }
 }

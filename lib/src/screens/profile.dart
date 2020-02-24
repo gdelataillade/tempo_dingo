@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/screens/log_in.dart';
 
 class Profile extends StatefulWidget {
   final UserModel userModel;
@@ -28,7 +29,12 @@ class _ProfileState extends State<Profile> {
               elevation: 1,
               actions: <Widget>[
                 GestureDetector(
-                  onTap: () => print(model.email),
+                  onTap: () {
+                    _userModel.logout();
+                    Navigator.pop(context);
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => LogIn()));
+                  },
                   child: Row(
                     children: <Widget>[
                       Text("Logout", style: TextStyle(fontSize: 20)),
