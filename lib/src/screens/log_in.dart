@@ -6,6 +6,7 @@ import 'package:tempo_dingo/src/models/user_model.dart';
 
 import 'package:tempo_dingo/src/screens/register.dart';
 import 'package:tempo_dingo/src/screens/password_forgotten.dart';
+import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/widgets/form_input.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
@@ -52,8 +53,10 @@ class _LogInForm extends StatefulWidget {
 }
 
 class __LogInFormState extends State<_LogInForm> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _emailController =
+      TextEditingController(text: 'gautier2406@gmail.com');
+  TextEditingController _passwordController =
+      TextEditingController(text: 'salutsalut');
   UserModel _userModel;
   String _email = "";
   String _password = "";
@@ -177,6 +180,9 @@ class __LogInFormState extends State<_LogInForm> {
     _loggedIn
         ? setState(() => _authFailed = false)
         : setState(() => _authFailed = true);
+    // if (_loggedIn)
+    //   Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => TabView()));
   }
 }
 
