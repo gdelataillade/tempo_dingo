@@ -40,6 +40,9 @@ class UserModel extends Model {
     prefs.setString('password', _password);
   }
 
+  List<String> _convertListDynamicToString(List<dynamic> dlist) =>
+      dlist.map((item) => item as String).toList();
+
   void _fillModelData(DocumentSnapshot document, bool staySignedIn) {
     _documentSnapshot = document;
     _email = document.data["email"];
@@ -49,9 +52,10 @@ class UserModel extends Model {
     _language = document.data["language"];
     _staySignedIn = staySignedIn;
     _vibration = document.data["vibration"];
-    _songs = document.data["songs"];
-    _artists = document.data["artists"];
-    _favorite = document.data["favorite"];
+    _songs = _convertListDynamicToString(document.data["library"]["songs"]);
+    _artists = _convertListDynamicToString(document.data["library"]["artists"]);
+    _favorite =
+        _convertListDynamicToString(document.data["library"]["favorite"]);
     _darkTheme = document.data["darkTheme"];
   }
 

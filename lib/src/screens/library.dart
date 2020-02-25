@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/config/mock_data.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
+
+SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class Library extends StatefulWidget {
   Library({Key key}) : super(key: key);
@@ -107,17 +113,35 @@ class _Songs extends StatefulWidget {
 class __SongsState extends State<_Songs> {
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: tracks.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () => print("play"),
-            child: tracks[index],
-          );
-        },
-      ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return FutureBuilder<List<Track>>(
+            future: spotifyRepository.getTrackList(model.songs),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: loadingWhite);
+                default:
+                  if (snapshot.hasError) return Container();
+                  return Scrollbar(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final Track track = snapshot.data[index];
+                        return TrackCard(
+                          track.album.images.first.url,
+                          track.name,
+                          track.artists.first.name,
+                          () {},
+                        );
+                      },
+                    ),
+                  );
+              }
+            });
+      },
     );
   }
 }
