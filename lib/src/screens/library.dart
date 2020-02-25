@@ -130,6 +130,7 @@ class __SongsState extends State<_Songs> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Track track = snapshot.data[index];
+
                         return TrackCard(
                           track.album.images.first.url,
                           track.name,
@@ -159,39 +160,69 @@ class __ArtistsState extends State<_Artists> {
   @override
   Widget build(BuildContext context) {
     _artistIndex = 0;
-    return Scrollbar(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: (artists.length / 3).round(),
-        itemBuilder: (BuildContext context, int index) {
-          Widget row = Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => print("Artist"),
-                  child: artists[_artistIndex],
-                ),
-                artists.length > _artistIndex + 1
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: artists[_artistIndex + 1],
-                      )
-                    : Container(width: 80, height: 80),
-                artists.length > _artistIndex + 2
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: artists[_artistIndex + 2],
-                      )
-                    : Container(width: 80, height: 80),
-              ],
-            ),
-          );
-          _artistIndex += 3;
-          return row;
-        },
-      ),
+    print("hello");
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return FutureBuilder<List<Artist>>(
+          future: spotifyRepository.getArtistsList(model.artists),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Artist>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: loadingWhite);
+              default:
+                if (snapshot.hasError) return Container();
+                var artists = snapshot.data;
+                return Scrollbar(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    itemCount: (snapshot.data.length / 3).round(),
+                    itemBuilder: (BuildContext context, int index) {
+                      Widget row = Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () => print("Artist"),
+                              child: ArtistCard(
+                                  artists[_artistIndex].images.first.url,
+                                  artists[_artistIndex].name),
+                            ),
+                            artists.length > _artistIndex + 1
+                                ? GestureDetector(
+                                    onTap: () => print("Artist"),
+                                    child: ArtistCard(
+                                        artists[_artistIndex + 1]
+                                            .images
+                                            .first
+                                            .url,
+                                        artists[_artistIndex + 1].name),
+                                  )
+                                : Container(width: 80, height: 80),
+                            artists.length > _artistIndex + 2
+                                ? GestureDetector(
+                                    onTap: () => print("Artist"),
+                                    child: ArtistCard(
+                                        artists[_artistIndex + 2]
+                                            .images
+                                            .first
+                                            .url,
+                                        artists[_artistIndex + 2].name),
+                                  )
+                                : Container(width: 80, height: 80),
+                          ],
+                        ),
+                      );
+                      _artistIndex += 3;
+                      return row;
+                    },
+                  ),
+                );
+            }
+          },
+        );
+      },
     );
   }
 }
