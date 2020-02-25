@@ -181,9 +181,6 @@ class __LogInFormState extends State<_LogInForm> {
     _loggedIn
         ? setState(() => _authFailed = false)
         : setState(() => _authFailed = true);
-    // if (_loggedIn)
-    //   Navigator.push(
-    //       context, MaterialPageRoute(builder: (context) => TabView()));
   }
 }
 
