@@ -50,13 +50,15 @@ class _TrackCardState extends State<TrackCard> {
               child: Image.network(widget.imgUrl, width: 65, height: 65),
             ),
           ),
-          Padding(
+          Container(
+            width: MediaQuery.of(context).size.width - 165,
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
                   widget.track,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: mainTheme,
                     fontSize: 20,
