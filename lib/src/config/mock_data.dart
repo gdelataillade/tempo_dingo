@@ -28,14 +28,14 @@ Widget card1 = TrackCard(
   "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
   "Little Wing",
   "Jimi Hendrix",
-  () => print("like"),
+  "123123123",
 );
 
 Widget card2 = TrackCard(
   "https://i.scdn.co/image/4dd3a9aa1a8dc5b9a49397caa67aff6ae8e7b642",
   "Someday",
   "The Strokes",
-  () => print("like"),
+  "123123123",
 );
 
 List<Widget> tracks = [

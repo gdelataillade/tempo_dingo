@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:tempo_dingo/main.dart';
-
 import 'package:tempo_dingo/src/config/mock_data.dart';
+
 import 'package:tempo_dingo/src/config/theme_config.dart';
-import 'package:tempo_dingo/src/widgets/artist_card.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);

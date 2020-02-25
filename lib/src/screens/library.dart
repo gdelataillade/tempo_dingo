@@ -3,7 +3,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
-import 'package:tempo_dingo/src/config/mock_data.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
@@ -135,7 +134,7 @@ class __SongsState extends State<_Songs> {
                           track.album.images.first.url,
                           track.name,
                           track.artists.first.name,
-                          () {},
+                          track.id,
                         );
                       },
                     ),
@@ -160,7 +159,6 @@ class __ArtistsState extends State<_Artists> {
   @override
   Widget build(BuildContext context) {
     _artistIndex = 0;
-    print("hello");
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return FutureBuilder<List<Artist>>(
@@ -237,6 +235,36 @@ class _Favorites extends StatefulWidget {
 class __FavoritesState extends State<_Favorites> {
   @override
   Widget build(BuildContext context) {
-    return Column();
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return FutureBuilder<List<Track>>(
+            future: spotifyRepository.getTrackList(model.favorite),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: loadingWhite);
+                default:
+                  if (snapshot.hasError) return Container();
+                  return Scrollbar(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final Track track = snapshot.data[index];
+
+                        return TrackCard(
+                          track.album.images.first.url,
+                          track.name,
+                          track.artists.first.name,
+                          track.id,
+                        );
+                      },
+                    ),
+                  );
+              }
+            });
+      },
+    );
   }
 }

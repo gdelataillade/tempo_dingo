@@ -1,18 +1,19 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 
 class TrackCard extends StatefulWidget {
   final String imgUrl;
   final String track;
   final String artist;
-  final Function() likeTrack;
+  final String trackId;
 
   const TrackCard(
     this.imgUrl,
     this.track,
     this.artist,
-    this.likeTrack,
+    this.trackId,
   );
 
   @override
@@ -76,16 +77,22 @@ class _TrackCardState extends State<TrackCard> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: widget.likeTrack,
-              child: Icon(
-                FeatherIcons.heart,
-                size: 35,
-                color: Colors.red,
-              ),
-            ),
+          ScopedModelDescendant<UserModel>(
+            builder: (context, child, model) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () => model.likeUnlikeTrack(widget.trackId),
+                  child: Icon(
+                    model.isFavorite(widget.trackId)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    size: 35,
+                    color: Colors.red,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

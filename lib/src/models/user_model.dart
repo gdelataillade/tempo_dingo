@@ -120,4 +120,22 @@ class UserModel extends Model {
     prefs.setString("password", null);
     notifyListeners();
   }
+
+  bool isFavorite(String trackId) {
+    return _favorite.contains(trackId) ? true : false;
+  }
+
+  void likeUnlikeTrack(String trackId) {
+    isFavorite(trackId) ? _favorite.remove(trackId) : _favorite.add(trackId);
+    notifyListeners();
+    Map<String, dynamic> library = {
+      "songs": _songs,
+      "artists": _artists,
+      "favorite": _favorite
+    };
+    Firestore.instance
+        .collection('users')
+        .document(_email)
+        .updateData({"library": library});
+  }
 }
