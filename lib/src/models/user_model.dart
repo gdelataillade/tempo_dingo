@@ -17,6 +17,8 @@ class UserModel extends Model {
   bool _darkTheme;
   bool _isConnected = false;
   bool _isSigningOut = false;
+  int tabViewIndex = 1;
+  int libraryTabIndex = 0;
 
   DocumentSnapshot get documentSnapshot => _documentSnapshot;
   String get email => _email;
@@ -127,7 +129,7 @@ class UserModel extends Model {
 
   void likeUnlikeTrack(String trackId) {
     isFavorite(trackId) ? _favorite.remove(trackId) : _favorite.add(trackId);
-    notifyListeners();
+    // notifyListeners();
     Map<String, dynamic> library = {
       "songs": _songs,
       "artists": _artists,

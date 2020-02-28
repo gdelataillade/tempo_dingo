@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:spotify/spotify_io.dart';
 
+import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/screens/home.dart';
 import 'package:tempo_dingo/src/screens/library.dart';
 import 'package:tempo_dingo/src/screens/profile.dart';
@@ -12,7 +13,11 @@ import 'package:tempo_dingo/src/screens/settings.dart';
 import 'package:vibrate/vibrate.dart';
 
 class TabView extends StatefulWidget {
-  TabView({Key key}) : super(key: key);
+  final List<Track> tracks;
+  final List<Artist> artists;
+  final List<Track> favorite;
+
+  const TabView(this.tracks, this.artists, this.favorite);
 
   @override
   _TabViewState createState() => _TabViewState();
@@ -22,16 +27,18 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   UserModel _userModel;
   TabController _tabController;
   VoidCallback _onChangeTab;
-  static int _currentTabIndex = 1;
+  int _currentTabIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    _tabController =
+        TabController(length: 3, vsync: this, initialIndex: _currentTabIndex);
     _onChangeTab = () {
       if (_currentTabIndex != _tabController.index) {
         Vibrate.feedback(FeedbackType.selection);
         setState(() => _currentTabIndex = _tabController.index);
+        _userModel.tabViewIndex = _tabController.index;
       }
     };
     _tabController.addListener(_onChangeTab);
@@ -47,6 +54,7 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       _userModel = model;
+      _tabController.index = _userModel.tabViewIndex;
       return Center(
         child: Scaffold(
           appBar: AppBar(
@@ -89,7 +97,12 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
             ],
           ),
           bottomNavigationBar: _TabBar(_tabController, _currentTabIndex),
-          body: _TabBarViewWidgets(_tabController),
+          body: _TabBarViewWidgets(
+            widget.tracks,
+            widget.artists,
+            widget.favorite,
+            _tabController,
+          ),
         ),
       );
     });
@@ -97,9 +110,17 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
 }
 
 class _TabBarViewWidgets extends StatefulWidget {
+  final List<Track> tracks;
+  final List<Artist> artists;
+  final List<Track> favorite;
   final TabController _dataController;
 
-  const _TabBarViewWidgets(this._dataController);
+  const _TabBarViewWidgets(
+    this.tracks,
+    this.artists,
+    this.favorite,
+    this._dataController,
+  );
 
   __TabBarViewWidgetsState createState() => __TabBarViewWidgetsState();
 }
@@ -110,9 +131,9 @@ class __TabBarViewWidgetsState extends State<_TabBarViewWidgets> {
     return TabBarView(
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
-        Search(),
+        SearchTab(),
         Home(),
-        Library(),
+        Library(widget.tracks, widget.artists, widget.favorite),
       ],
       controller: widget._dataController,
     );

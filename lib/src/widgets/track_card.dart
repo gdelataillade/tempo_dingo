@@ -21,6 +21,8 @@ class TrackCard extends StatefulWidget {
 }
 
 class _TrackCardState extends State<TrackCard> {
+  bool _isLiked = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,10 +81,14 @@ class _TrackCardState extends State<TrackCard> {
           ),
           ScopedModelDescendant<UserModel>(
             builder: (context, child, model) {
+              _isLiked = model.isFavorite(widget.trackId);
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  onTap: () => model.likeUnlikeTrack(widget.trackId),
+                  onTap: () {
+                    setState(() => _isLiked = !_isLiked);
+                    model.likeUnlikeTrack(widget.trackId);
+                  },
                   child: Icon(
                     model.isFavorite(widget.trackId)
                         ? Icons.favorite
