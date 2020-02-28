@@ -2,14 +2,14 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
-class Search extends StatefulWidget {
-  Search({Key key}) : super(key: key);
+class SearchTab extends StatefulWidget {
+  SearchTab({Key key}) : super(key: key);
 
   @override
-  _SearchState createState() => _SearchState();
+  _SearchTabState createState() => _SearchTabState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchTabState extends State<SearchTab> {
   TextEditingController _controller = TextEditingController();
   String _search = "";
   bool _showRecommendations = true;

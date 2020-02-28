@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:tempo_dingo/src/config/mock_data.dart';
 
+import 'package:tempo_dingo/src/config/mock_data.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/widgets/carousel.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -96,6 +97,7 @@ class __QuickPlayState extends State<_QuickPlay> {
           child: Text("Quick play"),
         ),
         const SizedBox(height: 10),
+        // Carousel([]),
         CarouselSlider(
           // height: 350,
           height: 390,
