@@ -46,6 +46,7 @@ class SpotifyRepository {
     for (int i = 0; i < tracksId.length; i++) {
       result = await spotify.tracks.get(tracksId[i]);
       tracks.add(result);
+      // print("${result.name}: ${tracksId[i]}");
     }
     return tracks;
   }

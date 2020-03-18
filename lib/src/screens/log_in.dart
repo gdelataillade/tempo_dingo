@@ -225,11 +225,15 @@ class __RegisterState extends State<_Register> {
       children: <Widget>[
         Text("New member?", style: Theme.of(context).textTheme.title),
         const SizedBox(height: 15),
-        Button(
-          "Register",
-          () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Register())),
-          false,
+        ScopedModelDescendant<UserModel>(
+          builder: (context, child, model) {
+            return Button(
+              "Register",
+              () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Register(model))),
+              false,
+            );
+          },
         ),
       ],
     );

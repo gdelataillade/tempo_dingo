@@ -89,7 +89,7 @@ class UserModel extends Model {
       Map<String, dynamic> data) async {
     Firestore.instance
         .collection('users')
-        .document(_email)
+        .document(email)
         .setData(data)
         .catchError((err) => print(err));
   }

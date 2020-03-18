@@ -381,7 +381,6 @@ class _DebugInfo extends StatefulWidget {
 class __DebugInfoState extends State<_DebugInfo> {
   @override
   Widget build(BuildContext context) {
-    print(widget.deviceData);
     return Padding(
       padding: const EdgeInsets.only(left: 35, right: 35),
       child: Column(

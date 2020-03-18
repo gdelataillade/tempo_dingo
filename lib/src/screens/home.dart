@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:tempo_dingo/src/config/mock_data.dart';
@@ -6,7 +7,10 @@ import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/widgets/carousel.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  final List<spotify.Track> tracks;
+  final List<spotify.Artist> artists;
+
+  const Home(this.tracks, this.artists);
 
   @override
   _HomeState createState() => _HomeState();
@@ -34,7 +38,7 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 20),
             _Artists(),
             const SizedBox(height: 20),
-            _QuickPlay(),
+            _QuickPlay(widget.tracks),
           ],
         ),
       ),
@@ -80,7 +84,9 @@ class __ArtistsState extends State<_Artists> {
 }
 
 class _QuickPlay extends StatefulWidget {
-  _QuickPlay({Key key}) : super(key: key);
+  final List<spotify.Track> tracks;
+
+  const _QuickPlay(this.tracks);
 
   @override
   __QuickPlayState createState() => __QuickPlayState();
@@ -97,34 +103,34 @@ class __QuickPlayState extends State<_QuickPlay> {
           child: Text("Quick play"),
         ),
         const SizedBox(height: 10),
-        // Carousel([]),
-        CarouselSlider(
-          // height: 350,
-          height: 390,
-          autoPlay: true,
-          autoPlayInterval: Duration(seconds: 3),
-          pauseAutoPlayOnTouch: Duration(seconds: 10),
-          items: <Widget>[
-            _CarouselSlide(
-              "Little Wing",
-              "Jimi Hendrix",
-              "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
-              "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
-            ),
-            _CarouselSlide(
-              "Little Wing",
-              "Jimi Hendrix",
-              "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
-              "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
-            ),
-            _CarouselSlide(
-              "Little Wing",
-              "Jimi Hendrix",
-              "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
-              "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
-            ),
-          ],
-        ),
+        Carousel(widget.tracks),
+        // CarouselSlider(
+        //   // height: 350,
+        //   height: 390,
+        //   autoPlay: true,
+        //   autoPlayInterval: Duration(seconds: 3),
+        //   pauseAutoPlayOnTouch: Duration(seconds: 10),
+        //   items: <Widget>[
+        //     _CarouselSlide(
+        //       "Little Wing",
+        //       "Jimi Hendrix",
+        //       "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
+        //       "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
+        //     ),
+        //     _CarouselSlide(
+        //       "Little Wing",
+        //       "Jimi Hendrix",
+        //       "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
+        //       "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
+        //     ),
+        //     _CarouselSlide(
+        //       "Little Wing",
+        //       "Jimi Hendrix",
+        //       "https://i.scdn.co/image/ab67616d0000b27319dcd95d28b63d10164327f2",
+        //       "https://i.scdn.co/image/14ce65949a921e76421a0164c17f9ebe0a8d76e8",
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

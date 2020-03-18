@@ -8,33 +8,43 @@ import 'package:tempo_dingo/src/widgets/form_input.dart';
 import 'package:tempo_dingo/src/config/register_config.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 
-class Register extends StatelessWidget {
-  const Register({Key key}) : super(key: key);
+class Register extends StatefulWidget {
+  final UserModel userModel;
+
+  const Register(this.userModel);
 
   @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainTheme,
-      appBar: AppBar(elevation: 0),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 35),
-              child: Text("Tempo Dingo",
-                  style: Theme.of(context).textTheme.headline),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35),
-              child: Text("v1.0.0", style: Theme.of(context).textTheme.body1),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(35),
-              child: _RegisterForm(),
-            ),
-            // _TermsAndConditions(),
-          ],
+    return ScopedModel<UserModel>(
+      model: widget.userModel,
+      child: Scaffold(
+        backgroundColor: mainTheme,
+        appBar: AppBar(elevation: 0),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 35),
+                child: Text("Tempo Dingo",
+                    style: Theme.of(context).textTheme.headline),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 35),
+                child: Text("v1.0.0", style: Theme.of(context).textTheme.body1),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(35),
+                child: _RegisterForm(),
+              ),
+              // _TermsAndConditions(),
+            ],
+          ),
         ),
       ),
     );

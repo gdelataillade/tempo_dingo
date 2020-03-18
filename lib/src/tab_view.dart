@@ -132,7 +132,7 @@ class __TabBarViewWidgetsState extends State<_TabBarViewWidgets> {
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         SearchTab(),
-        Home(),
+        Home(widget.tracks, widget.artists),
         Library(widget.tracks, widget.artists, widget.favorite),
       ],
       controller: widget._dataController,
