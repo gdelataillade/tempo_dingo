@@ -62,6 +62,7 @@ class _TrackCardState extends State<TrackCard> {
                 Text(
                   widget.track,
                   overflow: TextOverflow.clip,
+                  softWrap: false,
                   maxLines: 1,
                   style: TextStyle(
                     color: mainTheme,
@@ -71,6 +72,9 @@ class _TrackCardState extends State<TrackCard> {
                 ),
                 Text(
                   widget.artist,
+                  overflow: TextOverflow.clip,
+                  softWrap: false,
+                  maxLines: 1,
                   style: TextStyle(
                     color: mainTheme,
                     fontSize: 15,
