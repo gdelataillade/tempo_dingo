@@ -61,10 +61,11 @@ class _TrackCardState extends State<TrackCard> {
               children: <Widget>[
                 Text(
                   widget.track,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.clip,
+                  maxLines: 1,
                   style: TextStyle(
                     color: mainTheme,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontFamily: 'Apple-Semibold',
                   ),
                 ),
