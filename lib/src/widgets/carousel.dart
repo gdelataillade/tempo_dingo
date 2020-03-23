@@ -22,7 +22,7 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
       builder: (context, child, model) {
         _userModel = model;
         return Container(
-          height: 400,
+          height: 350,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -35,7 +35,7 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(right: 15),
                 child: Container(
                   width: 280,
-                  height: 400,
+                  height: 350,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(const Radius.circular(20)),
                   ),

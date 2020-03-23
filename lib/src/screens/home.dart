@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
 
-import 'package:tempo_dingo/src/config/mock_data.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/carousel.dart';
