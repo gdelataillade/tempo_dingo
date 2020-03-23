@@ -217,29 +217,59 @@ class _Favorites extends StatefulWidget {
 }
 
 class __FavoritesState extends State<_Favorites> {
+  UserModel _userModel;
+
+  int _getFavoriteTracksNumber() {
+    int counter = 0;
+
+    for (var i = 0; i < widget.tracks.length; i++) {
+      if (_userModel.isFavorite(widget.tracks[i].id)) counter++;
+    }
+    return counter;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
+        _userModel = model;
         return Scrollbar(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            itemCount: widget.tracks.length,
-            itemBuilder: (BuildContext context, int index) {
-              final Track track = widget.tracks[index];
+          child: _getFavoriteTracksNumber() == 0
+              ? _NoFavorite()
+              : ListView.builder(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  itemCount: widget.tracks.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Track track = widget.tracks[index];
 
-              return model.isFavorite(track.id)
-                  ? TrackCard(
-                      track.album.images.first.url,
-                      track.name,
-                      track.artists.first.name,
-                      track.id,
-                    )
-                  : Container();
-            },
-          ),
+                    return _userModel.isFavorite(track.id)
+                        ? TrackCard(
+                            track.album.images.first.url,
+                            track.name,
+                            track.artists.first.name,
+                            track.id,
+                          )
+                        : Container();
+                  },
+                ),
         );
       },
+    );
+  }
+}
+
+class _NoFavorite extends StatelessWidget {
+  const _NoFavorite({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        "You have no favorite songs",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
