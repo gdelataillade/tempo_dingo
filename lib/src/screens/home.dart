@@ -3,6 +3,7 @@ import 'package:spotify/spotify_io.dart' as spotify;
 
 import 'package:tempo_dingo/src/config/mock_data.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/carousel.dart';
 
 class Home extends StatefulWidget {
@@ -35,7 +36,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             const SizedBox(height: 20),
-            _Artists(),
+            _Artists(widget.artists),
             const SizedBox(height: 20),
             _QuickPlay(widget.tracks),
           ],
@@ -46,7 +47,9 @@ class _HomeState extends State<Home> {
 }
 
 class _Artists extends StatefulWidget {
-  _Artists({Key key}) : super(key: key);
+  final List<spotify.Artist> artists;
+
+  const _Artists(this.artists);
 
   @override
   __ArtistsState createState() => __ArtistsState();
@@ -65,13 +68,16 @@ class __ArtistsState extends State<_Artists> {
           height: 105,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: artists.length,
+            itemCount: widget.artists.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.only(left: 15, right: 0),
                 child: GestureDetector(
                   onTap: () => print("Artist"),
-                  child: artists[index],
+                  child: ArtistCard(
+                    widget.artists[index].images.first.url,
+                    widget.artists[index].name,
+                  ),
                 ),
               );
             },
