@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/screens/log_in.dart';
 
 class Profile extends StatefulWidget {
   final UserModel userModel;
@@ -32,8 +31,6 @@ class _ProfileState extends State<Profile> {
                   onTap: () {
                     _userModel.logout();
                     Navigator.pop(context);
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => LogIn()));
                   },
                   child: Row(
                     children: <Widget>[
@@ -62,7 +59,8 @@ class _ProfileState extends State<Profile> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text("42", style: Theme.of(context).textTheme.headline),
+                        Text("${_userModel.stars}",
+                            style: Theme.of(context).textTheme.headline),
                         Icon(
                           Icons.star,
                           color: Color.fromRGBO(248, 207, 95, 1),

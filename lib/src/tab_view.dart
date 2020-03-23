@@ -81,7 +81,8 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
                         children: <Widget>[
-                          Text("42", style: Theme.of(context).textTheme.body1),
+                          Text(_userModel.stars.toString(),
+                              style: Theme.of(context).textTheme.body1),
                           Icon(Icons.star,
                               color: Color.fromRGBO(248, 207, 95, 1)),
                         ],
