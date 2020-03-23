@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
+import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 
 class Carousel extends StatefulWidget {
@@ -30,31 +31,39 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
             itemBuilder: (BuildContext context, int index) {
               final spotify.Track track = widget.tracks[index];
 
-              return Container(
-                width: 250,
+              return Padding(
                 padding: const EdgeInsets.only(right: 15),
-                child: Column(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      child: Image.network(track.album.images.first.url,
-                          width: MediaQuery.of(context).size.width),
-                    )
-                  ],
+                child: Container(
+                  width: 280,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(const Radius.circular(20)),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        child: Image.network(track.album.images.first.url,
+                            width: MediaQuery.of(context).size.width),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        track.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        track.artists.first.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                    ],
+                  ),
                 ),
               );
-              // return ListTile(
-              //   leading: Container(
-              //     width: 150,
-              //     height: 300,
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //     ),
-              //     child: Row(
-              //       children: <Widget>[],
-              //     ),
-              //   ),
-              // );
             },
           ),
         );
