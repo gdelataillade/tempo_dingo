@@ -1,9 +1,17 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:spotify/spotify_io.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/resources/spotify_repository.dart';
+import 'package:tempo_dingo/src/widgets/track_card.dart';
+
+SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class SearchTab extends StatefulWidget {
-  SearchTab({Key key}) : super(key: key);
+  final List<Track> tracks;
+  final List<Artist> artists;
+
+  const SearchTab(this.tracks, this.artists);
 
   @override
   _SearchTabState createState() => _SearchTabState();
@@ -13,6 +21,7 @@ class _SearchTabState extends State<SearchTab> {
   TextEditingController _controller = TextEditingController();
   String _search = "";
   bool _showRecommendations = true;
+  List<Track> _recommendations = [];
 
   void _initController() => _controller.addListener(_searchListener);
 
@@ -25,6 +34,14 @@ class _SearchTabState extends State<SearchTab> {
     }
   }
 
+  void _initReco() async {
+    final List<Track> reco = await spotifyRepository.getRecommandedTracks(
+        widget.artists, widget.tracks);
+    setState(() {
+      _recommendations = reco;
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -35,28 +52,29 @@ class _SearchTabState extends State<SearchTab> {
   void initState() {
     super.initState();
     _initController();
+    _initReco();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: mainTheme,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Search",
-                style: Theme.of(context).textTheme.headline,
-              ),
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Search",
+              style: Theme.of(context).textTheme.headline,
             ),
-            _SearchInput(_controller),
-            const SizedBox(height: 20),
-            _showRecommendations ? Recommendations() : _SearchResult(),
-          ],
-        ),
+          ),
+          _SearchInput(_controller),
+          const SizedBox(height: 20),
+          _showRecommendations
+              ? Recommendations(_recommendations)
+              : _SearchResult(),
+        ],
       ),
     );
   }
@@ -98,7 +116,9 @@ class __SearchInputState extends State<_SearchInput> {
 }
 
 class Recommendations extends StatefulWidget {
-  const Recommendations();
+  final List<Track> recommendations;
+
+  const Recommendations(this.recommendations);
 
   @override
   _RecommendationsState createState() => _RecommendationsState();
@@ -107,7 +127,22 @@ class Recommendations extends StatefulWidget {
 class _RecommendationsState extends State<Recommendations> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Flexible(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 10),
+        itemCount: widget.recommendations.length,
+        itemBuilder: (BuildContext context, int index) {
+          final Track track = widget.recommendations[index];
+
+          return TrackCard(
+            track.album.images.first.url,
+            track.name,
+            track.artists.first.name,
+            track.id,
+          );
+        },
+      ),
+    );
   }
 }
 
