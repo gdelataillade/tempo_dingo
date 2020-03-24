@@ -127,22 +127,27 @@ class Recommendations extends StatefulWidget {
 class _RecommendationsState extends State<Recommendations> {
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(bottom: 10),
-        itemCount: widget.recommendations.length,
-        itemBuilder: (BuildContext context, int index) {
-          final Track track = widget.recommendations[index];
+    return widget.recommendations.length == 0
+        ? Padding(
+            padding: const EdgeInsets.only(top: 100),
+            child: Center(child: loadingWhite),
+          )
+        : Flexible(
+            child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 10),
+              itemCount: widget.recommendations.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Track track = widget.recommendations[index];
 
-          return TrackCard(
-            track.album.images.first.url,
-            track.name,
-            track.artists.first.name,
-            track.id,
+                return TrackCard(
+                  track.album.images.first.url,
+                  track.name,
+                  track.artists.first.name,
+                  track.id,
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 }
 
