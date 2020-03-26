@@ -10,9 +10,8 @@ import 'package:tempo_dingo/src/widgets/track_card.dart';
 class Library extends StatefulWidget {
   final List<Track> tracks;
   final List<Artist> artists;
-  final List<Track> favorite;
 
-  const Library(this.tracks, this.artists, this.favorite);
+  const Library(this.tracks, this.artists);
 
   @override
   _LibraryState createState() => _LibraryState();
