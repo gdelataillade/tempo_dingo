@@ -123,104 +123,103 @@ class __QuickPlayState extends State<_QuickPlay> {
   }
 }
 
-class _CarouselSlide extends StatefulWidget {
-  final String track;
-  final String artist;
-  final String imgAlbumUrl;
-  final String imgArtistUrl;
+// class _CarouselSlide extends StatefulWidget {
+//   final String track;
+//   final String artist;
+//   final String imgAlbumUrl;
+//   final String imgArtistUrl;
 
-  const _CarouselSlide(
-      this.track, this.artist, this.imgAlbumUrl, this.imgArtistUrl);
+//   const _CarouselSlide(
+//       this.track, this.artist, this.imgAlbumUrl, this.imgArtistUrl);
 
-  @override
-  __CarouselSlideState createState() => __CarouselSlideState();
-}
+//   @override
+//   __CarouselSlideState createState() => __CarouselSlideState();
+// }
 
-class __CarouselSlideState extends State<_CarouselSlide> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // height: 200,
-      width: MediaQuery.of(context).size.width - 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: mainTheme.withOpacity(0.5),
-                  spreadRadius: 0.5,
-                  blurRadius: 10,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              child: Image.network(widget.imgAlbumUrl,
-                  width: MediaQuery.of(context).size.width),
-            ),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.track,
-                    style: TextStyle(
-                      color: mainTheme,
-                      fontFamily: 'Apple-Bold',
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(0.5, 0.5),
-                          blurRadius: 0.5,
-                          color: mainTheme.withOpacity(0.3),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    widget.artist,
-                    style: TextStyle(
-                      color: mainTheme,
-                      fontFamily: 'Apple',
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: mainTheme.withOpacity(0.5),
-                      spreadRadius: 0.5,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  child: Image.network(widget.imgArtistUrl, width: 50),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class __CarouselSlideState extends State<_CarouselSlide> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: MediaQuery.of(context).size.width - 100,
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(20),
+//       ),
+//       child: Column(
+//         children: <Widget>[
+//           Container(
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.all(Radius.circular(20)),
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: mainTheme.withOpacity(0.5),
+//                   spreadRadius: 0.5,
+//                   blurRadius: 10,
+//                   offset: Offset(0, 5),
+//                 ),
+//               ],
+//             ),
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.all(Radius.circular(20)),
+//               child: Image.network(widget.imgAlbumUrl,
+//                   width: MediaQuery.of(context).size.width),
+//             ),
+//           ),
+//           const SizedBox(height: 5),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceAround,
+//             children: <Widget>[
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: <Widget>[
+//                   const SizedBox(height: 10),
+//                   Text(
+//                     widget.track,
+//                     style: TextStyle(
+//                       color: mainTheme,
+//                       fontFamily: 'Apple-Bold',
+//                       shadows: <Shadow>[
+//                         Shadow(
+//                           offset: Offset(0.5, 0.5),
+//                           blurRadius: 0.5,
+//                           color: mainTheme.withOpacity(0.3),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   const SizedBox(height: 5),
+//                   Text(
+//                     widget.artist,
+//                     style: TextStyle(
+//                       color: mainTheme,
+//                       fontFamily: 'Apple',
+//                       fontSize: 14,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               Container(
+//                 padding: const EdgeInsets.only(top: 5),
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.all(Radius.circular(20)),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: mainTheme.withOpacity(0.5),
+//                       spreadRadius: 0.5,
+//                       blurRadius: 10,
+//                       offset: Offset(0, 5),
+//                     ),
+//                   ],
+//                 ),
+//                 child: ClipRRect(
+//                   borderRadius: BorderRadius.all(Radius.circular(50)),
+//                   child: Image.network(widget.imgArtistUrl, width: 50),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

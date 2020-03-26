@@ -4,17 +4,17 @@ import 'package:spotify/spotify_io.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 
-class Gameplay extends StatefulWidget {
+class Game extends StatefulWidget {
   final UserModel userModel;
   final Track track;
 
-  const Gameplay(this.userModel, this.track);
+  const Game(this.userModel, this.track);
 
   @override
-  _GameplayState createState() => _GameplayState();
+  _GameState createState() => _GameState();
 }
 
-class _GameplayState extends State<Gameplay> {
+class _GameState extends State<Game> {
   UserModel _userModel;
 
   @override
