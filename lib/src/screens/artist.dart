@@ -7,7 +7,7 @@ import 'package:tempo_dingo/src/models/user_model.dart';
 class ArtistScreen extends StatefulWidget {
   final UserModel userModel;
   final Artist artist;
-  
+
   const ArtistScreen(this.userModel, this.artist);
 
   @override
@@ -43,7 +43,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
             ),
           );
         },
-      );
+      ),
     );
   }
 }

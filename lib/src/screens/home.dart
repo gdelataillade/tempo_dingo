@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/screens/artist.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/carousel.dart';
 
@@ -69,16 +72,23 @@ class __ArtistsState extends State<_Artists> {
             scrollDirection: Axis.horizontal,
             itemCount: widget.artists.length,
             itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 15, right: 0),
-                child: GestureDetector(
-                  onTap: () => print("Artist"),
-                  child: ArtistCard(
-                    widget.artists[index].images.first.url,
-                    widget.artists[index].name,
+              return ScopedModelDescendant<UserModel>(
+                  builder: (context, child, userModel) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 0),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ArtistScreen(
+                                userModel, widget.artists[index]))),
+                    child: ArtistCard(
+                      widget.artists[index].images.first.url,
+                      widget.artists[index].name,
+                    ),
                   ),
-                ),
-              );
+                );
+              });
             },
           ),
         ),
