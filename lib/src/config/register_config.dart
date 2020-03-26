@@ -17,4 +17,6 @@ final Map<String, List<String>> library = {
     "4ZP3CHz28XWVLGiaVVWuLj", // Tryo
   ],
   "favorite": [],
+  "history": [],
 };
+final List<Map<String, dynamic>> highscores = [];
