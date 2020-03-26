@@ -80,7 +80,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
               case ConnectionState.waiting:
                 return LoadingScreen("Loading tracks...");
               default:
-                if (tracks.hasError) return Container();
+                if (tracks.hasError) return _Error();
                 return FutureBuilder<List<Artist>>(
                   future: spotifyRepository.getArtistsList(model.artists),
                   builder: (context, artists) {
@@ -88,20 +88,19 @@ class __CheckLogInState extends State<_CheckLogIn> {
                       case ConnectionState.waiting:
                         return LoadingScreen("Loading artists...");
                       default:
-                        if (artists.hasError) return Container();
+                        if (artists.hasError) return _Error();
                         return FutureBuilder<List<Track>>(
-                          future:
-                              spotifyRepository.getTrackList(model.favorite),
-                          builder: (context, favorite) {
-                            switch (favorite.connectionState) {
+                          future: spotifyRepository.getTrackList(model.history),
+                          builder: (context, history) {
+                            switch (history.connectionState) {
                               case ConnectionState.waiting:
-                                return LoadingScreen("Loading favorite...");
+                                return LoadingScreen("Loading history...");
                               default:
-                                if (favorite.hasError) return Container();
+                                if (history.hasError) return _Error();
                                 return TabView(
                                   tracks.data,
                                   artists.data,
-                                  favorite.data,
+                                  history.data,
                                 );
                             }
                           },
@@ -113,6 +112,16 @@ class __CheckLogInState extends State<_CheckLogIn> {
           },
         );
       },
+    );
+  }
+}
+
+class _Error extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("Error with API. Try again later.",
+          style: Theme.of(context).textTheme.body1),
     );
   }
 }

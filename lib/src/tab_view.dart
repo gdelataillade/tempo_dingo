@@ -15,9 +15,9 @@ import 'package:vibrate/vibrate.dart';
 class TabView extends StatefulWidget {
   final List<Track> tracks;
   final List<Artist> artists;
-  final List<Track> favorite;
+  final List<Track> history;
 
-  const TabView(this.tracks, this.artists, this.favorite);
+  const TabView(this.tracks, this.artists, this.history);
 
   @override
   _TabViewState createState() => _TabViewState();
@@ -101,7 +101,7 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
           body: _TabBarViewWidgets(
             widget.tracks,
             widget.artists,
-            widget.favorite,
+            widget.history,
             _tabController,
           ),
         ),
@@ -113,13 +113,13 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
 class _TabBarViewWidgets extends StatefulWidget {
   final List<Track> tracks;
   final List<Artist> artists;
-  final List<Track> favorite;
+  final List<Track> history;
   final TabController _dataController;
 
   const _TabBarViewWidgets(
     this.tracks,
     this.artists,
-    this.favorite,
+    this.history,
     this._dataController,
   );
 
@@ -132,9 +132,9 @@ class __TabBarViewWidgetsState extends State<_TabBarViewWidgets> {
     return TabBarView(
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
-        SearchTab(widget.tracks, widget.artists),
+        SearchTab(widget.tracks, widget.artists, widget.history),
         Home(widget.tracks, widget.artists),
-        Library(widget.tracks, widget.artists, widget.favorite),
+        Library(widget.tracks, widget.artists),
       ],
       controller: widget._dataController,
     );

@@ -10,8 +10,9 @@ SpotifyRepository spotifyRepository = SpotifyRepository();
 class SearchTab extends StatefulWidget {
   final List<Track> tracks;
   final List<Artist> artists;
+  final List<Track> history;
 
-  const SearchTab(this.tracks, this.artists);
+  const SearchTab(this.tracks, this.artists, this.history);
 
   @override
   _SearchTabState createState() => _SearchTabState();
@@ -20,26 +21,18 @@ class SearchTab extends StatefulWidget {
 class _SearchTabState extends State<SearchTab> {
   TextEditingController _controller = TextEditingController();
   String _search = "";
-  bool _showRecommendations = true;
-  List<Track> _recommendations = [];
+  bool _showHistory = true;
+  List<Track> _history = [];
 
   void _initController() => _controller.addListener(_searchListener);
 
   void _searchListener() {
     _controller.text.isEmpty ? _search = "" : _search = _controller.text;
-    if (_search.length > 2 && _showRecommendations) {
-      setState(() => _showRecommendations = false);
-    } else if (_search.length <= 2 && !_showRecommendations) {
-      setState(() => _showRecommendations = true);
+    if (_search.length > 2 && _showHistory) {
+      setState(() => _showHistory = false);
+    } else if (_search.length <= 2 && !_showHistory) {
+      setState(() => _showHistory = true);
     }
-  }
-
-  void _initReco() async {
-    final List<Track> reco = await spotifyRepository.getRecommandedTracks(
-        widget.artists, widget.tracks);
-    setState(() {
-      _recommendations = reco;
-    });
   }
 
   @override
@@ -52,7 +45,6 @@ class _SearchTabState extends State<SearchTab> {
   void initState() {
     super.initState();
     _initController();
-    _initReco();
   }
 
   @override
@@ -71,9 +63,7 @@ class _SearchTabState extends State<SearchTab> {
           ),
           _SearchInput(_controller),
           const SizedBox(height: 20),
-          _showRecommendations
-              ? Recommendations(_recommendations)
-              : _SearchResult(),
+          _showHistory ? _History(_history) : _SearchResult(),
         ],
       ),
     );
@@ -115,39 +105,52 @@ class __SearchInputState extends State<_SearchInput> {
   }
 }
 
-class Recommendations extends StatefulWidget {
-  final List<Track> recommendations;
+class _History extends StatefulWidget {
+  final List<Track> history;
 
-  const Recommendations(this.recommendations);
+  const _History(this.history);
 
   @override
-  _RecommendationsState createState() => _RecommendationsState();
+  __HistoryState createState() => __HistoryState();
 }
 
-class _RecommendationsState extends State<Recommendations> {
+class __HistoryState extends State<_History> {
   @override
   Widget build(BuildContext context) {
-    return widget.recommendations.length == 0
-        ? Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Center(child: loadingWhite),
-          )
-        : Flexible(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(bottom: 10),
-              itemCount: widget.recommendations.length,
-              itemBuilder: (BuildContext context, int index) {
-                final Track track = widget.recommendations[index];
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Recent searches",
+            style: Theme.of(context).textTheme.title,
+          ),
+          const SizedBox(height: 15),
+          widget.history.length == 0
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Center(child: Text("No recent searches")),
+                )
+              : Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: false,
+                    padding: const EdgeInsets.only(bottom: 10),
+                    itemCount: widget.history.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final Track track = widget.history[index];
 
-                return TrackCard(
-                  track.album.images.first.url,
-                  track.name,
-                  track.artists.first.name,
-                  track.id,
-                );
-              },
-            ),
-          );
+                      return TrackCard(
+                        track.album.images.first.url,
+                        track.name,
+                        track.artists.first.name,
+                        track.id,
+                      );
+                    },
+                  ),
+                ),
+        ],
+      ),
+    );
   }
 }
 

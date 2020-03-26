@@ -14,6 +14,7 @@ class UserModel extends Model {
   List<String> _songs;
   List<String> _artists;
   List<String> _favorite;
+  List<String> _history;
   bool _darkTheme;
   bool _isConnected = false;
   bool _isSigningOut = false;
@@ -31,6 +32,7 @@ class UserModel extends Model {
   List<String> get songs => _songs;
   List<String> get artists => _artists;
   List<String> get favorite => _favorite;
+  List<String> get history => _history;
   bool get darkTheme => _darkTheme;
   bool get isConnected => _isConnected;
   bool get isSigningOut => _isSigningOut;
@@ -58,6 +60,7 @@ class UserModel extends Model {
     _artists = _convertListDynamicToString(document.data["library"]["artists"]);
     _favorite =
         _convertListDynamicToString(document.data["library"]["favorite"]);
+    _history = _convertListDynamicToString(document.data["library"]["history"]);
     _darkTheme = document.data["darkTheme"];
   }
 
@@ -133,7 +136,8 @@ class UserModel extends Model {
     Map<String, dynamic> library = {
       "songs": _songs,
       "artists": _artists,
-      "favorite": _favorite
+      "favorite": _favorite,
+      "history": _history
     };
     Firestore.instance
         .collection('users')
