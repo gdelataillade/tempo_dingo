@@ -24,6 +24,7 @@ class _GameState extends State<Game> {
       child: ScopedModelDescendant<UserModel>(
         builder: (context, child, userModel) {
           _userModel = userModel;
+          _userModel.addToHistory(widget.track.id);
           return Scaffold(
             appBar: AppBar(
               elevation: 1,

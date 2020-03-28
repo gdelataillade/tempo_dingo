@@ -126,6 +126,15 @@ class UserModel extends Model {
     notifyListeners();
   }
 
+  void addToHistory(String trackId) {
+    if (_history.contains(trackId)) _history.remove(trackId);
+    _history.insert(0, trackId);
+  }
+
+  bool isPurshased(String trackId) {
+    return _songs.contains(trackId) ? true : false;
+  }
+
   bool isFavorite(String trackId) {
     return _favorite.contains(trackId) ? true : false;
   }

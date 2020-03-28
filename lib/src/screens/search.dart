@@ -25,7 +25,6 @@ class _SearchTabState extends State<SearchTab> {
   TextEditingController _controller = TextEditingController();
   String _search = "";
   bool _showHistory = true;
-  List<Track> _history = [];
   List<Track> _trackResults = [];
   List<Artist> _artistResults = [];
 
@@ -66,23 +65,29 @@ class _SearchTabState extends State<SearchTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: mainTheme,
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Search",
-              style: Theme.of(context).textTheme.headline,
-            ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Container(
+          color: mainTheme,
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Search",
+                  style: Theme.of(context).textTheme.headline,
+                ),
+              ),
+              _SearchInput(_controller),
+              const SizedBox(height: 20),
+              _showHistory
+                  ? _History(widget.history)
+                  : _SearchResult(_trackResults),
+            ],
           ),
-          _SearchInput(_controller),
-          const SizedBox(height: 20),
-          _showHistory ? _History(_history) : _SearchResult(_trackResults),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -142,7 +147,7 @@ class __HistoryState extends State<_History> {
             "Recent searches",
             style: Theme.of(context).textTheme.title,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 5),
           widget.history.length == 0
               ? Padding(
                   padding: const EdgeInsets.only(top: 50),
@@ -161,6 +166,7 @@ class __HistoryState extends State<_History> {
                         track.name,
                         track.artists.first.name,
                         track.id,
+                        track.popularity,
                       );
                     },
                   ),
@@ -205,6 +211,7 @@ class __SearchResultState extends State<_SearchResult> {
                         track.name,
                         track.artists.first.name,
                         track.id,
+                        track.popularity,
                       ),
                     );
                   },
