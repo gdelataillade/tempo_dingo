@@ -140,6 +140,7 @@ class __SongsState extends State<_Songs> {
             track.name,
             track.artists.first.name,
             track.id,
+            track.popularity,
           );
         },
       ),
@@ -247,6 +248,7 @@ class __FavoritesState extends State<_Favorites> {
                             track.name,
                             track.artists.first.name,
                             track.id,
+                            track.popularity,
                           )
                         : Container();
                   },

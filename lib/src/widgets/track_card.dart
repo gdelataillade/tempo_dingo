@@ -8,12 +8,14 @@ class TrackCard extends StatefulWidget {
   final String track;
   final String artist;
   final String trackId;
+  final int popularity;
 
   const TrackCard(
     this.imgUrl,
     this.track,
     this.artist,
     this.trackId,
+    this.popularity,
   );
 
   @override
@@ -21,7 +23,22 @@ class TrackCard extends StatefulWidget {
 }
 
 class _TrackCardState extends State<TrackCard> {
+  bool _isPurshased = false;
   bool _isLiked = false;
+  int _price = 0;
+
+  void _setPrice() {
+    double price;
+
+    price = (widget.popularity + 1) / 5;
+    _price = price.toInt() + 1;
+  }
+
+  @override
+  void initState() {
+    _setPrice();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,22 +103,34 @@ class _TrackCardState extends State<TrackCard> {
           ),
           ScopedModelDescendant<UserModel>(
             builder: (context, child, model) {
+              _isPurshased = model.isPurshased(widget.trackId);
               _isLiked = model.isFavorite(widget.trackId);
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() => _isLiked = !_isLiked);
-                    model.likeUnlikeTrack(widget.trackId);
-                  },
-                  child: Icon(
-                    model.isFavorite(widget.trackId)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    size: 35,
-                    color: Colors.red,
-                  ),
-                ),
+                child: _isPurshased
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() => _isLiked = !_isLiked);
+                          model.likeUnlikeTrack(widget.trackId);
+                        },
+                        child: Icon(
+                          model.isFavorite(widget.trackId)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          size: 35,
+                          color: Colors.red,
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () => print("purshase"),
+                        child: Row(
+                          children: <Widget>[
+                            Text("$_price", style: TextStyle(color: mainTheme)),
+                            Icon(Icons.star,
+                                color: Color.fromRGBO(248, 207, 95, 1)),
+                          ],
+                        ),
+                      ),
               );
             },
           ),
