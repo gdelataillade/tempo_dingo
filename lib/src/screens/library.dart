@@ -58,7 +58,7 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(kToolbarHeight),
                 child: AppBar(
-                  elevation: 0,
+                  elevation: 1,
                   bottom: TabBar(
                     controller: _tabController,
                     indicatorColor: Colors.transparent,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tempo_dingo/src/config/theme_config.dart';
 
 class ArtistCard extends StatefulWidget {
   final String imgUrl;
@@ -12,6 +11,13 @@ class ArtistCard extends StatefulWidget {
 }
 
 class _ArtistCardState extends State<ArtistCard> {
+  String _formatString(String str) {
+    String newString = str;
+
+    if (newString.length > 13) return newString.substring(0, 13);
+    return str;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,7 +44,7 @@ class _ArtistCardState extends State<ArtistCard> {
           ),
         ),
         const SizedBox(height: 3),
-        Text(widget.artist),
+        Text(_formatString(widget.artist)),
       ],
     );
   }

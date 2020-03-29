@@ -2,10 +2,12 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart';
+
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
+import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
 SpotifyRepository spotifyRepository = SpotifyRepository();
@@ -80,10 +82,10 @@ class _SearchTabState extends State<SearchTab> {
                 ),
               ),
               _SearchInput(_controller),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _showHistory
                   ? _History(widget.history)
-                  : _SearchResult(_trackResults),
+                  : _ResultsTab(_trackResults, _artistResults),
             ],
           ),
         );
@@ -122,6 +124,87 @@ class __SearchInputState extends State<_SearchInput> {
           hintStyle: TextStyle(color: mainTheme.withOpacity(0.8)),
           border: InputBorder.none,
         ),
+      ),
+    );
+  }
+}
+
+class _ResultsTab extends StatefulWidget {
+  final List<Track> tracks;
+  final List<Artist> artists;
+
+  const _ResultsTab(this.tracks, this.artists);
+
+  @override
+  __ResultsTabState createState() => __ResultsTabState();
+}
+
+class __ResultsTabState extends State<_ResultsTab>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  int _tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      vsync: this,
+      length: 2,
+      initialIndex: _tabIndex,
+    );
+    _tabController.addListener(_onChangedTab);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _onChangedTab() {
+    setState(() => _tabIndex = _tabController.index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              GestureDetector(
+                child: Tab(
+                  child: Text("Songs",
+                      style: TextStyle(
+                        color: _tabIndex == 0
+                            ? Colors.white
+                            : Color.fromRGBO(153, 162, 189, 1),
+                        fontSize: 18,
+                        fontFamily: 'Apple-Semibold',
+                      )),
+                ),
+                onTap: () => setState(() => _tabIndex = 0),
+              ),
+              GestureDetector(
+                child: Tab(
+                  child: Text("Artists",
+                      style: TextStyle(
+                        color: _tabIndex == 1
+                            ? Colors.white
+                            : Color.fromRGBO(153, 162, 189, 1),
+                        fontSize: 18,
+                        fontFamily: 'Apple-Semibold',
+                      )),
+                ),
+                onTap: () => setState(() => _tabIndex = 1),
+              ),
+            ],
+          ),
+          _tabIndex == 0
+              ? _TrackSearchResults(widget.tracks)
+              : _ArtistSearchResults(widget.artists),
+        ],
       ),
     );
   }
@@ -177,16 +260,16 @@ class __HistoryState extends State<_History> {
   }
 }
 
-class _SearchResult extends StatefulWidget {
+class _TrackSearchResults extends StatefulWidget {
   final List<Track> tracks;
 
-  const _SearchResult(this.tracks);
+  const _TrackSearchResults(this.tracks);
 
   @override
-  __SearchResultState createState() => __SearchResultState();
+  __TrackSearchResultsState createState() => __TrackSearchResultsState();
 }
 
-class __SearchResultState extends State<_SearchResult> {
+class __TrackSearchResultsState extends State<_TrackSearchResults> {
   @override
   Widget build(BuildContext context) {
     return widget.tracks.length == 0
@@ -219,5 +302,64 @@ class __SearchResultState extends State<_SearchResult> {
               },
             ),
           );
+  }
+}
+
+class _ArtistSearchResults extends StatefulWidget {
+  final List<Artist> artists;
+
+  const _ArtistSearchResults(this.artists);
+
+  @override
+  __ArtistSearchResultsState createState() => __ArtistSearchResultsState();
+}
+
+class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
+  int _artistIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    _artistIndex = 0;
+
+    var artists = widget.artists;
+    return Flexible(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        itemCount: (widget.artists.length / 3).round(),
+        itemBuilder: (BuildContext context, int index) {
+          Widget row = Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => print("Artist"),
+                  child: ArtistCard(artists[_artistIndex].images.first.url,
+                      artists[_artistIndex].name),
+                ),
+                artists.length > _artistIndex + 1
+                    ? GestureDetector(
+                        onTap: () => print("Artist"),
+                        child: ArtistCard(
+                            artists[_artistIndex + 1].images.first.url,
+                            artists[_artistIndex + 1].name),
+                      )
+                    : Container(width: 80, height: 80),
+                artists.length > _artistIndex + 2
+                    ? GestureDetector(
+                        onTap: () => print("Artist"),
+                        child: ArtistCard(
+                            artists[_artistIndex + 2].images.first.url,
+                            artists[_artistIndex + 2].name),
+                      )
+                    : Container(width: 80, height: 80),
+              ],
+            ),
+          );
+          _artistIndex += 3;
+          return row;
+        },
+      ),
+    );
   }
 }
