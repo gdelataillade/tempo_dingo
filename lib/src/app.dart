@@ -19,8 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'Tempo Dingo',
       debugShowCheckedModeBanner: false,
       theme: themeConfig,
+      color: mainTheme,
       home: Scaffold(
         backgroundColor: mainTheme,
+        resizeToAvoidBottomInset: false,
         body: ScopedModel<UserModel>(
           model: UserModel(),
           child: _CheckLogIn(),

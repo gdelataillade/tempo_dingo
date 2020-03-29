@@ -57,6 +57,7 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
       _tabController.index = _userModel.tabViewIndex;
       return Center(
         child: Scaffold(
+          backgroundColor: mainTheme,
           appBar: AppBar(
             elevation: 0,
             leading: Builder(
