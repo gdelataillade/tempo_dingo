@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
@@ -16,12 +18,12 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   UserModel _userModel;
-  double _pourcentage;
+  double _percentage;
 
   @override
   void initState() {
     setState(() {
-      _pourcentage = 0.0;
+      _percentage = 0.0;
     });
     super.initState();
   }
@@ -35,31 +37,31 @@ class _GameState extends State<Game> {
           _userModel = userModel;
           _userModel.addToHistory(widget.track.id);
           return Scaffold(
-            appBar: AppBar(elevation: 1),
+            appBar: AppBar(elevation: 0),
             backgroundColor: mainTheme,
-            body: Padding(
-              padding: const EdgeInsets.all(35),
-              child: Column(
-                children: <Widget>[
-                  _AlbumProgressiveBar(widget.track, _pourcentage),
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.track.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontFamily: 'Apple-Bold',
-                    ),
+            body: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
+                  child: _AlbumProgressiveBar(widget.track, _percentage),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  widget.track.name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontFamily: 'Apple-Bold',
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    widget.track.artists.first.name,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 10),
-                  _TapArea(),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  widget.track.artists.first.name,
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                _TapArea(),
+              ],
             ),
           );
         },
@@ -70,28 +72,94 @@ class _GameState extends State<Game> {
 
 class _AlbumProgressiveBar extends StatefulWidget {
   final spotify.Track track;
-  final double pourcentage;
+  final double percentage;
 
-  const _AlbumProgressiveBar(this.track, this.pourcentage);
+  const _AlbumProgressiveBar(this.track, this.percentage);
 
   @override
   __AlbumProgressiveBarState createState() => __AlbumProgressiveBarState();
 }
 
 class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar> {
+  double _percentage;
+  int _secondsElapsed;
+  Timer _timer;
+
+  void _oneSecondElapsed(Timer t) {
+    setState(() {
+      _secondsElapsed++;
+      if (_secondsElapsed > 30) _secondsElapsed = 1;
+      _percentage = _secondsElapsed * 10 / 3;
+    });
+    print(_secondsElapsed);
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      _percentage = 0;
+      _secondsElapsed = 0;
+      _timer = Timer.periodic(
+          Duration(seconds: 1), (Timer t) => _oneSecondElapsed(t));
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        child: Image.network(widget.track.album.images.first.url,
-            width: MediaQuery.of(context).size.width),
+      width: 300,
+      height: 300,
+      child: CustomPaint(
+        foregroundPainter: _MyPainter(
+          completePercent: _percentage,
+          width: 3.0,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(300)),
+          child: Image.network(widget.track.album.images.first.url,
+              width: MediaQuery.of(context).size.width),
+        ),
       ),
     );
+  }
+}
+
+class _MyPainter extends CustomPainter {
+  double completePercent;
+  double width;
+
+  _MyPainter({this.completePercent, this.width});
+
+  Path getOuterPath(Rect rect, {@required TextDirection textDirection}) {
+    assert(textDirection != null,
+        'The textDirection argument to $runtimeType.getOuterPath must not be null.');
+    return Path()..addRect(rect);
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint complete = Paint()
+      ..color = Colors.white
+      ..strokeCap = StrokeCap.square
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width;
+
+    double arcAngle = 2 * pi * (completePercent / 100);
+
+    canvas.drawArc(
+        Rect.fromLTRB(0, 0, 300, 300), -pi / 2, arcAngle, false, complete);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }
 
@@ -106,8 +174,8 @@ class __TapAreaState extends State<_TapArea> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 260,
-      width: 350,
+      height: 320,
+      width: 355,
       child: Center(
         child: MaterialButton(
           height: 260,
