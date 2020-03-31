@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
@@ -80,34 +81,45 @@ class _AlbumProgressiveBar extends StatefulWidget {
   __AlbumProgressiveBarState createState() => __AlbumProgressiveBarState();
 }
 
-class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar> {
-  double _percentage;
-  int _secondsElapsed;
+class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
+    with TickerProviderStateMixin {
+  AnimationController _percentageAnimationController;
+  double _percentage = 0.0;
+  double _newPercentage = 0.0;
+  int _secondsElapsed = 0;
   Timer _timer;
 
   void _oneSecondElapsed(Timer t) {
     setState(() {
+      _percentage = _newPercentage;
       _secondsElapsed++;
       if (_secondsElapsed > 30) _secondsElapsed = 1;
-      _percentage = _secondsElapsed * 10 / 3;
+      _newPercentage = _secondsElapsed * 10 / 3;
+      _percentageAnimationController.forward(from: 0.0);
     });
-    print(_secondsElapsed);
   }
 
   @override
   void initState() {
     setState(() {
-      _percentage = 0;
-      _secondsElapsed = 0;
       _timer = Timer.periodic(
           Duration(seconds: 1), (Timer t) => _oneSecondElapsed(t));
     });
+    _percentageAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1))
+          ..addListener(() {
+            setState(() {
+              _percentage = lerpDouble(_percentage, _newPercentage,
+                  _percentageAnimationController.value);
+            });
+          });
     super.initState();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _percentageAnimationController?.dispose();
     super.dispose();
   }
 
@@ -178,8 +190,8 @@ class __TapAreaState extends State<_TapArea> {
       width: 355,
       child: Center(
         child: MaterialButton(
-          height: 260,
-          minWidth: 350,
+          height: 320,
+          minWidth: 355,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           onPressed: () => print("tap"),
