@@ -49,6 +49,8 @@ class _GameState extends State<Game> {
                 const SizedBox(height: 15),
                 Text(
                   widget.track.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 25,
@@ -58,6 +60,8 @@ class _GameState extends State<Game> {
                 const SizedBox(height: 5),
                 Text(
                   widget.track.artists.first.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 10),
