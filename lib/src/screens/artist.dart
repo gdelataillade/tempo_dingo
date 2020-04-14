@@ -21,6 +21,30 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   UserModel _userModel;
+  ScrollController _controller;
+  bool _showArtistInAppBar = false;
+  Widget _tracks = LoadingScreen("Loading tracks...");
+
+  void _scrollListener() {
+    if (_controller.offset > 260 && !_showArtistInAppBar) {
+      setState(() => _showArtistInAppBar = true);
+    } else if (_controller.offset <= 260 && _showArtistInAppBar) {
+      setState(() => _showArtistInAppBar = false);
+    }
+  }
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +56,42 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
           return Scaffold(
             appBar: AppBar(
-              elevation: 0,
+              elevation: 1,
+              title: _showArtistInAppBar
+                  ? Text(
+                      widget.artist.name,
+                      style: Theme.of(context).textTheme.title,
+                    )
+                  : Container(),
             ),
             backgroundColor: mainTheme,
-            body: Column(
-              children: <Widget>[
-                _ArtistHeader(
-                    widget.artist.name, widget.artist.images.first.url),
-                FutureBuilder<List<spotify.Track>>(
-                  future: repository.getArtistTracks(
-                      widget.artist.name, widget.artist.id),
-                  builder: (context, tracks) {
-                    switch (tracks.connectionState) {
-                      case ConnectionState.waiting:
-                        return LoadingScreen("Loading tracks...");
-                      default:
-                        if (tracks.hasError) return _Error();
-                        return _ArtistTracks(tracks.data);
-                    }
-                  },
+            body: SingleChildScrollView(
+              controller: _controller,
+              child: Container(
+                height: double.maxFinite,
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    _ArtistHeader(
+                        widget.artist.name, widget.artist.images.first.url),
+                    const SizedBox(height: 10),
+                    FutureBuilder<List<spotify.Track>>(
+                      future: repository.getArtistTracks(
+                          widget.artist.name, widget.artist.id),
+                      builder: (context, tracks) {
+                        switch (tracks.connectionState) {
+                          case ConnectionState.waiting:
+                            return _tracks;
+                          default:
+                            if (tracks.hasError) return _Error();
+                            _tracks = _ArtistTracks(tracks.data);
+                            return _ArtistTracks(tracks.data);
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },
@@ -116,23 +155,23 @@ class _ArtistTracks extends StatefulWidget {
 class __ArtistTracksState extends State<_ArtistTracks> {
   @override
   Widget build(BuildContext context) {
+    // return Container();
     return Expanded(
-      child: Scrollbar(
-        child: ListView.builder(
-          padding: const EdgeInsets.only(left: 25, right: 25),
-          itemCount: widget.tracks.length,
-          itemBuilder: (BuildContext context, int index) {
-            final spotify.Track track = widget.tracks[index];
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        itemCount: widget.tracks.length,
+        itemBuilder: (BuildContext context, int index) {
+          final spotify.Track track = widget.tracks[index];
 
-            return TrackCard(
-              track.album.images.first.url,
-              track.name,
-              track.artists.first.name,
-              track.id,
-              track.popularity,
-            );
-          },
-        ),
+          return TrackCard(
+            track.album.images.first.url,
+            track.name,
+            track.artists.first.name,
+            track.id,
+            track.popularity,
+          );
+        },
       ),
     );
   }
