@@ -62,22 +62,23 @@ class SpotifyRepository {
     return artists;
   }
 
-  Future<List<Track>> getArtistTracks(
-      String artistName, String artistId, List<Track> libraryTracks) async {
+  Future<List<Track>> getArtistTracks(String artistName, String artistId
+      // , List<Track> libraryTracks
+      ) async {
     List<Track> tracks = [];
     var results = await spotify.search.get(artistName).first(50);
 
-    for (int i = 0; i < libraryTracks.length; i++) {
-      if (libraryTracks[i].artists[0].id == artistId)
-        tracks.add(libraryTracks[i]);
-    }
+    // for (int i = 0; i < libraryTracks.length; i++) {
+    //   if (libraryTracks[i].artists[0].id == artistId)
+    //     tracks.add(libraryTracks[i]);
+    // }
     results.forEach((pages) {
       pages.items.forEach((item) {
         if (item is Track) {
           if (item.artists[0].id == artistId) {
             tracks.add(item);
-            for (int i = 0; i < libraryTracks.length; i++)
-              if (item.id == libraryTracks[i].id) tracks.remove(item);
+            // for (int i = 0; i < libraryTracks.length; i++)
+            // if (item.id == libraryTracks[i].id) tracks.remove(item);
           }
         }
       });

@@ -3,6 +3,11 @@ import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/resources/spotify_repository.dart';
+import 'package:tempo_dingo/src/widgets/loading_screen.dart';
+import 'package:tempo_dingo/src/widgets/track_card.dart';
+
+SpotifyRepository repository = SpotifyRepository();
 
 class ArtistScreen extends StatefulWidget {
   final UserModel userModel;
@@ -30,15 +35,24 @@ class _ArtistScreenState extends State<ArtistScreen> {
               elevation: 0,
             ),
             backgroundColor: mainTheme,
-            body: Padding(
-              padding: const EdgeInsets.only(left: 35, right: 35),
-              child: Column(
-                children: <Widget>[
-                  _ArtistHeader(
-                      widget.artist.name, widget.artist.images.first.url),
-                  _ArtistTracks(),
-                ],
-              ),
+            body: Column(
+              children: <Widget>[
+                _ArtistHeader(
+                    widget.artist.name, widget.artist.images.first.url),
+                FutureBuilder<List<spotify.Track>>(
+                  future: repository.getArtistTracks(
+                      widget.artist.name, widget.artist.id),
+                  builder: (context, tracks) {
+                    switch (tracks.connectionState) {
+                      case ConnectionState.waiting:
+                        return LoadingScreen("Loading tracks...");
+                      default:
+                        if (tracks.hasError) return _Error();
+                        return _ArtistTracks(tracks.data);
+                    }
+                  },
+                ),
+              ],
             ),
           );
         },
@@ -84,13 +98,17 @@ class __ArtistHeaderState extends State<_ArtistHeader> {
           ),
         ),
         const SizedBox(height: 20),
-        Text(widget.artist),
+        Text(widget.artist, style: Theme.of(context).textTheme.title),
       ],
     );
   }
 }
 
 class _ArtistTracks extends StatefulWidget {
+  final List<spotify.Track> tracks;
+
+  const _ArtistTracks(this.tracks);
+
   @override
   __ArtistTracksState createState() => __ArtistTracksState();
 }
@@ -98,6 +116,34 @@ class _ArtistTracks extends StatefulWidget {
 class __ArtistTracksState extends State<_ArtistTracks> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Expanded(
+      child: Scrollbar(
+        child: ListView.builder(
+          padding: const EdgeInsets.only(left: 25, right: 25),
+          itemCount: widget.tracks.length,
+          itemBuilder: (BuildContext context, int index) {
+            final spotify.Track track = widget.tracks[index];
+
+            return TrackCard(
+              track.album.images.first.url,
+              track.name,
+              track.artists.first.name,
+              track.id,
+              track.popularity,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _Error extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("Error with API. Try again later.",
+          style: Theme.of(context).textTheme.body1),
+    );
   }
 }
