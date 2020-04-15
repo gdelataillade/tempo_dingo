@@ -186,25 +186,31 @@ class __AudioSliderState extends State<_AudioSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: Column(
-        children: <Widget>[
-          Text("Audio Volume ${_audio.round()}",
-              style: Theme.of(context).textTheme.title),
-          Slider(
-              value: _audio,
-              min: 0,
-              max: 10,
-              // divisions: 10,
-              activeColor: Colors.white,
-              inactiveColor: Colors.white,
-              onChanged: (value) {
-                setState(() => _audio = value);
-                if (_audio % 1 == 0) Vibrate.feedback(FeedbackType.impact);
-              }),
-        ],
-      ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        _audio = model.volume;
+        return Padding(
+          padding: const EdgeInsets.only(left: 35, right: 35),
+          child: Column(
+            children: <Widget>[
+              Text("Audio Volume ${_audio.round()}",
+                  style: Theme.of(context).textTheme.title),
+              Slider(
+                  value: _audio,
+                  min: 0,
+                  max: 10,
+                  // divisions: 10,
+                  activeColor: Colors.white,
+                  inactiveColor: Colors.white,
+                  onChanged: (value) {
+                    setState(() => _audio = value);
+                    model.volume = value;
+                    if (_audio % 1 == 0) Vibrate.feedback(FeedbackType.impact);
+                  }),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -272,11 +278,6 @@ class __SettingsFieldsState extends State<_SettingsFields> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          GestureDetector(
-            onTap: () async => Vibrate.vibrate(),
-            child: Text("Vibrate"),
-          ),
-          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[

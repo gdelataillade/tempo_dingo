@@ -11,6 +11,7 @@ class UserModel extends Model {
   String _language;
   bool _staySignedIn;
   bool _vibration;
+  double volume = 10;
   List<String> _songs;
   List<String> _artists;
   List<String> _favorite;
