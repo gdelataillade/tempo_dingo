@@ -91,7 +91,11 @@ class _Highscores extends StatefulWidget {
 class __HighscoresState extends State<_Highscores> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: <Widget>[
+        Text("Highscores"),
+      ],
+    );
   }
 }
 
@@ -105,6 +109,80 @@ class _Shop extends StatefulWidget {
 class __ShopState extends State<_Shop> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: <Widget>[
+        Text("Shop"),
+        Text("If you like my app, you can buy me a coffee"),
+        const SizedBox(height: 15),
+        Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _ShopItem(20, 0.49),
+                _ShopItem(50, 0.99),
+              ],
+            ),
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _ShopItem(100, 1.49),
+                _ShopItem(500, 4.99),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ShopItem extends StatefulWidget {
+  final int nbStars;
+  final double price;
+
+  const _ShopItem(this.nbStars, this.price);
+
+  @override
+  __ShopItemState createState() => __ShopItemState();
+}
+
+class __ShopItemState extends State<_ShopItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 140,
+      height: 80,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: mainTheme.withOpacity(0.3),
+            spreadRadius: 0.5,
+            blurRadius: 5,
+            offset: Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("${widget.nbStars}", style: TextStyle(color: mainTheme)),
+              Icon(
+                Icons.star,
+                color: Color.fromRGBO(248, 207, 95, 1),
+                size: 30,
+              )
+            ],
+          ),
+          Text("${widget.price}€", style: TextStyle(color: mainTheme)),
+        ],
+      ),
+    );
   }
 }
