@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
           _userModel = model;
           return Scaffold(
             appBar: AppBar(
-              elevation: 1,
+              elevation: 0,
               actions: <Widget>[
                 GestureDetector(
                   onTap: () {
@@ -46,7 +46,7 @@ class _ProfileState extends State<Profile> {
             backgroundColor: mainTheme,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(35),
+                padding: const EdgeInsets.only(left: 35, right: 35),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

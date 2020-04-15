@@ -10,7 +10,7 @@ class UserModel extends Model {
   int _stars;
   String _language;
   bool _staySignedIn;
-  bool _vibration;
+  bool vibration = true;
   double volume = 10;
   List<String> _songs;
   List<String> _artists;
@@ -29,7 +29,6 @@ class UserModel extends Model {
   int get stars => _stars;
   String get language => _language;
   bool get staySignedIn => _staySignedIn;
-  bool get vibration => _vibration;
   List<String> get songs => _songs;
   List<String> get artists => _artists;
   List<String> get favorite => _favorite;
@@ -56,7 +55,7 @@ class UserModel extends Model {
     _stars = document.data["stars"];
     _language = document.data["language"];
     _staySignedIn = staySignedIn;
-    _vibration = document.data["vibration"];
+    vibration = document.data["vibration"];
     _songs = _convertListDynamicToString(document.data["library"]["songs"]);
     _artists = _convertListDynamicToString(document.data["library"]["artists"]);
     _favorite =
@@ -113,7 +112,8 @@ class UserModel extends Model {
     _stars = 0;
     _language = "US";
     _staySignedIn = false;
-    _vibration = true;
+    volume = 10;
+    vibration = true;
     _songs = [];
     _artists = [];
     _favorite = [];

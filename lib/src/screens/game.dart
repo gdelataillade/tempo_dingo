@@ -37,7 +37,7 @@ class _GameState extends State<Game> {
 
   void _tap() async {
     print("tap");
-    Vibrate.feedback(FeedbackType.impact);
+    if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
     if (_tapCount == 0) {
       await _audioPlayer
           .play(widget.track.previewUrl, volume: _userModel.volume / 10)

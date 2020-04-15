@@ -272,98 +272,106 @@ class __SettingsFieldsState extends State<_SettingsFields> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        _enableVibration = model.vibration;
+        return Padding(
+          padding: const EdgeInsets.only(left: 35, right: 35),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text("Vibration"),
-              Switch(
-                  activeColor: Colors.white,
-                  value: _enableVibration,
-                  onChanged: (value) {
-                    if (_enableVibration) Vibrate.feedback(FeedbackType.impact);
-                    setState(() => _enableVibration = value);
-                  }),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("Dark Theme"),
-              Switch(
-                  activeColor: Colors.white,
-                  value: _enableDarkTheme,
-                  onChanged: (value) {
-                    if (_enableDarkTheme) Vibrate.feedback(FeedbackType.impact);
-                    setState(() => _enableDarkTheme = value);
-                  }),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("Language"),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _buildFlag('assets/images/united-states.png', "US"),
-                  const SizedBox(width: 5),
-                  _buildFlag('assets/images/france.png', "FR"),
-                  const SizedBox(width: 5),
-                  _buildFlag('assets/images/spain.png', "ES"),
+                  Text("Vibration"),
+                  Switch(
+                      activeColor: Colors.white,
+                      value: _enableVibration,
+                      onChanged: (value) {
+                        if (_enableVibration)
+                          Vibrate.feedback(FeedbackType.impact);
+                        setState(() => _enableVibration = value);
+                        model.vibration = value;
+                      }),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Dark Theme"),
+                  Switch(
+                      activeColor: Colors.white,
+                      value: _enableDarkTheme,
+                      onChanged: (value) {
+                        if (_enableDarkTheme)
+                          Vibrate.feedback(FeedbackType.impact);
+                        setState(() => _enableDarkTheme = value);
+                      }),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Language"),
+                  Row(
+                    children: <Widget>[
+                      _buildFlag('assets/images/united-states.png', "US"),
+                      const SizedBox(width: 5),
+                      _buildFlag('assets/images/france.png', "FR"),
+                      const SizedBox(width: 5),
+                      _buildFlag('assets/images/spain.png', "ES"),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              GestureDetector(
+                onTap: () async {
+                  final Email email = _buildEmailReportBug();
+                  try {
+                    await FlutterEmailSender.send(email);
+                  } catch (error) {
+                    print(error);
+                  }
+                },
+                child: Text("Report a bug"),
+              ),
+              const SizedBox(height: 15),
+              GestureDetector(
+                onTap: () async {
+                  final Email email = _buildEmailRecommendation();
+                  try {
+                    await FlutterEmailSender.send(email);
+                  } catch (error) {
+                    print(error);
+                  }
+                },
+                child: Text("Have any recommendation?"),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Made with Flutter in "),
+                  GestureDetector(
+                    onTap: () async {
+                      if (await canLaunch(_gitHubUrl)) {
+                        await launch(_gitHubUrl);
+                      } else {
+                        throw 'Could not launch $_gitHubUrl';
+                      }
+                    },
+                    child: Text("open source",
+                        style: TextStyle(decoration: TextDecoration.underline)),
+                  ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 15),
-          GestureDetector(
-            onTap: () async {
-              final Email email = _buildEmailReportBug();
-              try {
-                await FlutterEmailSender.send(email);
-              } catch (error) {
-                print(error);
-              }
-            },
-            child: Text("Report a bug"),
-          ),
-          const SizedBox(height: 15),
-          GestureDetector(
-            onTap: () async {
-              final Email email = _buildEmailRecommendation();
-              try {
-                await FlutterEmailSender.send(email);
-              } catch (error) {
-                print(error);
-              }
-            },
-            child: Text("Have any recommendation?"),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("Made with Flutter in "),
-              GestureDetector(
-                onTap: () async {
-                  if (await canLaunch(_gitHubUrl)) {
-                    await launch(_gitHubUrl);
-                  } else {
-                    throw 'Could not launch $_gitHubUrl';
-                  }
-                },
-                child: Text("open source",
-                    style: TextStyle(decoration: TextDecoration.underline)),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
