@@ -313,9 +313,9 @@ class __SettingsFieldsState extends State<_SettingsFields> {
                 children: <Widget>[
                   _buildFlag('assets/images/united-states.png', "US"),
                   const SizedBox(width: 5),
-                  _buildFlag('assets/images/spain.png', "ES"),
-                  const SizedBox(width: 5),
                   _buildFlag('assets/images/france.png', "FR"),
+                  const SizedBox(width: 5),
+                  _buildFlag('assets/images/spain.png', "ES"),
                 ],
               ),
             ],
@@ -386,7 +386,7 @@ class __DebugInfoState extends State<_DebugInfo> {
       padding: const EdgeInsets.only(left: 35, right: 35),
       child: Column(
         children: <Widget>[
-          Text("Debug info:", style: Theme.of(context).textTheme.title),
+          Text("Debug info", style: Theme.of(context).textTheme.title),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

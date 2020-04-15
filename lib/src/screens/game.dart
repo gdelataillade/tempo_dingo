@@ -6,6 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:vibrate/vibrate.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/game_model.dart';
@@ -36,6 +37,7 @@ class _GameState extends State<Game> {
 
   void _tap() async {
     print("tap");
+    Vibrate.feedback(FeedbackType.impact);
     if (_tapCount == 0) {
       await _audioPlayer
           .play(widget.track.previewUrl, volume: _userModel.volume / 10)
