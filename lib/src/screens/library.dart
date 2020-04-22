@@ -4,6 +4,8 @@ import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/screens/artist.dart';
+import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
@@ -128,22 +130,32 @@ class _Songs extends StatefulWidget {
 class __SongsState extends State<_Songs> {
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: widget.tracks.length,
-        itemBuilder: (BuildContext context, int index) {
-          final Track track = widget.tracks[index];
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Scrollbar(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            itemCount: widget.tracks.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Track track = widget.tracks[index];
 
-          return TrackCard(
-            track.album.images.first.url,
-            track.name,
-            track.artists.first.name,
-            track.id,
-            track.popularity,
-          );
-        },
-      ),
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Game(model, track))),
+                child: TrackCard(
+                  track.album.images.first.url,
+                  track.name,
+                  track.artists.first.name,
+                  track.id,
+                  track.popularity,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -165,44 +177,60 @@ class __ArtistsState extends State<_Artists> {
     _artistIndex = 0;
 
     var artists = widget.artists;
-    return Scrollbar(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: (widget.artists.length / 3).round(),
-        itemBuilder: (BuildContext context, int index) {
-          Widget row = Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => print("Artist"),
-                  child: ArtistCard(artists[_artistIndex].images.first.url,
-                      artists[_artistIndex].name),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, userModel) {
+        return Scrollbar(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            itemCount: (widget.artists.length / 3).round(),
+            itemBuilder: (BuildContext context, int index) {
+              Widget row = Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ArtistScreen(
+                                  userModel, widget.artists[index]))),
+                      child: ArtistCard(artists[_artistIndex].images.first.url,
+                          artists[_artistIndex].name),
+                    ),
+                    artists.length > _artistIndex + 1
+                        ? GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ArtistScreen(
+                                        userModel, widget.artists[index]))),
+                            child: ArtistCard(
+                                artists[_artistIndex + 1].images.first.url,
+                                artists[_artistIndex + 1].name),
+                          )
+                        : Container(width: 80, height: 80),
+                    artists.length > _artistIndex + 2
+                        ? GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ArtistScreen(
+                                        userModel, widget.artists[index]))),
+                            child: ArtistCard(
+                                artists[_artistIndex + 2].images.first.url,
+                                artists[_artistIndex + 2].name),
+                          )
+                        : Container(width: 80, height: 80),
+                  ],
                 ),
-                artists.length > _artistIndex + 1
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: ArtistCard(
-                            artists[_artistIndex + 1].images.first.url,
-                            artists[_artistIndex + 1].name),
-                      )
-                    : Container(width: 80, height: 80),
-                artists.length > _artistIndex + 2
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: ArtistCard(
-                            artists[_artistIndex + 2].images.first.url,
-                            artists[_artistIndex + 2].name),
-                      )
-                    : Container(width: 80, height: 80),
-              ],
-            ),
-          );
-          _artistIndex += 3;
-          return row;
-        },
-      ),
+              );
+              _artistIndex += 3;
+              return row;
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -243,12 +271,18 @@ class __FavoritesState extends State<_Favorites> {
                     final Track track = widget.tracks[index];
 
                     return _userModel.isFavorite(track.id)
-                        ? TrackCard(
-                            track.album.images.first.url,
-                            track.name,
-                            track.artists.first.name,
-                            track.id,
-                            track.popularity,
+                        ? GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Game(model, track))),
+                            child: TrackCard(
+                              track.album.images.first.url,
+                              track.name,
+                              track.artists.first.name,
+                              track.id,
+                              track.popularity,
+                            ),
                           )
                         : Container();
                   },
