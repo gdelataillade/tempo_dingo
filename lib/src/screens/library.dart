@@ -8,7 +8,6 @@ import 'package:tempo_dingo/src/screens/artist.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
-import 'package:vibrate/vibrate.dart';
 
 class Library extends StatefulWidget {
   final List<Track> tracks;
@@ -66,53 +65,35 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                     controller: _tabController,
                     indicatorColor: Colors.transparent,
                     tabs: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          if (model.vibration)
-                            Vibrate.feedback(FeedbackType.impact);
-                        },
-                        child: Tab(
-                          child: Text("Songs",
-                              style: TextStyle(
-                                color: _tabIndex == 0
-                                    ? Colors.white
-                                    : Color.fromRGBO(153, 162, 189, 1),
-                                fontSize: 25,
-                                fontFamily: 'Apple-Bold',
-                              )),
-                        ),
+                      Tab(
+                        child: Text("Songs",
+                            style: TextStyle(
+                              color: _tabIndex == 0
+                                  ? Colors.white
+                                  : Color.fromRGBO(153, 162, 189, 1),
+                              fontSize: 25,
+                              fontFamily: 'Apple-Bold',
+                            )),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (model.vibration)
-                            Vibrate.feedback(FeedbackType.impact);
-                        },
-                        child: Tab(
-                          child: Text("Artists",
-                              style: TextStyle(
-                                color: _tabIndex == 1
-                                    ? Colors.white
-                                    : Color.fromRGBO(153, 162, 189, 1),
-                                fontSize: 25,
-                                fontFamily: 'Apple-Bold',
-                              )),
-                        ),
+                      Tab(
+                        child: Text("Artists",
+                            style: TextStyle(
+                              color: _tabIndex == 1
+                                  ? Colors.white
+                                  : Color.fromRGBO(153, 162, 189, 1),
+                              fontSize: 25,
+                              fontFamily: 'Apple-Bold',
+                            )),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (model.vibration)
-                            Vibrate.feedback(FeedbackType.impact);
-                        },
-                        child: Tab(
-                          child: Text("Favorite",
-                              style: TextStyle(
-                                color: _tabIndex == 2
-                                    ? Colors.white
-                                    : Color.fromRGBO(153, 162, 189, 1),
-                                fontSize: 25,
-                                fontFamily: 'Apple-Bold',
-                              )),
-                        ),
+                      Tab(
+                        child: Text("Favorite",
+                            style: TextStyle(
+                              color: _tabIndex == 2
+                                  ? Colors.white
+                                  : Color.fromRGBO(153, 162, 189, 1),
+                              fontSize: 25,
+                              fontFamily: 'Apple-Bold',
+                            )),
                       ),
                     ],
                   ),
