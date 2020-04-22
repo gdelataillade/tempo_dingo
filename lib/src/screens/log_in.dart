@@ -61,7 +61,7 @@ class __LogInFormState extends State<_LogInForm> {
   UserModel _userModel;
   String _email = "";
   String _password = "";
-  bool _staySignedIn = false;
+  bool _staySignedIn = true;
   bool _inputsAreValid = false;
   bool _hidePassword = true;
   bool _authFailed = false;
