@@ -44,7 +44,7 @@ class _TrackCardState extends State<TrackCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 15),
+      margin: const EdgeInsets.only(top: 12),
       width: MediaQuery.of(context).size.width - 60,
       height: 65,
       decoration: BoxDecoration(
