@@ -62,12 +62,14 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
             elevation: 0,
             leading: Builder(
               builder: (BuildContext context) {
-                return GestureDetector(
-                    child: Icon(FeatherIcons.settings, color: Colors.white),
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Settings(_userModel))));
+                return IconButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Settings(_userModel))),
+                  icon: Icon(FeatherIcons.settings),
+                  color: Colors.white,
+                );
               },
             ),
             actions: <Widget>[
@@ -79,10 +81,10 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
                 child: Row(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.only(top: 4, right: 10),
                       child: Row(
                         children: <Widget>[
-                          Text(_userModel.stars.toString(),
+                          Text("${_userModel.stars}",
                               style: Theme.of(context).textTheme.body1),
                           Icon(Icons.star,
                               color: Color.fromRGBO(248, 207, 95, 1)),
