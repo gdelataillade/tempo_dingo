@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:vibrate/vibrate.dart';
 
 class TrackCard extends StatefulWidget {
   final String imgUrl;
@@ -110,6 +111,8 @@ class _TrackCardState extends State<TrackCard> {
                 child: _isPurshased
                     ? GestureDetector(
                         onTap: () {
+                          if (model.vibration)
+                            Vibrate.feedback(FeedbackType.impact);
                           setState(() => _isLiked = !_isLiked);
                           model.likeUnlikeTrack(widget.trackId);
                         },
