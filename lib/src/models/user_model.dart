@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tempo_dingo/src/config/register_config.dart' as config;
 
 class UserModel extends Model {
   DocumentSnapshot _documentSnapshot;
@@ -8,7 +9,7 @@ class UserModel extends Model {
   String _password;
   String _fullName;
   int _stars;
-  String _language;
+  String _language = "US";
   bool _staySignedIn;
   bool vibration = true;
   double volume = 10;
@@ -37,11 +38,11 @@ class UserModel extends Model {
   bool get isConnected => _isConnected;
   bool get isSigningOut => _isSigningOut;
 
-  void _storeLoginInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setString('email', _email);
-    prefs.setString('password', _password);
+  void _storeLoginInfo() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('email', _email);
+      prefs.setString('password', _password);
+    });
   }
 
   List<String> _convertListDynamicToString(List<dynamic> dlist) =>
@@ -88,6 +89,44 @@ class UserModel extends Model {
     return false;
   }
 
+  Future<void> loginGuest() async {
+    print("loginGuest");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.clear();
+    // Stars prefs
+    int stars = prefs.getInt('stars');
+    if (stars == null) {
+      _stars = 11;
+      prefs.setInt('stars', _stars);
+    } else
+      _stars = stars;
+    // Favorite prefs
+    List<String> favorite = prefs.getStringList('favorite');
+    if (favorite == null) {
+      _favorite = [];
+      prefs.setStringList('favorite', []);
+    } else
+      _favorite = favorite;
+    // History prefs
+    List<String> history = prefs.getStringList('history');
+    if (history == null) {
+      _history = [];
+      prefs.setStringList('history', []);
+    } else
+      _history = history;
+    // Language prefs
+    String language = prefs.getString('language');
+    if (language == null) {
+      _language = "US";
+      prefs.setString('language', "US");
+    } else
+      _language = language;
+
+    _songs = config.library["songs"];
+    _artists = config.library["artists"];
+    _language = config.language;
+  }
+
   Future<void> register(String fullName, String email, String password,
       Map<String, dynamic> data) async {
     Firestore.instance
@@ -106,8 +145,8 @@ class UserModel extends Model {
 
   void logout() async {
     _documentSnapshot = null;
-    _email = "";
-    _password = "";
+    _email = null;
+    _password = null;
     _fullName = "";
     _stars = 0;
     _language = "US";
@@ -130,6 +169,22 @@ class UserModel extends Model {
   void addToHistory(String trackId) {
     if (_history.contains(trackId)) _history.remove(trackId);
     _history.insert(0, trackId);
+    if (_isConnected) {
+      Map<String, dynamic> library = {
+        "songs": _songs,
+        "artists": _artists,
+        "favorite": _favorite,
+        "history": _history
+      };
+      Firestore.instance
+          .collection('users')
+          .document(_email)
+          .updateData({"library": library});
+    } else {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setStringList('history', _history);
+      });
+    }
   }
 
   bool isPurshased(String trackId) {
@@ -142,16 +197,38 @@ class UserModel extends Model {
 
   void likeUnlikeTrack(String trackId) {
     isFavorite(trackId) ? _favorite.remove(trackId) : _favorite.add(trackId);
-    // notifyListeners();
-    Map<String, dynamic> library = {
-      "songs": _songs,
-      "artists": _artists,
-      "favorite": _favorite,
-      "history": _history
-    };
-    Firestore.instance
-        .collection('users')
-        .document(_email)
-        .updateData({"library": library});
+    if (_isConnected) {
+      Map<String, dynamic> library = {
+        "songs": _songs,
+        "artists": _artists,
+        "favorite": _favorite,
+        "history": _history
+      };
+      Firestore.instance
+          .collection('users')
+          .document(_email)
+          .updateData({"library": library});
+    } else {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setStringList('favorite', _favorite);
+      });
+    }
   }
+
+  void addOrRemoveStars(int nb) {
+    _stars += nb;
+    if (_isConnected) {
+      Firestore.instance
+          .collection('users')
+          .document(_email)
+          .updateData({"stars": _stars});
+    } else {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setInt('stars', _stars);
+      });
+    }
+    notifyListeners();
+  }
+
+  void reloadPage() => notifyListeners();
 }

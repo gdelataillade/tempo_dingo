@@ -1,3 +1,4 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +7,6 @@ import 'package:spotify/spotify_io.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/tab_view.dart';
-import 'package:tempo_dingo/src/screens/log_in.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 
@@ -43,6 +43,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
 
   @override
   void initState() {
+    print("initState");
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         _email = prefs.getString('email');
@@ -62,13 +63,24 @@ class __CheckLogInState extends State<_CheckLogIn> {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       print("Build scoped model");
       if (model.isSigningOut) _resetData();
-      if ((_email == null || _password == null) && !model.isConnected)
-        return LogIn();
-      return model.isConnected
-          ? _tabsFutureBuilders()
-          : FutureBuilder(
-              future: model.login(_email, _password, false),
-              builder: (context, snapshot) => Center(child: loadingWhite));
+      if (_email == null || _password == null)
+        return FutureBuilder<void>(
+          future: model.loginGuest(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: loadingWhite);
+              default:
+                return _tabsFutureBuilders();
+            }
+          },
+        );
+      // model.loginGuest();
+      // return _tabsFutureBuilders();
+
+      return FutureBuilder(
+          future: model.login(_email, _password, false),
+          builder: (context, snapshot) => Center(child: loadingWhite));
     });
   }
 
@@ -76,7 +88,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return FutureBuilder<List<Track>>(
-          future: spotifyRepository.getTrackList(model.songs),
+          future: spotifyRepository.getTrackList(model.songs, "songs"),
           builder: (context, tracks) {
             switch (tracks.connectionState) {
               case ConnectionState.waiting:
@@ -92,7 +104,8 @@ class __CheckLogInState extends State<_CheckLogIn> {
                       default:
                         if (artists.hasError) return _Error();
                         return FutureBuilder<List<Track>>(
-                          future: spotifyRepository.getTrackList(model.history),
+                          future: spotifyRepository.getTrackList(
+                              model.history, "history"),
                           builder: (context, history) {
                             switch (history.connectionState) {
                               case ConnectionState.waiting:
@@ -121,9 +134,26 @@ class __CheckLogInState extends State<_CheckLogIn> {
 class _Error extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Error with API. Try again later.",
-          style: Theme.of(context).textTheme.body1),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Network error. Try again.",
+                  style: Theme.of(context).textTheme.body1),
+              const SizedBox(height: 100),
+              IconButton(
+                icon: Icon(
+                  FeatherIcons.refreshCcw,
+                  color: Colors.white,
+                ),
+                onPressed: () => model.reloadPage(),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

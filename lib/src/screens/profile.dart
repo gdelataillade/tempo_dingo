@@ -23,60 +23,110 @@ class _ProfileState extends State<Profile> {
       child: ScopedModelDescendant<UserModel>(
         builder: (context, child, model) {
           _userModel = model;
-          return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              actions: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    _userModel.logout();
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    children: <Widget>[
-                      Text("Logout", style: TextStyle(fontSize: 20)),
-                      const SizedBox(width: 5),
-                      Icon(FeatherIcons.logOut),
-                      const SizedBox(width: 10),
+          return model.isConnected
+              ? Scaffold(
+                  appBar: AppBar(
+                    elevation: 0,
+                    actions: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          _userModel.logout();
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Text("Logout", style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 5),
+                            Icon(FeatherIcons.logOut),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
+                  backgroundColor: mainTheme,
+                  body: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 35, right: 35),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Profile",
+                              style: Theme.of(context).textTheme.headline),
+                          const SizedBox(height: 10),
+                          Text(_userModel.fullName,
+                              style: Theme.of(context).textTheme.title),
+                          const SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("${_userModel.stars}",
+                                  style: Theme.of(context).textTheme.headline),
+                              Icon(
+                                Icons.star,
+                                color: Color.fromRGBO(248, 207, 95, 1),
+                                size: 50,
+                              ),
+                            ],
+                          ),
+                          _Highscores(),
+                          _Shop(),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : _GuestProfile();
+        },
+      ),
+    );
+  }
+}
+
+class _GuestProfile extends StatefulWidget {
+  @override
+  __GuestProfileState createState() => __GuestProfileState();
+}
+
+class __GuestProfileState extends State<_GuestProfile> {
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, userModel) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            title: Text("Guest"),
+          ),
+          backgroundColor: mainTheme,
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("${userModel.stars}",
+                        style: Theme.of(context).textTheme.headline),
+                    Icon(
+                      Icons.star,
+                      color: Color.fromRGBO(248, 207, 95, 1),
+                      size: 50,
+                    ),
+                  ],
+                ),
+                RaisedButton(
+                  onPressed: () => userModel.addOrRemoveStars(3),
+                  child: Text("+3"),
+                ),
+                RaisedButton(
+                  onPressed: () => userModel.addOrRemoveStars(-10),
+                  child: Text("-10"),
                 ),
               ],
             ),
-            backgroundColor: mainTheme,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 35, right: 35),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Profile",
-                        style: Theme.of(context).textTheme.headline),
-                    const SizedBox(height: 10),
-                    Text(_userModel.fullName,
-                        style: Theme.of(context).textTheme.title),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("${_userModel.stars}",
-                            style: Theme.of(context).textTheme.headline),
-                        Icon(
-                          Icons.star,
-                          color: Color.fromRGBO(248, 207, 95, 1),
-                          size: 50,
-                        ),
-                      ],
-                    ),
-                    _Highscores(),
-                    _Shop(),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
