@@ -102,7 +102,7 @@ class _SettingsState extends State<Settings> {
                   padding: const EdgeInsets.only(left: 35),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Settings",
+                    _userModel.intl("settings"),
                     style: Theme.of(context).textTheme.headline,
                   ),
                 ),
@@ -144,12 +144,7 @@ class __HeaderState extends State<_Header> {
           children: <Widget>[
             GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.chevron_left, color: Colors.white, size: 30),
-                  Text("Home", style: Theme.of(context).textTheme.title),
-                ],
-              ),
+              child: Icon(Icons.chevron_left, color: Colors.white, size: 30),
             ),
             Row(
               children: <Widget>[
@@ -193,7 +188,7 @@ class __AudioSliderState extends State<_AudioSlider> {
           padding: const EdgeInsets.only(left: 35, right: 35),
           child: Column(
             children: <Widget>[
-              Text("Audio Volume ${_audio.round()}",
+              Text("${model.intl('volume')} ${_audio.round()}",
                   style: Theme.of(context).textTheme.title),
               Slider(
                   value: _audio,
@@ -230,7 +225,8 @@ class __SettingsFieldsState extends State<_SettingsFields> {
   final String _gitHubUrl = "https://github.com/gdelataillade/tempo_dingo";
   bool _enableVibration = true;
   bool _enableDarkTheme = true;
-  String _language = "US";
+  String _language;
+  UserModel _userModel;
 
   Email _buildEmailReportBug() {
     return Email(
@@ -255,6 +251,7 @@ class __SettingsFieldsState extends State<_SettingsFields> {
         if (_language != language) {
           Vibrate.feedback(FeedbackType.impact);
           setState(() => _language = language);
+          _userModel.changeLanguage(language);
         }
       },
       child: Container(
@@ -274,7 +271,9 @@ class __SettingsFieldsState extends State<_SettingsFields> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        _enableVibration = model.vibration;
+        _userModel = model;
+        _language = model.language;
+        _enableVibration = _userModel.vibration;
         return Padding(
           padding: const EdgeInsets.only(left: 35, right: 35),
           child: Column(
@@ -284,7 +283,7 @@ class __SettingsFieldsState extends State<_SettingsFields> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Vibration"),
+                  Text(model.intl('vibration')),
                   Switch(
                       activeColor: Colors.white,
                       value: _enableVibration,
@@ -292,14 +291,14 @@ class __SettingsFieldsState extends State<_SettingsFields> {
                         if (_enableVibration)
                           Vibrate.feedback(FeedbackType.impact);
                         setState(() => _enableVibration = value);
-                        model.vibration = value;
+                        _userModel.vibration = value;
                       }),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Dark Theme"),
+                  Text(model.intl('dark_theme')),
                   Switch(
                       activeColor: Colors.white,
                       value: _enableDarkTheme,
@@ -314,14 +313,14 @@ class __SettingsFieldsState extends State<_SettingsFields> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Language"),
+                  Text(model.intl('language')),
                   Row(
                     children: <Widget>[
-                      _buildFlag('assets/images/united-states.png', "US"),
+                      _buildFlag('assets/images/united-states.png', "en"),
                       const SizedBox(width: 5),
-                      _buildFlag('assets/images/france.png', "FR"),
+                      _buildFlag('assets/images/france.png', "fr"),
                       const SizedBox(width: 5),
-                      _buildFlag('assets/images/spain.png', "ES"),
+                      _buildFlag('assets/images/spain.png', "es"),
                     ],
                   ),
                 ],
@@ -336,7 +335,7 @@ class __SettingsFieldsState extends State<_SettingsFields> {
                     print(error);
                   }
                 },
-                child: Text("Report a bug"),
+                child: Text(model.intl('report_bug')),
               ),
               const SizedBox(height: 15),
               GestureDetector(
