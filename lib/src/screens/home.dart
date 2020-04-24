@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Tempo Dingo",
+                  'Tempo Dingo',
                   style: Theme.of(context).textTheme.headline,
                 ),
               ),
@@ -60,39 +60,41 @@ class _Artists extends StatefulWidget {
 class __ArtistsState extends State<_Artists> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-            padding: const EdgeInsets.only(left: 24), child: Text("Artists")),
-        const SizedBox(height: 10),
-        Container(
-          height: 105,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.artists.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ScopedModelDescendant<UserModel>(
-                  builder: (context, child, userModel) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 0),
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ArtistScreen(
-                                userModel, widget.artists[index]))),
-                    child: ArtistCard(
-                      widget.artists[index].images.first.url,
-                      widget.artists[index].name,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, userModel) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(left: 24),
+                child: Text(userModel.intl('artists'))),
+            const SizedBox(height: 10),
+            Container(
+              height: 105,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.artists.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 0),
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ArtistScreen(
+                                  userModel, widget.artists[index]))),
+                      child: ArtistCard(
+                        widget.artists[index].images.first.url,
+                        widget.artists[index].name,
+                      ),
                     ),
-                  ),
-                );
-              });
-            },
-          ),
-        ),
-      ],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

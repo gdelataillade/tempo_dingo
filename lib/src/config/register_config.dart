@@ -1,5 +1,5 @@
 final int stars = 10;
-final String language = "US";
+final String language = "en";
 final bool staySignedIn = false;
 final bool vibration = true;
 final bool darkTheme = true;

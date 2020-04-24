@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tempo_dingo/src/config/register_config.dart' as config;
+import '../config/language.dart';
 
 class UserModel extends Model {
   DocumentSnapshot _documentSnapshot;
@@ -9,7 +10,7 @@ class UserModel extends Model {
   String _password;
   String _fullName;
   int _stars;
-  String _language = "US";
+  String _language;
   bool _staySignedIn;
   bool vibration = true;
   double volume = 10;
@@ -90,9 +91,10 @@ class UserModel extends Model {
   }
 
   Future<void> loginGuest() async {
-    print("loginGuest");
+    // print("loginGuest");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await prefs.clear();
+
     // Stars prefs
     int stars = prefs.getInt('stars');
     if (stars == null) {
@@ -117,14 +119,13 @@ class UserModel extends Model {
     // Language prefs
     String language = prefs.getString('language');
     if (language == null) {
-      _language = "US";
-      prefs.setString('language', "US");
+      _language = "en";
+      prefs.setString('language', "en");
     } else
       _language = language;
 
     _songs = config.library["songs"];
     _artists = config.library["artists"];
-    _language = config.language;
   }
 
   Future<void> register(String fullName, String email, String password,
@@ -229,6 +230,23 @@ class UserModel extends Model {
     }
     notifyListeners();
   }
+
+  void changeLanguage(String newLang) {
+    _language = newLang;
+    if (_isConnected) {
+      Firestore.instance
+          .collection('users')
+          .document(_email)
+          .updateData({"language": newLang});
+    } else {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setString('language', newLang);
+      });
+    }
+    notifyListeners();
+  }
+
+  String intl(String key) => lang[key][_language];
 
   void reloadPage() => notifyListeners();
 }
