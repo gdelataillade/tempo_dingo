@@ -347,13 +347,13 @@ class __SettingsFieldsState extends State<_SettingsFields> {
                     print(error);
                   }
                 },
-                child: Text("Have any recommendation?"),
+                child: Text(model.intl('recommendation')),
               ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Made with Flutter in "),
+                  Text(model.intl('made_with_flutter')),
                   GestureDetector(
                     onTap: () async {
                       if (await canLaunch(_gitHubUrl)) {
@@ -389,38 +389,43 @@ class _DebugInfo extends StatefulWidget {
 class __DebugInfoState extends State<_DebugInfo> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 35, right: 35),
-      child: Column(
-        children: <Widget>[
-          Text("Debug info", style: Theme.of(context).textTheme.title),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Padding(
+          padding: const EdgeInsets.only(left: 35, right: 35),
+          child: Column(
             children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Text(model.intl('debug_info'),
+                  style: Theme.of(context).textTheme.title),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Device:"),
-                  Text("Screen size:"),
-                  Text("App version:"),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(model.intl('device')),
+                      Text(model.intl('screen_size')),
+                      Text(model.intl('app_version')),
+                    ],
+                  ),
+                  widget.deviceData.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                                "${widget.deviceData['name']} ${widget.deviceData['systemName']} ${widget.deviceData['systemVersion']}"),
+                            Text("${widget.width}x${widget.height}"),
+                            Text(appVersion)
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
-              widget.deviceData.isNotEmpty
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "${widget.deviceData['name']} ${widget.deviceData['systemName']} ${widget.deviceData['systemVersion']}"),
-                        Text("${widget.width}x${widget.height}"),
-                        Text(appVersion)
-                      ],
-                    )
-                  : Container(),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -430,40 +435,45 @@ class _Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text.rich(
-            TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: "Privacy Policy",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-                TextSpan(
-                  text: " - ",
-                  children: <TextSpan>[],
-                ),
-                TextSpan(
-                  text: "Terms of service",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text("Made with ", style: TextStyle(fontSize: 13)),
-              Icon(FeatherIcons.heart, color: Colors.red, size: 15),
-              Text(" by Gautier de Lataillade", style: TextStyle(fontSize: 13)),
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: model.intl('privacy_policy'),
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    TextSpan(
+                      text: " - ",
+                      children: <TextSpan>[],
+                    ),
+                    TextSpan(
+                      text: model.intl('terms_service'),
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(model.intl('made_with'), style: TextStyle(fontSize: 13)),
+                  Icon(FeatherIcons.heart, color: Colors.red, size: 15),
+                  Text(" ${model.intl('by')} Gautier de Lataillade",
+                      style: TextStyle(fontSize: 13)),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

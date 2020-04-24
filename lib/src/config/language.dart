@@ -46,4 +46,49 @@ var lang = {
     "fr": "Une recommandation?",
     "es": "¿Alguna recomendación?",
   },
+  "made_with_flutter": {
+    "en": "Made with Flutter in ",
+    "fr": "Développé avec Flutter en ",
+    "es": "Hecho con Flutter en ",
+  },
+  "debug_info": {
+    "en": "Debug info",
+    "fr": "Info de debug",
+    "es": "Informaciónes de debug",
+  },
+  "device": {
+    "en": "Device",
+    "fr": "Appareil",
+    "es": "Dispositivo",
+  },
+  "screen_size": {
+    "en": "Screen size",
+    "fr": "Taille écran",
+    "es": "Tamaño de pantalla",
+  },
+  "app_version": {
+    "en": "App version",
+    "fr": "Version",
+    "es": "Versión",
+  },
+  "privacy_policy": {
+    "en": "Privacy policy",
+    "fr": "Politique de confidentialité",
+    "es": "Política de privacidad",
+  },
+  "terms_service": {
+    "en": "Terms of service",
+    "fr": "Conditions d'utilisation",
+    "es": "Términos de servicio",
+  },
+  "made_with": {
+    "en": "Made with ",
+    "fr": "Développé avec ",
+    "es": "Desarollado con ",
+  },
+  "by": {
+    "en": "by",
+    "fr": "par",
+    "es": "por",
+  },
 };
