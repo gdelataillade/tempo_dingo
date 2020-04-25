@@ -10,6 +10,22 @@ var lang = {
     "fr": "Jeu rapide",
     "es": "Juego rapido",
   },
+  // TabView
+  "search": {
+    "en": "Search",
+    "fr": "Recherche",
+    "es": "Buscar",
+  },
+  "home": {
+    "en": "Home",
+    "fr": "Accueil",
+    "es": "Inicio",
+  },
+  "library": {
+    "en": "Library",
+    "fr": "Bibliothèque",
+    "es": "Biblioteca",
+  },
   // Settings
   "settings": {
     "en": "Settings",

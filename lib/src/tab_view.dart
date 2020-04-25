@@ -162,66 +162,70 @@ class _TabBar extends StatefulWidget {
 class __TabBarState extends State<_TabBar> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: mainTheme,
-      child: Theme(
-        data: ThemeData(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: TabBar(
-          controller: widget.dataController,
-          indicatorColor: Colors.transparent,
-          indicatorWeight: 20,
-          tabs: <Widget>[
-            Tab(
-              icon: Icon(
-                FeatherIcons.search,
-                color: Colors.white,
-                size: widget.currentTabIndex == 0 ? 30 : 24,
-              ),
-              child: Text(
-                "Search",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Apple-Semibold",
-                  fontSize: widget.currentTabIndex == 0 ? 16 : 14,
-                ),
-              ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Material(
+          color: mainTheme,
+          child: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
             ),
-            Tab(
-              icon: Icon(
-                FeatherIcons.home,
-                color: Colors.white,
-                size: widget.currentTabIndex == 1 ? 30 : 24,
-              ),
-              child: Text(
-                "Home",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Apple-Semibold",
-                  fontSize: widget.currentTabIndex == 1 ? 16 : 14,
+            child: TabBar(
+              controller: widget.dataController,
+              indicatorColor: Colors.transparent,
+              indicatorWeight: 20,
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(
+                    FeatherIcons.search,
+                    color: Colors.white,
+                    size: widget.currentTabIndex == 0 ? 30 : 24,
+                  ),
+                  child: Text(
+                    model.intl('search'),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Apple-Semibold",
+                      fontSize: widget.currentTabIndex == 0 ? 16 : 14,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Tab(
-              icon: Icon(
-                FeatherIcons.music,
-                color: Colors.white,
-                size: widget.currentTabIndex == 2 ? 30 : 24,
-              ),
-              child: Text(
-                "Library",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Apple-Semibold",
-                  fontSize: widget.currentTabIndex == 2 ? 16 : 14,
+                Tab(
+                  icon: Icon(
+                    FeatherIcons.home,
+                    color: Colors.white,
+                    size: widget.currentTabIndex == 1 ? 30 : 24,
+                  ),
+                  child: Text(
+                    model.intl('home'),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Apple-Semibold",
+                      fontSize: widget.currentTabIndex == 1 ? 16 : 14,
+                    ),
+                  ),
                 ),
-              ),
+                Tab(
+                  icon: Icon(
+                    FeatherIcons.music,
+                    color: Colors.white,
+                    size: widget.currentTabIndex == 2 ? 30 : 24,
+                  ),
+                  child: Text(
+                    model.intl('library'),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Apple-Semibold",
+                      fontSize: widget.currentTabIndex == 2 ? 16 : 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
