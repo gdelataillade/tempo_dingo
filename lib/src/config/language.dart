@@ -20,6 +20,22 @@ var lang = {
     "fr": "Erreur réseau. Veuillez réessayer.",
     "es": "Error de red. Inténtalo de nuevo.",
   },
+  // Search
+  "search_hint": {
+    "en": "Artist or song...",
+    "fr": "Artiste ou musique...",
+    "es": "Artista o música...",
+  },
+  "recent_games": {
+    "en": "Played recently",
+    "fr": "Joué recemment",
+    "es": "Jugado recientemente",
+  },
+  "no_recent_games": {
+    "en": "You haven't played yet",
+    "fr": "Tu n'as pas encore joué",
+    "es": "Aún no has jugado",
+  },
   // Home
   "artists": {
     "en": "Artists",

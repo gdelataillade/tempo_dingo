@@ -77,7 +77,7 @@ class _SearchTabState extends State<SearchTab> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Search",
+                  model.intl('search'),
                   style: Theme.of(context).textTheme.headline,
                 ),
               ),
@@ -106,25 +106,29 @@ class _SearchInput extends StatefulWidget {
 class __SearchInputState extends State<_SearchInput> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      height: 38,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(const Radius.circular(5)),
-      ),
-      child: TextField(
-        autocorrect: false,
-        controller: widget.controller,
-        cursorColor: mainTheme,
-        decoration: InputDecoration(
-          prefixIcon:
-              Icon(FeatherIcons.search, color: mainTheme.withOpacity(0.8)),
-          hintText: "Artist, song or album...",
-          hintStyle: TextStyle(color: mainTheme.withOpacity(0.8)),
-          border: InputBorder.none,
-        ),
-      ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Container(
+          margin: const EdgeInsets.only(top: 10),
+          height: 38,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(const Radius.circular(5)),
+          ),
+          child: TextField(
+            autocorrect: false,
+            controller: widget.controller,
+            cursorColor: mainTheme,
+            decoration: InputDecoration(
+              prefixIcon:
+                  Icon(FeatherIcons.search, color: mainTheme.withOpacity(0.8)),
+              hintText: model.intl('search_hint'),
+              hintStyle: TextStyle(color: mainTheme.withOpacity(0.8)),
+              border: InputBorder.none,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -222,40 +226,43 @@ class _History extends StatefulWidget {
 class __HistoryState extends State<_History> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Recent searches",
-            style: Theme.of(context).textTheme.title,
-          ),
-          const SizedBox(height: 5),
-          widget.history.length == 0
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: Center(child: Text("No recent searches")),
-                )
-              : Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: false,
-                    padding: const EdgeInsets.only(bottom: 10),
-                    itemCount: widget.history.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final Track track = widget.history[index];
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                model.intl('recent_games'),
+                style: Theme.of(context).textTheme.title,
+              ),
+              widget.history.length == 0
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: Center(child: Text(model.intl('no_recent_games'))),
+                    )
+                  : Flexible(
+                      child: ListView.builder(
+                        shrinkWrap: false,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        itemCount: widget.history.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final Track track = widget.history[index];
 
-                      return TrackCard(
-                        track.album.images.first.url,
-                        track.name,
-                        track.artists.first.name,
-                        track.id,
-                        track.popularity,
-                      );
-                    },
-                  ),
-                ),
-        ],
-      ),
+                          return TrackCard(
+                            track.album.images.first.url,
+                            track.name,
+                            track.artists.first.name,
+                            track.id,
+                            track.popularity,
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

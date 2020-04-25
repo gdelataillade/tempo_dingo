@@ -111,16 +111,20 @@ class _QuickPlay extends StatefulWidget {
 class __QuickPlayState extends State<_QuickPlay> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 24),
-          child: Text("Quick play"),
-        ),
-        const SizedBox(height: 10),
-        Carousel(widget.tracks),
-      ],
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: Text(model.intl('quick_play')),
+            ),
+            const SizedBox(height: 10),
+            Carousel(widget.tracks),
+          ],
+        );
+      },
     );
   }
 }
