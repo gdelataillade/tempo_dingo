@@ -43,7 +43,6 @@ class __CheckLogInState extends State<_CheckLogIn> {
 
   @override
   void initState() {
-    print("initState");
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         _email = prefs.getString('email');
@@ -88,11 +87,11 @@ class __CheckLogInState extends State<_CheckLogIn> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return FutureBuilder<List<Track>>(
-          future: spotifyRepository.getTrackList(model.songs, "songs"),
+          future: spotifyRepository.getTrackList(model.songs),
           builder: (context, tracks) {
             switch (tracks.connectionState) {
               case ConnectionState.waiting:
-                return LoadingScreen("Loading tracks...");
+                return LoadingScreen(model.intl('loading_tracks'));
               default:
                 if (tracks.hasError) return _Error();
                 return FutureBuilder<List<Artist>>(
@@ -100,16 +99,16 @@ class __CheckLogInState extends State<_CheckLogIn> {
                   builder: (context, artists) {
                     switch (artists.connectionState) {
                       case ConnectionState.waiting:
-                        return LoadingScreen("Loading artists...");
+                        return LoadingScreen(model.intl('loading_artists'));
                       default:
                         if (artists.hasError) return _Error();
                         return FutureBuilder<List<Track>>(
-                          future: spotifyRepository.getTrackList(
-                              model.history, "history"),
+                          future: spotifyRepository.getTrackList(model.history),
                           builder: (context, history) {
                             switch (history.connectionState) {
                               case ConnectionState.waiting:
-                                return LoadingScreen("Loading history...");
+                                return LoadingScreen(
+                                    model.intl('loading_history'));
                               default:
                                 if (history.hasError) return _Error();
                                 return TabView(
@@ -140,7 +139,7 @@ class _Error extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Network error. Try again.",
+              Text(model.intl('network_error'),
                   style: Theme.of(context).textTheme.body1),
               const SizedBox(height: 100),
               IconButton(

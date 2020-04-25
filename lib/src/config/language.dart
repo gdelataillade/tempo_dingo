@@ -1,4 +1,25 @@
 var lang = {
+  // app.dart
+  "loading_tracks": {
+    "en": "Loading tracks...",
+    "fr": "Chargement de vos musiques...",
+    "es": "Cargando tu música...",
+  },
+  "loading_artists": {
+    "en": "Loading artists...",
+    "fr": "Chargement de vos artistes...",
+    "es": "Cargando tus artistas...",
+  },
+  "loading_history": {
+    "en": "Loading history...",
+    "fr": "Chargement de votre historique...",
+    "es": "Cargando tu historial...",
+  },
+  "network_error": {
+    "en": "Network error. Try again.",
+    "fr": "Erreur réseau. Veuillez réessayer.",
+    "es": "Error de red. Inténtalo de nuevo.",
+  },
   // Home
   "artists": {
     "en": "Artists",
