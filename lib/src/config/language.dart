@@ -20,6 +20,22 @@ var lang = {
     "fr": "Erreur réseau. Veuillez réessayer.",
     "es": "Error de red. Inténtalo de nuevo.",
   },
+  // TabView
+  "search": {
+    "en": "Search",
+    "fr": "Recherche",
+    "es": "Buscar",
+  },
+  "home": {
+    "en": "Home",
+    "fr": "Accueil",
+    "es": "Inicio",
+  },
+  "library": {
+    "en": "Library",
+    "fr": "Bibliothèque",
+    "es": "Biblioteca",
+  },
   // Search
   "search_hint": {
     "en": "Artist or song...",
@@ -47,21 +63,21 @@ var lang = {
     "fr": "Jeu rapide",
     "es": "Juego rapido",
   },
-  // TabView
-  "search": {
-    "en": "Search",
-    "fr": "Recherche",
-    "es": "Buscar",
+  // Library
+  "songs": {
+    "en": "Songs",
+    "fr": "Musiques",
+    "es": "Músicas",
   },
-  "home": {
-    "en": "Home",
-    "fr": "Accueil",
-    "es": "Inicio",
+  "favorite": {
+    "en": "Favorite",
+    "fr": "Favoris",
+    "es": "Favoritos",
   },
-  "library": {
-    "en": "Library",
-    "fr": "Bibliothèque",
-    "es": "Biblioteca",
+  "no_favorite": {
+    "en": "You still don't have favorite songs",
+    "fr": "Aún no tienes canciones favoritas",
+    "es": "Vous n'avez pas encore de chansons favorites",
   },
   // Settings
   "settings": {

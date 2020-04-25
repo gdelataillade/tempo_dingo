@@ -66,7 +66,7 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                     indicatorColor: Colors.transparent,
                     tabs: <Widget>[
                       Tab(
-                        child: Text("Songs",
+                        child: Text(model.intl('songs'),
                             style: TextStyle(
                               color: _tabIndex == 0
                                   ? Colors.white
@@ -76,7 +76,7 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                             )),
                       ),
                       Tab(
-                        child: Text("Artists",
+                        child: Text(model.intl('artists'),
                             style: TextStyle(
                               color: _tabIndex == 1
                                   ? Colors.white
@@ -86,7 +86,7 @@ class _LibraryState extends State<Library> with SingleTickerProviderStateMixin {
                             )),
                       ),
                       Tab(
-                        child: Text("Favorite",
+                        child: Text(model.intl('favorite'),
                             style: TextStyle(
                               color: _tabIndex == 2
                                   ? Colors.white
@@ -298,13 +298,17 @@ class _NoFavorite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "You have no favorite songs",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Center(
+          child: Text(
+            model.intl('no_favorite'),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        );
+      },
     );
   }
 }
