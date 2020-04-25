@@ -60,28 +60,13 @@ class _Artists extends StatefulWidget {
 }
 
 class __ArtistsState extends State<_Artists> {
-  void _shuffleList(List<spotify.Artist> list) {
-    var random = new Random();
-
-    for (var i = list.length - 1; i > 0; i--) {
-      var n = random.nextInt(i + 1);
-      var temp = widget.artists[i];
-
-      widget.artists[i] = widget.artists[n];
-      widget.artists[n] = temp;
-    }
-  }
-
-  @override
-  void initState() {
-    _shuffleList(widget.artists);
-    super.initState();
-  }
+  List<spotify.Artist> _shuffledList;
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
+        _shuffledList = userModel.shuffleList(widget.artists);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -102,10 +87,10 @@ class __ArtistsState extends State<_Artists> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ArtistScreen(
-                                  userModel, widget.artists[index]))),
+                                  userModel, _shuffledList[index]))),
                       child: ArtistCard(
-                        widget.artists[index].images.first.url,
-                        widget.artists[index].name,
+                        _shuffledList[index].images.first.url,
+                        _shuffledList[index].name,
                       ),
                     ),
                   );
@@ -129,10 +114,32 @@ class _QuickPlay extends StatefulWidget {
 }
 
 class __QuickPlayState extends State<_QuickPlay> {
+  List<spotify.Track> _shuffledList;
+
+  List<spotify.Track> _addHistoryToList(List<String> historyIds) {
+    List<spotify.Track> _newList = [];
+
+    // Add purchased tracks recently played
+    for (var i = 0; i < _shuffledList.length; i++) {
+      for (var j = 0; j < historyIds.length; j++) {
+        if (_shuffledList[i].id == historyIds[j])
+          _newList.add(_shuffledList[i]);
+      }
+    }
+
+    // Then, add the other purchased tracks
+    for (var i = 0; i < widget.tracks.length; i++) {
+      if (!_newList.contains(widget.tracks[i])) _newList.add(widget.tracks[i]);
+    }
+    return _newList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
+        _shuffledList = model.shuffleList(widget.tracks);
+        _shuffledList = _addHistoryToList(model.history);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -141,7 +148,7 @@ class __QuickPlayState extends State<_QuickPlay> {
               child: Text(model.intl('quick_play')),
             ),
             const SizedBox(height: 10),
-            Carousel(widget.tracks),
+            Carousel(_shuffledList),
           ],
         );
       },

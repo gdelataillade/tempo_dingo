@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -249,4 +251,17 @@ class UserModel extends Model {
   String intl(String key) => lang[key][_language];
 
   void reloadPage() => notifyListeners();
+
+  List shuffleList(List items) {
+    var random = new Random();
+
+    for (var i = items.length - 1; i > 0; i--) {
+      var n = random.nextInt(i + 1);
+      var temp = items[i];
+
+      items[i] = items[n];
+      items[n] = temp;
+    }
+    return items;
+  }
 }
