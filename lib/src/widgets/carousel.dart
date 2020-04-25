@@ -45,10 +45,23 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
                             builder: (context) => Game(_userModel, track))),
                     child: Column(
                       children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          child: Image.network(track.album.images.first.url,
-                              width: MediaQuery.of(context).size.width),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                spreadRadius: 0.2,
+                                blurRadius: 2,
+                                offset: Offset(1, 1),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            child: Image.network(track.album.images.first.url,
+                                width: MediaQuery.of(context).size.width),
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Text(
