@@ -35,6 +35,13 @@ class _TrackCardState extends State<TrackCard> {
     _price = price.toInt() + 1;
   }
 
+  String _shortenTrackName(String name) {
+    List<String> _res = name.split(" (");
+    _res = _res.first.split(" -");
+    _res = _res.first.split(" /");
+    return _res.first;
+  }
+
   @override
   void initState() {
     _setPrice();
@@ -77,15 +84,17 @@ class _TrackCardState extends State<TrackCard> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text(
-                  widget.track,
-                  overflow: TextOverflow.clip,
-                  softWrap: false,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: mainTheme,
-                    fontSize: 18,
-                    fontFamily: 'Apple-Semibold',
+                Flexible(
+                  child: Text(
+                    _shortenTrackName(widget.track),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: mainTheme,
+                      fontSize: 17,
+                      fontFamily: 'Apple-Semibold',
+                    ),
                   ),
                 ),
                 Text(
