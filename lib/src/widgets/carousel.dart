@@ -16,6 +16,13 @@ class Carousel extends StatefulWidget {
 class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
   UserModel _userModel;
 
+  String _shortenTrackName(String name) {
+    List<String> _res = name.split(" (");
+    _res = _res.first.split(" -");
+    _res = _res.first.split(" /");
+    return _res.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
@@ -65,7 +72,7 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          track.name,
+                          _shortenTrackName(track.name),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.title,
