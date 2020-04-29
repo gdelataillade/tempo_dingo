@@ -304,7 +304,7 @@ class _NoFavorite extends StatelessWidget {
           child: Text(
             model.intl('no_favorite'),
             style: TextStyle(
-              color: Colors.white,
+              color: Color.fromRGBO(255, 255, 255, 0.8),
             ),
           ),
         );
