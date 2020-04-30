@@ -28,24 +28,60 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   UserModel _userModel;
   GameModel _gameModel;
+
   int _tapCount = 0;
-  double _realTempo = 0.0;
-  double _progressionPercentage = 0.0;
+  double _realTempo = 0;
+  double _playerTempo = 0;
+  double _accuracy = 0;
+  double _progressionPercentage = 0;
 
   AudioCache audioCache = AudioCache();
   AudioPlayer _audioPlayer = AudioPlayer();
 
+  Duration _timeElapsed = Duration.zero;
+  DateTime _startTime;
+  DateTime _timestamp;
+
   void _tap() async {
-    print("tap");
+    print("tapCount: $_tapCount\n\n");
+    _tapCount++;
     if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
-    if (_tapCount == 0) {
+    if (_tapCount == 1) {
       await _audioPlayer
           .play(widget.track.previewUrl, volume: _userModel.volume / 10)
           .then((res) {
         _gameModel.setGameState(GameState.STARTED);
       });
+    } else
+      _calculateTempo();
+  }
+
+  void _setAccuracy() {
+    if (_playerTempo >= _realTempo)
+      _accuracy = _realTempo / _playerTempo;
+    else
+      _accuracy = _playerTempo / _realTempo;
+    _accuracy *= 100;
+  }
+
+  void _calculateTempo() {
+    if (_tapCount == 3) _startTime = DateTime.now();
+    if (_tapCount > 3) {
+      _timestamp = DateTime.now();
+      _timeElapsed = _timestamp.difference(_startTime);
+      print(
+          "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
+      _setAccuracy();
+      print("accuracy: ${_accuracy.toStringAsFixed(3)}");
     }
-    setState(() => _tapCount++);
+    if (_timeElapsed.inSeconds > 29) {
+      print("Stop");
+    }
+    if (_timeElapsed.inMicroseconds > 0) {
+      _playerTempo =
+          (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
+      print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
+    }
   }
 
   @override
@@ -141,7 +177,6 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
   GameModel _gameModel;
 
   void _oneSecondElapsed(Timer t) {
-    print(_gameModel.realTempo);
     if (_gameModel.gameState == GameState.STARTED) {
       setState(() {
         _percentage = _newPercentage;
