@@ -159,7 +159,7 @@ class __ArtistTracksState extends State<_ArtistTracks> {
     return Expanded(
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(left: 25, right: 25),
+        padding: const EdgeInsets.only(left: 24, right: 24),
         itemCount: widget.tracks.length,
         itemBuilder: (BuildContext context, int index) {
           final spotify.Track track = widget.tracks[index];
