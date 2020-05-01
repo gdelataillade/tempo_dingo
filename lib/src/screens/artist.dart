@@ -155,11 +155,10 @@ class _ArtistTracks extends StatefulWidget {
 class __ArtistTracksState extends State<_ArtistTracks> {
   @override
   Widget build(BuildContext context) {
-    // return Container();
     return Expanded(
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(left: 24, right: 24),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         itemCount: widget.tracks.length,
         itemBuilder: (BuildContext context, int index) {
           final spotify.Track track = widget.tracks[index];

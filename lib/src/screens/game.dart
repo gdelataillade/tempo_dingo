@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
@@ -144,7 +145,8 @@ class _GameState extends State<Game> {
                         style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 10),
-                      _TapArea(_tap),
+                      // _TapArea(_tap),
+                      _GameOver(),
                     ],
                   );
                 },
@@ -268,6 +270,42 @@ class __TapAreaState extends State<_TapArea> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GameOver extends StatefulWidget {
+  @override
+  __GameOverState createState() => __GameOverState();
+}
+
+class __GameOverState extends State<_GameOver> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[],
+        ),
+        Text("Awesome!"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(FeatherIcons.repeat),
+              color: Colors.white,
+              iconSize: 30,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.favorite_border),
+              color: Colors.white,
+              iconSize: 30,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
