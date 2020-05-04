@@ -42,6 +42,7 @@ class _GameState extends State<Game> {
   Duration _timeElapsed = Duration.zero;
   DateTime _startTime;
   DateTime _timestamp;
+  Timer _timer;
 
   void _tap() async {
     print("tapCount: $_tapCount\n\n");
@@ -53,8 +54,8 @@ class _GameState extends State<Game> {
           .then((res) {
         _gameModel.setGameState(GameState.STARTED);
       });
-    } else
-      _calculateTempo();
+    }
+    _calculateTempo();
   }
 
   void _setAccuracy() {
@@ -66,7 +67,7 @@ class _GameState extends State<Game> {
   }
 
   void _calculateTempo() {
-    if (_tapCount == 3) _startTime = DateTime.now();
+    if (_tapCount == 1) _startTime = DateTime.now();
     if (_tapCount > 3) {
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp.difference(_startTime);
@@ -75,13 +76,24 @@ class _GameState extends State<Game> {
       _setAccuracy();
       print("accuracy: ${_accuracy.toStringAsFixed(3)}");
     }
-    if (_timeElapsed.inSeconds > 29) {
-      print("Stop");
-    }
     if (_timeElapsed.inMicroseconds > 0) {
       _playerTempo =
           (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
       print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
+    }
+  }
+
+  void _checkGameOver() {
+    if (_tapCount > 0) {
+      _timestamp = DateTime.now();
+      _timeElapsed = _timestamp
+          .difference(_startTime == null ? DateTime.now() : _startTime);
+      print("check game over");
+      print(_timeElapsed.inSeconds);
+      if (_timeElapsed.inSeconds > 29) {
+        print("game is over");
+        _userModel.gameOver();
+      }
     }
   }
 
@@ -92,12 +104,15 @@ class _GameState extends State<Game> {
         _realTempo = tempo;
       });
     });
+    _timer =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => _checkGameOver());
     super.initState();
   }
 
   @override
   void dispose() {
     _audioPlayer.stop();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -145,8 +160,7 @@ class _GameState extends State<Game> {
                         style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 10),
-                      // _TapArea(_tap),
-                      _GameOver(),
+                      _userModel.isGameOver ? _GameOver() : _TapArea(_tap),
                     ],
                   );
                 },

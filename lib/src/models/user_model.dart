@@ -25,6 +25,7 @@ class UserModel extends Model {
   bool _isSigningOut = false;
   int tabViewIndex = 1;
   int libraryTabIndex = 0;
+  bool _isGameOver = false;
 
   DocumentSnapshot get documentSnapshot => _documentSnapshot;
   String get email => _email;
@@ -40,6 +41,7 @@ class UserModel extends Model {
   bool get darkTheme => _darkTheme;
   bool get isConnected => _isConnected;
   bool get isSigningOut => _isSigningOut;
+  bool get isGameOver => _isGameOver;
 
   void _storeLoginInfo() {
     SharedPreferences.getInstance().then((prefs) {
@@ -253,7 +255,7 @@ class UserModel extends Model {
   void reloadPage() => notifyListeners();
 
   List shuffleList(List items) {
-    var random = new Random();
+    var random = Random();
 
     for (var i = items.length - 1; i > 0; i--) {
       var n = random.nextInt(i + 1);
@@ -263,5 +265,10 @@ class UserModel extends Model {
       items[n] = temp;
     }
     return items;
+  }
+
+  void gameOver() {
+    _isGameOver = true;
+    notifyListeners();
   }
 }
