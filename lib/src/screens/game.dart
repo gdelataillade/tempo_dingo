@@ -50,15 +50,13 @@ class _GameState extends State<Game> {
   }
 
   void _calculateTempo() {
-    if (_tapCount == 1) _startTime = DateTime.now();
+    if (_tapCount == 3) _startTime = DateTime.now();
     if (_tapCount > 3) {
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp.difference(_startTime);
       print(
           "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
       print("accuracy: ${_accuracy.toStringAsFixed(3)}");
-    }
-    if (_timeElapsed.inMicroseconds > 0) {
       _playerTempo =
           (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
       print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
@@ -97,6 +95,13 @@ class _GameState extends State<Game> {
       _playerTempo = 0;
       _accuracy = 0;
     });
+  }
+
+  String _shortenTrackName(String name) {
+    List<String> _res = name.split(" (");
+    _res = _res.first.split(" -");
+    _res = _res.first.split(" /");
+    return _res.first;
   }
 
   @override
@@ -139,7 +144,7 @@ class _GameState extends State<Game> {
                 ),
                 const SizedBox(height: 15),
                 Text(
-                  widget.track.name,
+                  "${_playerTempo.round()} ${_shortenTrackName(widget.track.name)}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
