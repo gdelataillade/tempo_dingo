@@ -10,7 +10,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:vibrate/vibrate.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
-import 'package:tempo_dingo/src/models/game_model.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 
@@ -28,7 +27,6 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   UserModel _userModel;
-  GameModel _gameModel;
 
   int _tapCount = 0;
   double _realTempo = 0;
@@ -76,9 +74,7 @@ class _GameState extends State<Game> {
     if (_tapCount == 1) {
       await _audioPlayer
           .play(widget.track.previewUrl, volume: _userModel.volume / 10)
-          .then((res) {
-        _gameModel.setGameState(GameState.STARTED);
-      });
+          .then((res) {});
     }
     _calculateTempo();
   }
@@ -88,10 +84,8 @@ class _GameState extends State<Game> {
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp
           .difference(_startTime == null ? DateTime.now() : _startTime);
-      print("check game over");
       print(_timeElapsed.inSeconds);
       if (_timeElapsed.inSeconds > 29) {
-        print("game is over");
         _userModel.gameOver();
       }
     }
@@ -122,54 +116,42 @@ class _GameState extends State<Game> {
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: mainTheme,
-      body: ScopedModel<GameModel>(
-        model: GameModel(),
-        child: ScopedModelDescendant<GameModel>(
-          builder: (context, child, gameModel) {
-            _gameModel = gameModel;
-            _gameModel.setRealTempo(_realTempo);
-            return ScopedModel<UserModel>(
-              model: widget.userModel,
-              child: ScopedModelDescendant<UserModel>(
-                builder: (context, child, userModel) {
-                  _userModel = userModel;
-                  _userModel.addToHistory(widget.track.id);
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(right: 35, left: 35, top: 5),
-                        child: _AlbumProgressiveBar(
-                            widget.track,
-                            _progressionPercentage,
-                            _tapCount > 0 && !_userModel.isGameOver),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        widget.track.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontFamily: 'Apple-Bold',
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        widget.track.artists.first.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(height: 10),
-                      _userModel.isGameOver
-                          ? _GameOver(_accuracy)
-                          : _TapArea(_tap),
-                    ],
-                  );
-                },
-              ),
+      body: ScopedModel<UserModel>(
+        model: widget.userModel,
+        child: ScopedModelDescendant<UserModel>(
+          builder: (context, child, userModel) {
+            _userModel = userModel;
+            _userModel.addToHistory(widget.track.id);
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
+                  child: _AlbumProgressiveBar(
+                      widget.track,
+                      _progressionPercentage,
+                      _tapCount > 0 && !_userModel.isGameOver),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  widget.track.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontFamily: 'Apple-Bold',
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  widget.track.artists.first.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                _userModel.isGameOver ? _GameOver(_accuracy) : _TapArea(_tap),
+              ],
             );
           },
         ),
