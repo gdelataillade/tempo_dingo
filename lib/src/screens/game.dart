@@ -140,7 +140,9 @@ class _GameState extends State<Game> {
                         padding:
                             const EdgeInsets.only(right: 35, left: 35, top: 5),
                         child: _AlbumProgressiveBar(
-                            widget.track, _progressionPercentage),
+                            widget.track,
+                            _progressionPercentage,
+                            _tapCount > 0 && !_userModel.isGameOver),
                       ),
                       const SizedBox(height: 15),
                       Text(
@@ -179,8 +181,9 @@ class _GameState extends State<Game> {
 class _AlbumProgressiveBar extends StatefulWidget {
   final spotify.Track track;
   final double percentage;
+  final bool isPlaying;
 
-  const _AlbumProgressiveBar(this.track, this.percentage);
+  const _AlbumProgressiveBar(this.track, this.percentage, this.isPlaying);
 
   @override
   __AlbumProgressiveBarState createState() => __AlbumProgressiveBarState();
@@ -193,14 +196,12 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
   double _newPercentage = 0.0;
   int _secondsElapsed = 0;
   Timer _timer;
-  GameModel _gameModel;
 
   void _oneSecondElapsed(Timer t) {
-    if (_gameModel.gameState == GameState.STARTED) {
+    if (widget.isPlaying) {
       setState(() {
         _percentage = _newPercentage;
         _secondsElapsed++;
-        if (_secondsElapsed > 30) _secondsElapsed = 1;
         _newPercentage = _secondsElapsed * 10 / 3;
       });
     }
@@ -233,25 +234,20 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<GameModel>(
-      builder: (context, child, gameModel) {
-        _gameModel = gameModel;
-        return Container(
-          width: 300,
-          height: 300,
-          child: CustomPaint(
-            foregroundPainter: _MyPainter(
-              completePercent: _percentage,
-              width: 3.0,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(300)),
-              child: Image.network(widget.track.album.images.first.url,
-                  width: MediaQuery.of(context).size.width),
-            ),
-          ),
-        );
-      },
+    return Container(
+      width: 300,
+      height: 300,
+      child: CustomPaint(
+        foregroundPainter: _MyPainter(
+          completePercent: _percentage,
+          width: 3.0,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(300)),
+          child: Image.network(widget.track.album.images.first.url,
+              width: MediaQuery.of(context).size.width),
+        ),
+      ),
     );
   }
 }
