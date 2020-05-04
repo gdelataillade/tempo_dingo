@@ -44,20 +44,6 @@ class _GameState extends State<Game> {
   DateTime _timestamp;
   Timer _timer;
 
-  void _tap() async {
-    print("tapCount: $_tapCount\n\n");
-    _tapCount++;
-    if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
-    if (_tapCount == 1) {
-      await _audioPlayer
-          .play(widget.track.previewUrl, volume: _userModel.volume / 10)
-          .then((res) {
-        _gameModel.setGameState(GameState.STARTED);
-      });
-    }
-    _calculateTempo();
-  }
-
   void _setAccuracy() {
     if (_playerTempo >= _realTempo)
       _accuracy = _realTempo / _playerTempo;
@@ -73,7 +59,6 @@ class _GameState extends State<Game> {
       _timeElapsed = _timestamp.difference(_startTime);
       print(
           "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
-      _setAccuracy();
       print("accuracy: ${_accuracy.toStringAsFixed(3)}");
     }
     if (_timeElapsed.inMicroseconds > 0) {
@@ -81,10 +66,25 @@ class _GameState extends State<Game> {
           (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
       print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
     }
+    _setAccuracy();
+  }
+
+  void _tap() async {
+    print("tapCount: $_tapCount\n\n");
+    _tapCount++;
+    if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
+    if (_tapCount == 1) {
+      await _audioPlayer
+          .play(widget.track.previewUrl, volume: _userModel.volume / 10)
+          .then((res) {
+        _gameModel.setGameState(GameState.STARTED);
+      });
+    }
+    _calculateTempo();
   }
 
   void _checkGameOver() {
-    if (_tapCount > 0) {
+    if (_tapCount > 0 && !_userModel.isGameOver) {
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp
           .difference(_startTime == null ? DateTime.now() : _startTime);
@@ -113,6 +113,7 @@ class _GameState extends State<Game> {
   void dispose() {
     _audioPlayer.stop();
     _timer?.cancel();
+    _userModel.exitGame();
     super.dispose();
   }
 
@@ -160,7 +161,9 @@ class _GameState extends State<Game> {
                         style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 10),
-                      _userModel.isGameOver ? _GameOver() : _TapArea(_tap),
+                      _userModel.isGameOver
+                          ? _GameOver(_accuracy)
+                          : _TapArea(_tap),
                     ],
                   );
                 },
@@ -289,6 +292,10 @@ class __TapAreaState extends State<_TapArea> {
 }
 
 class _GameOver extends StatefulWidget {
+  final double accuracy;
+
+  const _GameOver(this.accuracy);
+
   @override
   __GameOverState createState() => __GameOverState();
 }
@@ -302,6 +309,7 @@ class __GameOverState extends State<_GameOver> {
           children: <Widget>[],
         ),
         Text("Awesome!"),
+        Text("${widget.accuracy}%"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

@@ -271,4 +271,6 @@ class UserModel extends Model {
     _isGameOver = true;
     notifyListeners();
   }
+
+  void exitGame() => _isGameOver = false;
 }
