@@ -32,7 +32,6 @@ class _GameState extends State<Game> {
   double _realTempo = 0;
   double _playerTempo = 0;
   double _accuracy = 0;
-  double _progressionPercentage = 0;
 
   AudioCache audioCache = AudioCache();
   AudioPlayer _audioPlayer = AudioPlayer();
@@ -68,8 +67,8 @@ class _GameState extends State<Game> {
   }
 
   void _tap() async {
-    print("tapCount: $_tapCount\n\n");
-    _tapCount++;
+    print("tapCount: $_tapCount");
+    setState(() => _tapCount++);
     if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
     if (_tapCount == 1) {
       await _audioPlayer
@@ -89,6 +88,15 @@ class _GameState extends State<Game> {
         _userModel.gameOver();
       }
     }
+  }
+
+  void _playAgain() {
+    _userModel.exitGame();
+    setState(() {
+      _tapCount = 0;
+      _playerTempo = 0;
+      _accuracy = 0;
+    });
   }
 
   @override
@@ -127,9 +135,7 @@ class _GameState extends State<Game> {
                 Padding(
                   padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
                   child: _AlbumProgressiveBar(
-                      widget.track,
-                      _progressionPercentage,
-                      _tapCount > 0 && !_userModel.isGameOver),
+                      widget.track, _tapCount > 0 && !_userModel.isGameOver),
                 ),
                 const SizedBox(height: 15),
                 Text(
@@ -150,7 +156,9 @@ class _GameState extends State<Game> {
                   style: TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 10),
-                _userModel.isGameOver ? _GameOver(_accuracy) : _TapArea(_tap),
+                _userModel.isGameOver
+                    ? _GameOver(_accuracy, _playAgain)
+                    : _TapArea(_tap),
               ],
             );
           },
@@ -162,10 +170,9 @@ class _GameState extends State<Game> {
 
 class _AlbumProgressiveBar extends StatefulWidget {
   final spotify.Track track;
-  final double percentage;
   final bool isPlaying;
 
-  const _AlbumProgressiveBar(this.track, this.percentage, this.isPlaying);
+  const _AlbumProgressiveBar(this.track, this.isPlaying);
 
   @override
   __AlbumProgressiveBarState createState() => __AlbumProgressiveBarState();
@@ -186,8 +193,15 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
         _secondsElapsed++;
         _newPercentage = _secondsElapsed * 10 / 3;
       });
+      _percentageAnimationController.forward(from: 0.0);
+    } else {
+      // Reset params if game restarts
+      setState(() {
+        _percentage = 0;
+        _newPercentage = 0;
+        _secondsElapsed = 0;
+      });
     }
-    _percentageAnimationController.forward(from: 0.0);
   }
 
   @override
@@ -271,8 +285,9 @@ class __TapAreaState extends State<_TapArea> {
 
 class _GameOver extends StatefulWidget {
   final double accuracy;
+  final Function() playAgain;
 
-  const _GameOver(this.accuracy);
+  const _GameOver(this.accuracy, this.playAgain);
 
   @override
   __GameOverState createState() => __GameOverState();
@@ -292,7 +307,7 @@ class __GameOverState extends State<_GameOver> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
-              onPressed: () {},
+              onPressed: widget.playAgain,
               icon: Icon(FeatherIcons.repeat),
               color: Colors.white,
               iconSize: 30,
