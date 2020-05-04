@@ -157,7 +157,7 @@ class _GameState extends State<Game> {
                 ),
                 const SizedBox(height: 10),
                 _userModel.isGameOver
-                    ? _GameOver(_accuracy, _playAgain)
+                    ? _GameOver(_accuracy, _playAgain, widget.track.id)
                     : _TapArea(_tap),
               ],
             );
@@ -286,41 +286,54 @@ class __TapAreaState extends State<_TapArea> {
 class _GameOver extends StatefulWidget {
   final double accuracy;
   final Function() playAgain;
+  final String trackId;
 
-  const _GameOver(this.accuracy, this.playAgain);
+  const _GameOver(this.accuracy, this.playAgain, this.trackId);
 
   @override
   __GameOverState createState() => __GameOverState();
 }
 
 class __GameOverState extends State<_GameOver> {
+  bool _isLiked;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[],
-        ),
-        Text("Awesome!"),
-        Text("${widget.accuracy}%"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, userModel) {
+        _isLiked = userModel.isFavorite(widget.trackId);
+        return Column(
           children: <Widget>[
-            IconButton(
-              onPressed: widget.playAgain,
-              icon: Icon(FeatherIcons.repeat),
-              color: Colors.white,
-              iconSize: 30,
+            Row(
+              children: <Widget>[],
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.favorite_border),
-              color: Colors.white,
-              iconSize: 30,
+            Text("Awesome!"),
+            Text("${widget.accuracy}%"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  onPressed: widget.playAgain,
+                  icon: Icon(FeatherIcons.repeat),
+                  color: Colors.white,
+                  iconSize: 30,
+                ),
+                IconButton(
+                  onPressed: () {
+                    userModel.likeUnlikeTrack(widget.trackId);
+                    setState(() => _isLiked = !_isLiked);
+                  },
+                  icon: _isLiked
+                      ? Icon(Icons.favorite)
+                      : Icon(Icons.favorite_border),
+                  color: Colors.red,
+                  iconSize: 30,
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
