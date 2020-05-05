@@ -51,7 +51,7 @@ class _GameState extends State<Game> {
       _accuracy = _playerTempo / _realTempo;
     _accuracy *= 100;
     if (_accuracy > 0) {
-      print("$_accuracy ${_timeElapsed.inMilliseconds / 1000.0}");
+      // print("$_accuracy - ${_timeElapsed.inMilliseconds / 1000.0}");
       _accuracyList
           .add(ChartItem(_accuracy, _timeElapsed.inMilliseconds / 1000.0));
     }
@@ -63,9 +63,9 @@ class _GameState extends State<Game> {
       // Start to calculate tempo & accuracy here
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp.difference(_gameStartTime);
-      print(
-          "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
-      print("accuracy: ${_accuracy.toStringAsFixed(3)}");
+      // print(
+      //     "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
+      // print("accuracy: ${_accuracy.toStringAsFixed(3)}");
       _playerTempo =
           (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
       print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
@@ -153,7 +153,7 @@ class _GameState extends State<Game> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    _shortenTrackName(widget.track.name),
+                    "${_accuracy.round()}% ${_shortenTrackName(widget.track.name)}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -335,7 +335,7 @@ class __GameOverState extends State<_GameOver> {
               children: <Widget>[],
             ),
             Text("Awesome!"),
-            Text("${widget.accuracy}%"),
+            Text("${widget.accuracy.toStringAsPrecision(5)}%"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -405,8 +405,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
     for (var i = 0; i < widget.list.length; i++) {
       list.add(FlSpot(widget.list[i].time / 3, widget.list[i].accuracy / 10));
-      print(widget.list[i].time / 3);
-      print(widget.list[i].accuracy / 10);
+      print("time: ${widget.list[i].time} -> ${widget.list[i].time / 3}");
+      print(
+          "accuarcy: ${widget.list[i].accuracy} -> ${widget.list[i].accuracy / 10}");
     }
     return list;
   }
