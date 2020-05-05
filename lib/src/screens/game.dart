@@ -8,6 +8,7 @@ import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibrate/vibrate.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
@@ -32,12 +33,14 @@ class _GameState extends State<Game> {
   double _realTempo = 0;
   double _playerTempo = 0;
   double _accuracy = 0;
+  List<ChartItem> _accuracyList = [];
 
   AudioCache audioCache = AudioCache();
   AudioPlayer _audioPlayer = AudioPlayer();
 
   Duration _timeElapsed = Duration.zero;
-  DateTime _startTime;
+  DateTime _musicStartTime;
+  DateTime _gameStartTime;
   DateTime _timestamp;
   Timer _timer;
 
@@ -47,13 +50,19 @@ class _GameState extends State<Game> {
     else
       _accuracy = _playerTempo / _realTempo;
     _accuracy *= 100;
+    if (_accuracy > 0) {
+      print("$_accuracy ${_timeElapsed.inMilliseconds / 1000.0}");
+      _accuracyList
+          .add(ChartItem(_accuracy, _timeElapsed.inMilliseconds / 1000.0));
+    }
   }
 
   void _calculateTempo() {
-    if (_tapCount == 3) _startTime = DateTime.now();
+    if (_tapCount == 3) _gameStartTime = DateTime.now();
     if (_tapCount > 3) {
+      // Start to calculate tempo & accuracy here
       _timestamp = DateTime.now();
-      _timeElapsed = _timestamp.difference(_startTime);
+      _timeElapsed = _timestamp.difference(_gameStartTime);
       print(
           "time elapsed: ${_timeElapsed.inSeconds}.${_timeElapsed.inMilliseconds} seconds");
       print("accuracy: ${_accuracy.toStringAsFixed(3)}");
@@ -65,13 +74,13 @@ class _GameState extends State<Game> {
   }
 
   void _tap() async {
-    print("tapCount: $_tapCount");
+    // print("tapCount: $_tapCount");
     setState(() => _tapCount++);
     if (_userModel.vibration) Vibrate.feedback(FeedbackType.impact);
     if (_tapCount == 1) {
       await _audioPlayer
           .play(widget.track.previewUrl, volume: _userModel.volume / 10)
-          .then((res) {});
+          .then((res) => _musicStartTime = DateTime.now());
     }
     _calculateTempo();
   }
@@ -80,9 +89,8 @@ class _GameState extends State<Game> {
     if (_tapCount > 0 && !_userModel.isGameOver) {
       _timestamp = DateTime.now();
       _timeElapsed = _timestamp
-          .difference(_startTime == null ? DateTime.now() : _startTime);
-      print(_timeElapsed.inSeconds);
-      if (_timeElapsed.inSeconds > 29) {
+          .difference(_gameStartTime == null ? DateTime.now() : _gameStartTime);
+      if (_timestamp.difference(_musicStartTime).inSeconds > 29) {
         _userModel.gameOver();
       }
     }
@@ -135,36 +143,43 @@ class _GameState extends State<Game> {
           builder: (context, child, userModel) {
             _userModel = userModel;
             _userModel.addToHistory(widget.track.id);
-            return Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
-                  child: _AlbumProgressiveBar(
-                      widget.track, _tapCount > 0 && !_userModel.isGameOver),
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  "${_playerTempo.round()} ${_shortenTrackName(widget.track.name)}",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontFamily: 'Apple-Bold',
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
+                    child: _AlbumProgressiveBar(
+                        widget.track, _tapCount > 0 && !_userModel.isGameOver),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  widget.track.artists.first.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 10),
-                _userModel.isGameOver
-                    ? _GameOver(_accuracy, _playAgain, widget.track.id)
-                    : _TapArea(_tap),
-              ],
+                  const SizedBox(height: 15),
+                  Text(
+                    _shortenTrackName(widget.track.name),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontFamily: 'Apple-Bold',
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    widget.track.artists.first.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  _userModel.isGameOver
+                      ? _GameOver(
+                          _accuracy,
+                          _playAgain,
+                          widget.track.id,
+                          _accuracyList,
+                        )
+                      : _TapArea(_tap),
+                ],
+              ),
             );
           },
         ),
@@ -292,8 +307,14 @@ class _GameOver extends StatefulWidget {
   final double accuracy;
   final Function() playAgain;
   final String trackId;
+  final List<ChartItem> accuracyList;
 
-  const _GameOver(this.accuracy, this.playAgain, this.trackId);
+  const _GameOver(
+    this.accuracy,
+    this.playAgain,
+    this.trackId,
+    this.accuracyList,
+  );
 
   @override
   __GameOverState createState() => __GameOverState();
@@ -307,6 +328,7 @@ class __GameOverState extends State<_GameOver> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
         _isLiked = userModel.isFavorite(widget.trackId);
+        print("length: ${widget.accuracyList.length}");
         return Column(
           children: <Widget>[
             Row(
@@ -323,6 +345,16 @@ class __GameOverState extends State<_GameOver> {
                   color: Colors.white,
                   iconSize: 30,
                 ),
+                // IconButton(
+                //   onPressed: () {
+                //     setState(() {
+                //       _showChart = !_showChart;
+                //     });
+                //   },
+                //   icon: Icon(FeatherIcons.barChart),
+                //   color: Colors.white,
+                //   iconSize: 33,
+                // ),
                 IconButton(
                   onPressed: () {
                     userModel.likeUnlikeTrack(widget.trackId);
@@ -336,11 +368,277 @@ class __GameOverState extends State<_GameOver> {
                 ),
               ],
             ),
+            LineChartSample2(widget.accuracyList),
           ],
         );
       },
     );
   }
+}
+
+class ChartItem {
+  final double accuracy;
+  final double time;
+
+  ChartItem(this.accuracy, this.time);
+}
+
+class LineChartSample2 extends StatefulWidget {
+  final List<ChartItem> list;
+
+  const LineChartSample2(this.list);
+
+  @override
+  _LineChartSample2State createState() => _LineChartSample2State();
+}
+
+class _LineChartSample2State extends State<LineChartSample2> {
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+
+  bool showAvg = false;
+
+  List<FlSpot> _buildSpots() {
+    List<FlSpot> list = [];
+
+    for (var i = 0; i < widget.list.length; i++) {
+      list.add(FlSpot(widget.list[i].time / 3, widget.list[i].accuracy / 10));
+      print(widget.list[i].time / 3);
+      print(widget.list[i].accuracy / 10);
+    }
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Stack(
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 1.70,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
+                ),
+                // color: Color(0xff232d37),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    right: 18.0, left: 12.0, top: 24, bottom: 12),
+                child: LineChart(
+                  mainData(),
+                  // showAvg ? avgData() : mainData(),
+                ),
+              ),
+            ),
+          ),
+          // SizedBox(
+          //   width: 60,
+          //   height: 34,
+          //   child: FlatButton(
+          //     onPressed: () {
+          //       setState(() {
+          //         showAvg = !showAvg;
+          //       });
+          //     },
+          //     child: Text(
+          //       'avg',
+          //       style: TextStyle(
+          //           fontSize: 12,
+          //           color:
+          //               showAvg ? Colors.white.withOpacity(0.5) : Colors.white),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 22,
+          textStyle: const TextStyle(
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 0:
+                return '0s';
+              case 5:
+                return '15s';
+              case 10:
+                return '30s';
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          textStyle: const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 5:
+                return '50%';
+              case 10:
+                return '100%';
+            }
+            return '';
+          },
+          reservedSize: 28,
+          margin: 12,
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: const Color(0xff37434d), width: 1)),
+      minX: 0,
+      maxX: 10,
+      minY: 0,
+      maxY: 10,
+      lineBarsData: [
+        LineChartBarData(
+          spots: _buildSpots(),
+          isCurved: true,
+          colors: gradientColors,
+          barWidth: 4,
+          isStrokeCapRound: true,
+          dotData: FlDotData(show: false),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // LineChartData avgData() {
+  //   return LineChartData(
+  //     lineTouchData: LineTouchData(enabled: false),
+  //     gridData: FlGridData(
+  //       show: true,
+  //       drawHorizontalLine: true,
+  //       getDrawingVerticalLine: (value) {
+  //         return FlLine(
+  //           color: const Color(0xff37434d),
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //       getDrawingHorizontalLine: (value) {
+  //         return FlLine(
+  //           color: const Color(0xff37434d),
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //     ),
+  //     titlesData: FlTitlesData(
+  //       show: true,
+  //       bottomTitles: SideTitles(
+  //         showTitles: true,
+  //         reservedSize: 22,
+  //         textStyle: const TextStyle(
+  //             color: Color(0xff68737d),
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 16),
+  //         getTitles: (value) {
+  //           switch (value.toInt()) {
+  //             case 0:
+  //               return '0s';
+  //             case 5:
+  //               return '15s';
+  //             case 10:
+  //               return '30s';
+  //           }
+  //           return '';
+  //         },
+  //         margin: 8,
+  //       ),
+  //       leftTitles: SideTitles(
+  //         showTitles: true,
+  //         textStyle: const TextStyle(
+  //           color: Color(0xff67727d),
+  //           fontWeight: FontWeight.bold,
+  //           fontSize: 15,
+  //         ),
+  //         getTitles: (value) {
+  //           switch (value.toInt()) {
+  //             case 5:
+  //               return '50%';
+  //             case 10:
+  //               return '100%';
+  //           }
+  //           return '';
+  //         },
+  //         reservedSize: 28,
+  //         margin: 12,
+  //       ),
+  //     ),
+  //     borderData: FlBorderData(
+  //         show: true,
+  //         border: Border.all(color: const Color(0xff37434d), width: 1)),
+  //     minX: 0,
+  //     maxX: 10,
+  //     minY: 0,
+  //     maxY: 10,
+  //     lineBarsData: [
+  //       LineChartBarData(
+  //         spots: _buildSpots(),
+  //         isCurved: true,
+  //         colors: [
+  //           ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //               .lerp(0.2),
+  //           ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //               .lerp(0.2),
+  //         ],
+  //         barWidth: 5,
+  //         isStrokeCapRound: true,
+  //         dotData: FlDotData(
+  //           show: false,
+  //         ),
+  //         belowBarData: BarAreaData(show: true, colors: [
+  //           ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //               .lerp(0.2)
+  //               .withOpacity(0.1),
+  //           ColorTween(begin: gradientColors[0], end: gradientColors[1])
+  //               .lerp(0.2)
+  //               .withOpacity(0.1),
+  //         ]),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 
 class _MyPainter extends CustomPainter {

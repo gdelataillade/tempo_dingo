@@ -27,6 +27,7 @@ dependencies:
   scoped_model: ^1.0.1
   shared_preferences: ^0.5.4+3
   audioplayers: ^0.15.0
+  fl_chart: ^0.9.4
 
 dev_dependencies:
   flutter_test:
