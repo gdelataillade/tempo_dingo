@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
+import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
@@ -155,23 +156,38 @@ class _ArtistTracks extends StatefulWidget {
 class __ArtistTracksState extends State<_ArtistTracks> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        itemCount: widget.tracks.length,
-        itemBuilder: (BuildContext context, int index) {
-          final spotify.Track track = widget.tracks[index];
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Expanded(
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            itemCount: widget.tracks.length,
+            itemBuilder: (BuildContext context, int index) {
+              final spotify.Track track = widget.tracks[index];
 
-          return TrackCard(
-            track.album.images.first.url,
-            track.name,
-            track.artists.first.name,
-            track.id,
-            track.popularity,
-          );
-        },
-      ),
+              return GestureDetector(
+                onTap: () {
+                  if (track.previewUrl != null) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Game(model, track)));
+                  }
+                },
+                child: TrackCard(
+                  track.album.images.first.url,
+                  track.name,
+                  track.artists.first.name,
+                  track.id,
+                  track.popularity,
+                  track.previewUrl == null,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

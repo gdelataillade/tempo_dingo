@@ -249,12 +249,24 @@ class __HistoryState extends State<_History> {
                         itemBuilder: (BuildContext context, int index) {
                           final Track track = widget.history[index];
 
-                          return TrackCard(
-                            track.album.images.first.url,
-                            track.name,
-                            track.artists.first.name,
-                            track.id,
-                            track.popularity,
+                          return GestureDetector(
+                            onTap: () {
+                              if (track.previewUrl != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Game(model, track)));
+                              }
+                            },
+                            child: TrackCard(
+                              track.album.images.first.url,
+                              track.name,
+                              track.artists.first.name,
+                              track.id,
+                              track.popularity,
+                              track.previewUrl == null,
+                            ),
                           );
                         },
                       ),
@@ -292,16 +304,20 @@ class __TrackSearchResultsState extends State<_TrackSearchResults> {
                 return ScopedModelDescendant<UserModel>(
                   builder: (context, child, model) {
                     return GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Game(model, track))),
+                      onTap: () {
+                        if (track.previewUrl != null)
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Game(model, track)));
+                      },
                       child: TrackCard(
                         track.album.images.first.url,
                         track.name,
                         track.artists.first.name,
                         track.id,
                         track.popularity,
+                        track.previewUrl == null,
                       ),
                     );
                   },
