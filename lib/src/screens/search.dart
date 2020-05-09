@@ -6,6 +6,7 @@ import 'package:spotify/spotify_io.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
+import 'package:tempo_dingo/src/screens/artist.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
@@ -345,44 +346,60 @@ class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
     _artistIndex = 0;
 
     var artists = widget.artists;
-    return Flexible(
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-        itemCount: (widget.artists.length / 3).round(),
-        itemBuilder: (BuildContext context, int index) {
-          Widget row = Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => print("Artist"),
-                  child: ArtistCard(artists[_artistIndex].images.first.url,
-                      artists[_artistIndex].name),
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Flexible(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            itemCount: (widget.artists.length / 3).round(),
+            itemBuilder: (BuildContext context, int index) {
+              Widget row = Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ArtistScreen(model, artists[_artistIndex]))),
+                      child: ArtistCard(artists[_artistIndex].images.first.url,
+                          artists[_artistIndex].name),
+                    ),
+                    artists.length > _artistIndex + 1
+                        ? GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ArtistScreen(
+                                        model, artists[_artistIndex + 1]))),
+                            child: ArtistCard(
+                                artists[_artistIndex + 1].images.first.url,
+                                artists[_artistIndex + 1].name),
+                          )
+                        : Container(width: 80, height: 80),
+                    artists.length > _artistIndex + 2
+                        ? GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ArtistScreen(
+                                        model, artists[_artistIndex + 2]))),
+                            child: ArtistCard(
+                                artists[_artistIndex + 2].images.first.url,
+                                artists[_artistIndex + 2].name),
+                          )
+                        : Container(width: 80, height: 80),
+                  ],
                 ),
-                artists.length > _artistIndex + 1
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: ArtistCard(
-                            artists[_artistIndex + 1].images.first.url,
-                            artists[_artistIndex + 1].name),
-                      )
-                    : Container(width: 80, height: 80),
-                artists.length > _artistIndex + 2
-                    ? GestureDetector(
-                        onTap: () => print("Artist"),
-                        child: ArtistCard(
-                            artists[_artistIndex + 2].images.first.url,
-                            artists[_artistIndex + 2].name),
-                      )
-                    : Container(width: 80, height: 80),
-              ],
-            ),
-          );
-          _artistIndex += 3;
-          return row;
-        },
-      ),
+              );
+              _artistIndex += 3;
+              return row;
+            },
+          ),
+        );
+      },
     );
   }
 }
