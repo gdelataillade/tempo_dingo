@@ -273,4 +273,15 @@ class UserModel extends Model {
   }
 
   void exitGame() => _isGameOver = false;
+
+  void pushGameStats() async {
+    final QuerySnapshot snapshot =
+        await Firestore.instance.collection("stats").getDocuments();
+    final int nbGames = snapshot.documents.first["nbGames"];
+
+    Firestore.instance
+        .collection('stats')
+        .document('stats')
+        .updateData({"nbGames": nbGames + 1});
+  }
 }

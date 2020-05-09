@@ -327,6 +327,7 @@ class __GameOverState extends State<_GameOver> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
+        userModel.pushGameStats();
         _isLiked = userModel.isFavorite(widget.trackId);
         print("length: ${widget.accuracyList.length}");
         return Column(
