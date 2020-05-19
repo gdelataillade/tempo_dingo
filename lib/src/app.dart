@@ -1,7 +1,6 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/models/user_model.dart';
@@ -38,48 +37,22 @@ class _CheckLogIn extends StatefulWidget {
 }
 
 class __CheckLogInState extends State<_CheckLogIn> {
-  String _email;
-  String _password;
-
-  @override
-  void initState() {
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        _email = prefs.getString('email');
-        _password = prefs.getString('password');
-      });
-    });
-    super.initState();
-  }
-
-  void _resetData() {
-    _email = null;
-    _password = null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       print("Build scoped model");
-      if (model.isSigningOut) _resetData();
-      if (_email == null || _password == null)
-        return FutureBuilder<void>(
-          future: model.loginGuest(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: loadingWhite);
-              default:
-                return _tabsFutureBuilders();
-            }
-          },
-        );
-      // model.loginGuest();
-      // return _tabsFutureBuilders();
 
-      return FutureBuilder(
-          future: model.login(_email, _password, false),
-          builder: (context, snapshot) => Center(child: loadingWhite));
+      return FutureBuilder<void>(
+        future: model.getSharedPrefs(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: loadingWhite);
+            default:
+              return _tabsFutureBuilders();
+          }
+        },
+      );
     });
   }
 

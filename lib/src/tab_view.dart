@@ -94,9 +94,7 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: Icon(
-                        _userModel.isConnected
-                            ? FeatherIcons.user
-                            : FeatherIcons.logIn,
+                        FeatherIcons.user,
                         color: Colors.white,
                       ),
                     ),

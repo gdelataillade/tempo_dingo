@@ -4,7 +4,7 @@ final bool staySignedIn = false;
 final bool vibration = true;
 final bool darkTheme = true;
 final Map<String, List<String>> library = {
-  "songs": [
+  "tracks": [
     "2aoo2jlRnM3A0NyLQqMN2f", // All Along the Watchtower
     "45KqDHTOJtIM53QR1gPGTa", // Brothers
     "51R2M1JgyFfRS3e6v5wCt3", // Clandestino
