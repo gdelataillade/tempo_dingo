@@ -16,6 +16,7 @@ class UserModel extends Model {
   List<String> _artists;
   List<String> _favorite;
   List<String> _history;
+  List<String> _highscores;
   int tabViewIndex = 1;
   int libraryTabIndex = 0;
   bool _isGameOver = false;
@@ -30,49 +31,56 @@ class UserModel extends Model {
   bool get isGameOver => _isGameOver;
 
   Future<void> getSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
     // await prefs.clear();
 
     // Stars prefs
-    _stars = prefs.getInt('stars');
+    _stars = _prefs.getInt('stars');
     if (_stars == null) {
       _stars = 11;
-      prefs.setInt('stars', _stars);
+      _prefs.setInt('stars', _stars);
     }
 
     // Tracks prefs
-    _tracks = prefs.getStringList('tracks');
+    _tracks = _prefs.getStringList('tracks');
     if (_tracks == null) {
       _tracks = config.library["tracks"];
-      prefs.setStringList('tracks', _tracks);
+      _prefs.setStringList('tracks', _tracks);
     }
 
     // Artists prefs
-    _artists = prefs.getStringList('artists');
+    _artists = _prefs.getStringList('artists');
     if (_artists == null) {
       _artists = config.library["artists"];
-      prefs.setStringList('artists', _artists);
+      _prefs.setStringList('artists', _artists);
     }
 
     // Favorite prefs
-    _favorite = prefs.getStringList('favorite');
+    _favorite = _prefs.getStringList('favorite');
     if (_favorite == null) {
       _favorite = [];
-      prefs.setStringList('favorite', []);
+      _prefs.setStringList('favorite', []);
     }
 
     // History prefs
-    _history = prefs.getStringList('history');
+    _history = _prefs.getStringList('history');
     if (_history == null) {
       _history = [];
-      prefs.setStringList('history', []);
+      _prefs.setStringList('history', []);
     }
 
     // Language prefs
-    _language = prefs.getString('language');
+    _language = _prefs.getString('language');
     if (_language == null) {
       _language = "en";
-      prefs.setString('language', "en");
+      _prefs.setString('language', "en");
+    }
+
+    // Highscores
+    _highscores = _prefs.getStringList('highscores');
+    if (_highscores == null) {
+      for (var i = 0; i < _tracks.length; i++) _highscores.add('0');
+      _prefs.setStringList('highscores', _highscores);
     }
   }
 
