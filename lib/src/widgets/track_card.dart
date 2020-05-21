@@ -31,11 +31,11 @@ class _TrackCardState extends State<TrackCard> {
   bool _isLiked = false;
   int _price = 0;
 
-  void _setPrice() {
+  int _setPrice() {
     double price;
 
     price = (widget.popularity + 1) / 5;
-    _price = price.toInt() + 1;
+    return price.toInt() + 1;
   }
 
   String _shortenTrackName(String name) {
@@ -82,7 +82,7 @@ class _TrackCardState extends State<TrackCard> {
 
   @override
   void initState() {
-    _setPrice();
+    _price = _setPrice();
     super.initState();
   }
 

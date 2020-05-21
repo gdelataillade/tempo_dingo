@@ -98,6 +98,16 @@ class UserModel extends Model {
     return _tracks.contains(trackId) ? true : false;
   }
 
+  void purchaseTrack(String trackId, String artistId, int price) {
+    _tracks.add(trackId);
+    _artists.add(artistId);
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setStringList('tracks', _tracks);
+      prefs.setStringList('artists', _artists);
+    });
+    getSharedPrefs();
+  }
+
   bool isFavorite(String trackId) {
     return _favorite.contains(trackId) ? true : false;
   }
@@ -122,8 +132,6 @@ class UserModel extends Model {
   bool isHighscore(String nbStr, String trackId) {
     double _nb = double.parse(nbStr);
     int _index = _tracks.indexOf(trackId);
-    print("Score: $nbStr");
-    print("Track index: $_index");
 
     // Check if highscore
     if (_nb > double.parse(_highscores[_index])) {
@@ -181,5 +189,12 @@ class UserModel extends Model {
         .collection('stats')
         .document('stats')
         .updateData({"nbGames": nbGames + 1});
+  }
+
+  int setPrice(int popularity) {
+    double price;
+
+    price = (popularity + 1) / 5;
+    return price.toInt() + 1;
   }
 }

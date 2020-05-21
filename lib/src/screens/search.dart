@@ -9,6 +9,7 @@ import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/screens/artist.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
+import 'package:tempo_dingo/src/widgets/purchasePopup.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
 
 SpotifyRepository spotifyRepository = SpotifyRepository();
@@ -306,11 +307,23 @@ class __TrackSearchResultsState extends State<_TrackSearchResults> {
                   builder: (context, child, model) {
                     return GestureDetector(
                       onTap: () {
-                        if (track.previewUrl != null)
+                        if (track.previewUrl == null) return;
+                        if (model.songs.contains(track.id))
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Game(model, track)));
+                        else
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => PurchasePopup(
+                              model,
+                              track.id,
+                              track.name,
+                              track.artists.first.id,
+                              model.setPrice(track.popularity),
+                            ),
+                          );
                       },
                       child: TrackCard(
                         track.album.images.first.url,
