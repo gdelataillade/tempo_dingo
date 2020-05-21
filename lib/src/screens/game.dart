@@ -102,6 +102,8 @@ class _GameState extends State<Game> {
       _tapCount = 0;
       _playerTempo = 0;
       _accuracy = 0;
+      _accuracyList = [];
+      _timeElapsed = Duration.zero;
     });
   }
 
@@ -336,32 +338,17 @@ class __GameOverState extends State<_GameOver> {
   }
 
   void _rotateStars() {
+    // Put empty stars
     _starsEarned.add(Transform.rotate(angle: -0.4, child: _starBorder));
     _starsEarned.add(_starBorder);
     _starsEarned.add(Transform.rotate(angle: 0.4, child: _starBorder));
 
+    // Replace empty stars by filled stars when needed
     if (_nbStars >= 1)
       _starsEarned[0] = Transform.rotate(angle: -0.4, child: _star);
     if (_nbStars >= 2) _starsEarned[0] = _star;
     if (_nbStars == 3)
       _starsEarned[0] = Transform.rotate(angle: 0.4, child: _star);
-
-    // if (_nbStars == 2) {
-    //   _starsEarned.add(Transform.rotate(angle: -0.1, child: _star));
-    //   _starsEarned.add(_starBorder);
-
-    //   _starsEarned.add(Transform.rotate(angle: 0.1, child: _star));
-    // } else if (_nbStars == 3) {
-    //   _starsEarned.add(Padding(
-    //     padding: const EdgeInsets.only(top: 5),
-    //     child: Transform.rotate(angle: -0.4, child: _star),
-    //   ));
-    //   _starsEarned.add(_starBorder);
-    //   _starsEarned.add(Padding(
-    //     padding: const EdgeInsets.only(top: 5),
-    //     child: Transform.rotate(angle: 0.4, child: _star),
-    //   ));
-    // }
   }
 
   @override
@@ -376,6 +363,7 @@ class __GameOverState extends State<_GameOver> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
         userModel.pushGameStats();
+        userModel.addOrRemoveStars(_nbStars);
         _isLiked = userModel.isFavorite(widget.trackId);
         print("length: ${widget.accuracyList.length}");
         return Column(
