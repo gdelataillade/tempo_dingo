@@ -321,11 +321,13 @@ class _GameOver extends StatefulWidget {
 }
 
 class __GameOverState extends State<_GameOver> {
-  bool _isLiked;
-  static final Widget _star =
-      Icon(Icons.star, size: 40, color: Color.fromRGBO(248, 207, 95, 1));
+  static final Color _yellow = Color.fromRGBO(248, 207, 95, 1);
+  static final Widget _star = Icon(Icons.star, size: 45, color: _yellow);
+  static final Widget _starBorder =
+      Icon(Icons.star_border, size: 45, color: _yellow);
   List<Widget> _starsEarned = [];
-  int _nbStars;
+  int _nbStars = 0;
+  bool _isLiked;
 
   void _countStars() {
     if (widget.accuracy >= 90) _nbStars++;
@@ -334,20 +336,32 @@ class __GameOverState extends State<_GameOver> {
   }
 
   void _rotateStars() {
-    if (_nbStars == 2) {
-      _starsEarned.add(Transform.rotate(angle: -0.1, child: _star));
-      _starsEarned.add(Transform.rotate(angle: 0.1, child: _star));
-    } else if (_nbStars == 3) {
-      _starsEarned.add(Padding(
-        padding: const EdgeInsets.only(top: 5),
-        child: Transform.rotate(angle: -0.4, child: _star),
-      ));
-      _starsEarned.add(_star);
-      _starsEarned.add(Padding(
-        padding: const EdgeInsets.only(top: 5),
-        child: Transform.rotate(angle: 0.4, child: _star),
-      ));
-    }
+    _starsEarned.add(Transform.rotate(angle: -0.4, child: _starBorder));
+    _starsEarned.add(_starBorder);
+    _starsEarned.add(Transform.rotate(angle: 0.4, child: _starBorder));
+
+    if (_nbStars >= 1)
+      _starsEarned[0] = Transform.rotate(angle: -0.4, child: _star);
+    if (_nbStars >= 2) _starsEarned[0] = _star;
+    if (_nbStars == 3)
+      _starsEarned[0] = Transform.rotate(angle: 0.4, child: _star);
+
+    // if (_nbStars == 2) {
+    //   _starsEarned.add(Transform.rotate(angle: -0.1, child: _star));
+    //   _starsEarned.add(_starBorder);
+
+    //   _starsEarned.add(Transform.rotate(angle: 0.1, child: _star));
+    // } else if (_nbStars == 3) {
+    //   _starsEarned.add(Padding(
+    //     padding: const EdgeInsets.only(top: 5),
+    //     child: Transform.rotate(angle: -0.4, child: _star),
+    //   ));
+    //   _starsEarned.add(_starBorder);
+    //   _starsEarned.add(Padding(
+    //     padding: const EdgeInsets.only(top: 5),
+    //     child: Transform.rotate(angle: 0.4, child: _star),
+    //   ));
+    // }
   }
 
   @override
@@ -368,7 +382,17 @@ class __GameOverState extends State<_GameOver> {
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _starsEarned,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: _starsEarned[0],
+                ),
+                _starsEarned[1],
+                Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: _starsEarned[2],
+                ),
+              ],
             ),
             Text("Awesome!"),
             Text("${widget.accuracy.toStringAsPrecision(5)}%"),
