@@ -1,8 +1,12 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:spotify/spotify_io.dart';
+
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/resources/spotify_repository.dart';
+
+SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class Profile extends StatefulWidget {
   final UserModel userModel;
@@ -23,111 +27,42 @@ class _ProfileState extends State<Profile> {
       child: ScopedModelDescendant<UserModel>(
         builder: (context, child, model) {
           _userModel = model;
-          return _GuestProfile();
-          // return model.isConnected
-          //     ? Scaffold(
-          //         appBar: AppBar(
-          //           elevation: 0,
-          //           actions: <Widget>[
-          //             GestureDetector(
-          //               onTap: () {
-          //                 _userModel.logout();
-          //                 Navigator.pop(context);
-          //               },
-          //               child: Row(
-          //                 children: <Widget>[
-          //                   Text("Logout", style: TextStyle(fontSize: 20)),
-          //                   const SizedBox(width: 5),
-          //                   Icon(FeatherIcons.logOut),
-          //                   const SizedBox(width: 10),
-          //                 ],
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //         backgroundColor: mainTheme,
-          //         body: SingleChildScrollView(
-          //           child: Padding(
-          //             padding: const EdgeInsets.only(left: 35, right: 35),
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: <Widget>[
-          //                 Text("Profile",
-          //                     style: Theme.of(context).textTheme.headline),
-          //                 const SizedBox(height: 10),
-          //                 Text(_userModel.fullName,
-          //                     style: Theme.of(context).textTheme.title),
-          //                 const SizedBox(height: 15),
-          //                 Row(
-          //                   mainAxisAlignment: MainAxisAlignment.center,
-          //                   children: <Widget>[
-          //                     Text("${_userModel.stars}",
-          //                         style: Theme.of(context).textTheme.headline),
-          //                     Icon(
-          //                       Icons.star,
-          //                       color: Color.fromRGBO(248, 207, 95, 1),
-          //                       size: 50,
-          //                     ),
-          //                   ],
-          //                 ),
-          //                 _Highscores(),
-          //                 _Shop(),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       )
-          //     : _GuestProfile();
-        },
-      ),
-    );
-  }
-}
-
-class _GuestProfile extends StatefulWidget {
-  @override
-  __GuestProfileState createState() => __GuestProfileState();
-}
-
-class __GuestProfileState extends State<_GuestProfile> {
-  @override
-  Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, userModel) {
-        return Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            title: Text("Guest"),
-          ),
-          backgroundColor: mainTheme,
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+            ),
+            backgroundColor: mainTheme,
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 35, right: 35),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("${userModel.stars}",
+                    Text("Profile",
                         style: Theme.of(context).textTheme.headline),
-                    Icon(
-                      Icons.star,
-                      color: Color.fromRGBO(248, 207, 95, 1),
-                      size: 50,
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("${_userModel.stars}",
+                            style: Theme.of(context).textTheme.headline),
+                        Icon(
+                          Icons.star,
+                          color: Color.fromRGBO(248, 207, 95, 1),
+                          size: 50,
+                        ),
+                      ],
                     ),
+                    _Highscores(),
+                    const SizedBox(height: 15),
+                    _Shop(),
                   ],
                 ),
-                RaisedButton(
-                  onPressed: () => userModel.addOrRemoveStars(3),
-                  child: Text("+3"),
-                ),
-                RaisedButton(
-                  onPressed: () => userModel.addOrRemoveStars(-10),
-                  child: Text("-10"),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -140,11 +75,91 @@ class _Highscores extends StatefulWidget {
 }
 
 class __HighscoresState extends State<_Highscores> {
+  Widget _highscores;
+  bool _isExpanded = false;
+
+  String _shortenTrackName(String name) {
+    List<String> _res = name.split(" (");
+    _res = _res.first.split(" -");
+    _res = _res.first.split(" /");
+    return _res.first;
+  }
+
+  void _initHighscores() {
+    _highscores = ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return FutureBuilder<List<Track>>(
+          future: spotifyRepository.getTrackList(model.songs),
+          builder: (context, tracks) {
+            switch (tracks.connectionState) {
+              case ConnectionState.waiting:
+                return loadingWhite;
+              default:
+                if (tracks.hasError) return Container();
+                return Container(
+                  height: 200,
+                  child: ListView.builder(
+                    itemCount: tracks.data.length,
+                    itemBuilder: (context, i) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(_shortenTrackName(tracks.data[i].name)),
+                            Text(model.highscores[i],
+                                style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+            }
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("Highscores"),
+        GestureDetector(
+          onTap: () {
+            setState(() => _isExpanded = !_isExpanded);
+            if (_highscores == null) _initHighscores();
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Highscores",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontFamily: 'Apple-Semibold',
+                  ),
+                ),
+                IconButton(
+                  icon:
+                      Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+                  onPressed: () {
+                    setState(() => _isExpanded = !_isExpanded);
+                    if (_highscores == null) _initHighscores();
+                  },
+                  iconSize: 32,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ),
+        _isExpanded ? _highscores : Container(),
       ],
     );
   }
@@ -167,7 +182,14 @@ class __ShopState extends State<_Shop> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Shop"),
+        Text(
+          "Shop",
+          style: TextStyle(
+            fontSize: 28,
+            fontFamily: 'Apple-Semibold',
+          ),
+        ),
+        const SizedBox(height: 10),
         Text("If you like my app, you can buy me a coffee"),
         const SizedBox(height: 15),
         Column(

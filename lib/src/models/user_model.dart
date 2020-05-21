@@ -27,6 +27,7 @@ class UserModel extends Model {
   List<String> get artists => _artists;
   List<String> get favorite => _favorite;
   List<String> get history => _history;
+  List<String> get highscores => _highscores;
   bool get darkTheme => _darkTheme;
   bool get isGameOver => _isGameOver;
 
