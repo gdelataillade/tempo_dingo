@@ -322,6 +322,40 @@ class _GameOver extends StatefulWidget {
 
 class __GameOverState extends State<_GameOver> {
   bool _isLiked;
+  static final Widget _star =
+      Icon(Icons.star, size: 40, color: Color.fromRGBO(248, 207, 95, 1));
+  List<Widget> _starsEarned = [];
+  int _nbStars;
+
+  void _countStars() {
+    if (widget.accuracy >= 90) _nbStars++;
+    if (widget.accuracy >= 97) _nbStars++;
+    if (widget.accuracy >= 99) _nbStars++;
+  }
+
+  void _rotateStars() {
+    if (_nbStars == 2) {
+      _starsEarned.add(Transform.rotate(angle: -0.1, child: _star));
+      _starsEarned.add(Transform.rotate(angle: 0.1, child: _star));
+    } else if (_nbStars == 3) {
+      _starsEarned.add(Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Transform.rotate(angle: -0.4, child: _star),
+      ));
+      _starsEarned.add(_star);
+      _starsEarned.add(Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Transform.rotate(angle: 0.4, child: _star),
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    _countStars();
+    _rotateStars();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +367,8 @@ class __GameOverState extends State<_GameOver> {
         return Column(
           children: <Widget>[
             Row(
-              children: <Widget>[],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _starsEarned,
             ),
             Text("Awesome!"),
             Text("${widget.accuracy.toStringAsPrecision(5)}%"),
@@ -365,7 +400,7 @@ class __GameOverState extends State<_GameOver> {
                       ? Icon(Icons.favorite)
                       : Icon(Icons.favorite_border),
                   color: Colors.red,
-                  iconSize: 30,
+                  iconSize: 32,
                 ),
               ],
             ),
