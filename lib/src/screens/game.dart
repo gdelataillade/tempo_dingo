@@ -330,6 +330,7 @@ class __GameOverState extends State<_GameOver> {
   List<Widget> _starsEarned = [];
   int _nbStars = 0;
   bool _isLiked;
+  bool _isHighscore;
 
   void _countStars() {
     if (widget.accuracy >= 90) _nbStars++;
@@ -353,6 +354,7 @@ class __GameOverState extends State<_GameOver> {
 
   @override
   void initState() {
+    print("Init game over");
     _countStars();
     _rotateStars();
     super.initState();
@@ -364,6 +366,8 @@ class __GameOverState extends State<_GameOver> {
       builder: (context, child, userModel) {
         userModel.pushGameStats();
         userModel.addOrRemoveStars(_nbStars);
+        _isHighscore = userModel.isHighscore(
+            widget.accuracy.toStringAsFixed(3), widget.trackId);
         _isLiked = userModel.isFavorite(widget.trackId);
         print("length: ${widget.accuracyList.length}");
         return Column(
@@ -382,8 +386,8 @@ class __GameOverState extends State<_GameOver> {
                 ),
               ],
             ),
-            Text("Awesome!"),
-            Text("${widget.accuracy.toStringAsPrecision(5)}%"),
+            Text("Score: ${widget.accuracy.toStringAsFixed(3)}%"),
+            _isHighscore ? Text("New highscore!") : Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

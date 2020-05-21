@@ -119,6 +119,26 @@ class UserModel extends Model {
     notifyListeners();
   }
 
+  bool isHighscore(String nbStr, String trackId) {
+    double _nb = double.parse(nbStr);
+    int _index = _tracks.indexOf(trackId);
+    print("Score: $nbStr");
+    print("Track index: $_index");
+
+    // Check if highscore
+    if (_nb > double.parse(_highscores[_index])) {
+      // Save highscore
+      _highscores[_index] = nbStr;
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setStringList('highscores', _highscores);
+        return true;
+      });
+
+      return true;
+    }
+    return false;
+  }
+
   void changeLanguage(String newLang) {
     _language = newLang;
 
