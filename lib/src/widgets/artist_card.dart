@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,26 @@ class ArtistCard extends StatefulWidget {
 }
 
 class _ArtistCardState extends State<ArtistCard> {
+  Image _image;
+
   String _formatString(String str) {
     String newString = str;
 
     if (newString.length > 13) return newString.substring(0, 13);
     return str;
+  }
+
+  Future<Size> _calculateImageDimension() {
+    if (widget.imgUrl != null) _image = Image.network(widget.imgUrl);
+    Completer<Size> completer = Completer();
+    _image.image.resolve(ImageConfiguration()).addListener(
+      ImageStreamListener((ImageInfo image, bool _) {
+        var myImage = image.image;
+        Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
+        completer.complete(size);
+      }),
+    );
+    return completer.future;
   }
 
   @override
@@ -39,14 +55,24 @@ class _ArtistCardState extends State<ArtistCard> {
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: widget.imgUrl != null
-                ? Image.network(widget.imgUrl)
-                : Container(
-                    color: Colors.grey,
-                    child: Icon(FeatherIcons.user),
-                  ),
+          child: FutureBuilder<Size>(
+            future: _calculateImageDimension(),
+            builder: (context, size) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: widget.imgUrl != null
+                    ? FittedBox(
+                        child: _image,
+                        fit: size.data.height > size.data.width
+                            ? BoxFit.fitWidth
+                            : BoxFit.fitHeight,
+                      )
+                    : Container(
+                        color: Colors.grey,
+                        child: Icon(FeatherIcons.user),
+                      ),
+              );
+            },
           ),
         ),
         const SizedBox(height: 3),
