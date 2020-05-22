@@ -1,3 +1,4 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ArtistCard extends StatefulWidget {
@@ -40,7 +41,12 @@ class _ArtistCardState extends State<ArtistCard> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(50),
-            child: Image.network(widget.imgUrl),
+            child: widget.imgUrl != null
+                ? Image.network(widget.imgUrl)
+                : Container(
+                    color: Colors.grey,
+                    child: Icon(FeatherIcons.user),
+                  ),
           ),
         ),
         const SizedBox(height: 3),

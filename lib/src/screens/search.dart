@@ -377,7 +377,10 @@ class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
                           MaterialPageRoute(
                               builder: (context) =>
                                   ArtistScreen(model, artists[_artistIndex]))),
-                      child: ArtistCard(artists[_artistIndex].images.first.url,
+                      child: ArtistCard(
+                          widget.artists[index].images.length > 0
+                              ? widget.artists[index].images.first.url
+                              : null,
                           artists[_artistIndex].name),
                     ),
                     artists.length > _artistIndex + 1
@@ -388,7 +391,9 @@ class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
                                     builder: (context) => ArtistScreen(
                                         model, artists[_artistIndex + 1]))),
                             child: ArtistCard(
-                                artists[_artistIndex + 1].images.first.url,
+                                artists[_artistIndex + 1].images.length > 0
+                                    ? artists[_artistIndex + 1].images.first.url
+                                    : null,
                                 artists[_artistIndex + 1].name),
                           )
                         : Container(width: 80, height: 80),
@@ -400,7 +405,9 @@ class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
                                     builder: (context) => ArtistScreen(
                                         model, artists[_artistIndex + 2]))),
                             child: ArtistCard(
-                                artists[_artistIndex + 2].images.first.url,
+                                artists[_artistIndex + 2].images.length > 0
+                                    ? artists[_artistIndex + 2].images.first.url
+                                    : null,
                                 artists[_artistIndex + 2].name),
                           )
                         : Container(width: 80, height: 80),

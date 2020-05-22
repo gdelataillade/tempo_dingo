@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
@@ -60,13 +58,10 @@ class _Artists extends StatefulWidget {
 }
 
 class __ArtistsState extends State<_Artists> {
-  List<spotify.Artist> _shuffledList;
-
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
-        _shuffledList = userModel.shuffleList(widget.artists);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -87,10 +82,12 @@ class __ArtistsState extends State<_Artists> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ArtistScreen(
-                                  userModel, _shuffledList[index]))),
+                                  userModel, widget.artists[index]))),
                       child: ArtistCard(
-                        _shuffledList[index].images.first.url,
-                        _shuffledList[index].name,
+                        widget.artists[index].images.length > 0
+                            ? widget.artists[index].images.first.url
+                            : null,
+                        widget.artists[index].name,
                       ),
                     ),
                   );

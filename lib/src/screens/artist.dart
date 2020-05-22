@@ -1,3 +1,4 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:scoped_model/scoped_model.dart';
@@ -75,7 +76,11 @@ class _ArtistScreenState extends State<ArtistScreen> {
                   children: <Widget>[
                     const SizedBox(height: 10),
                     _ArtistHeader(
-                        widget.artist.name, widget.artist.images.first.url),
+                      widget.artist.name,
+                      widget.artist.images.length > 1
+                          ? widget.artist.images.first.url
+                          : null,
+                    ),
                     const SizedBox(height: 10),
                     FutureBuilder<List<spotify.Track>>(
                       future: repository.getArtistTracks(
@@ -135,7 +140,12 @@ class __ArtistHeaderState extends State<_ArtistHeader> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(200),
-            child: Image.network(widget.imgUrl),
+            child: widget.imgUrl != null
+                ? Image.network(widget.imgUrl)
+                : Container(
+                    color: Colors.grey,
+                    child: Icon(FeatherIcons.user),
+                  ),
           ),
         ),
         const SizedBox(height: 20),
