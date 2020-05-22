@@ -7,7 +7,7 @@ class SpotifyRepository {
 
   Future<List<Artist>> getArtistsSearchResults(String input) async {
     final List<Artist> list = [];
-    var result = await spotify.search.get(input).first(10);
+    var result = await spotify.search.get(input).first(9);
 
     result.forEach((pages) {
       pages.items.forEach((item) {
