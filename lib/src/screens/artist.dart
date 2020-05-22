@@ -71,7 +71,6 @@ class _ArtistScreenState extends State<ArtistScreen> {
             body: SingleChildScrollView(
               controller: _controller,
               child: Container(
-                height: double.maxFinite,
                 child: Column(
                   children: <Widget>[
                     const SizedBox(height: 10),
@@ -169,7 +168,8 @@ class __ArtistTracksState extends State<_ArtistTracks> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
-        return Expanded(
+        return Container(
+          height: widget.tracks.length.roundToDouble() * (65 + 20),
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.only(left: 20, right: 20),
