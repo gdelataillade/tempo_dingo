@@ -23,8 +23,9 @@ class _ArtistCardState extends State<ArtistCard> {
   }
 
   Future<Size> _calculateImageDimension() {
-    if (widget.imgUrl != null) _image = Image.network(widget.imgUrl);
     Completer<Size> completer = Completer();
+
+    _image = Image.network(widget.imgUrl);
     _image.image.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((ImageInfo image, bool _) {
         var myImage = image.image;
@@ -55,24 +56,21 @@ class _ArtistCardState extends State<ArtistCard> {
               ),
             ],
           ),
-          child: FutureBuilder<Size>(
-            future: _calculateImageDimension(),
-            builder: (context, size) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: widget.imgUrl != null
-                    ? FittedBox(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: widget.imgUrl != null
+                ? FutureBuilder<Size>(
+                    future: _calculateImageDimension(),
+                    builder: (context, size) {
+                      return FittedBox(
                         child: _image,
                         fit: size.data.height > size.data.width
                             ? BoxFit.fitWidth
                             : BoxFit.fitHeight,
-                      )
-                    : Container(
-                        color: Colors.grey,
-                        child: Icon(FeatherIcons.user),
-                      ),
-              );
-            },
+                      );
+                    },
+                  )
+                : Container(color: Colors.grey),
           ),
         ),
         const SizedBox(height: 3),
