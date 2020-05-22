@@ -33,7 +33,8 @@ class UserModel extends Model {
 
   Future<void> getSharedPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    // await prefs.clear();
+
+    // await _prefs.clear();
 
     // Stars prefs
     _stars = _prefs.getInt('stars');
@@ -80,6 +81,7 @@ class UserModel extends Model {
     // Highscores
     _highscores = _prefs.getStringList('highscores');
     if (_highscores == null) {
+      _highscores = List<String>();
       for (var i = 0; i < _tracks.length; i++) _highscores.add('0');
       _prefs.setStringList('highscores', _highscores);
     }
@@ -99,11 +101,14 @@ class UserModel extends Model {
   }
 
   void purchaseTrack(String trackId, String artistId, int price) {
+    if (_tracks.contains(trackId)) return;
     _tracks.add(trackId);
     _artists.add(artistId);
+    _highscores.add("0");
     SharedPreferences.getInstance().then((prefs) {
       prefs.setStringList('tracks', _tracks);
       prefs.setStringList('artists', _artists);
+      prefs.setStringList('highscores', _highscores);
     });
     getSharedPrefs();
   }
