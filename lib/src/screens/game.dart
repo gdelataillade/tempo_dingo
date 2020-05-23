@@ -68,7 +68,7 @@ class _GameState extends State<Game> {
       // print("accuracy: ${_accuracy.toStringAsFixed(3)}");
       _playerTempo =
           (((_tapCount - 3) * 60) / _timeElapsed.inMicroseconds) * 1000000;
-      print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
+      // print("${_playerTempo.toStringAsFixed(3)} - $_realTempo");
     }
     _setAccuracy();
   }
@@ -332,10 +332,14 @@ class __GameOverState extends State<_GameOver> {
   bool _isLiked;
   bool _isHighscore;
 
+  Widget _build;
+
   void _countStars() {
     if (widget.accuracy >= 90) _nbStars++;
     if (widget.accuracy >= 97) _nbStars++;
     if (widget.accuracy >= 99) _nbStars++;
+    print(widget.accuracy);
+    print(_nbStars);
   }
 
   void _rotateStars() {
@@ -352,16 +356,7 @@ class __GameOverState extends State<_GameOver> {
       _starsEarned[0] = Transform.rotate(angle: 0.4, child: _star);
   }
 
-  @override
-  void initState() {
-    print("Init game over");
-    _countStars();
-    _rotateStars();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _initBuild() {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
         userModel.pushGameStats();
@@ -369,7 +364,7 @@ class __GameOverState extends State<_GameOver> {
         _isHighscore = userModel.isHighscore(
             widget.accuracy.toStringAsFixed(3), widget.trackId);
         _isLiked = userModel.isFavorite(widget.trackId);
-        print("length: ${widget.accuracyList.length}");
+        // print("length: ${widget.accuracyList.length}");
         return Column(
           children: <Widget>[
             Row(
@@ -426,6 +421,18 @@ class __GameOverState extends State<_GameOver> {
       },
     );
   }
+
+  @override
+  void initState() {
+    // print("Init game over");
+    _countStars();
+    _rotateStars();
+    _build = _initBuild();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) => _build;
 }
 
 class ChartItem {
@@ -457,9 +464,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
     for (var i = 0; i < widget.list.length; i++) {
       list.add(FlSpot(widget.list[i].time / 3, widget.list[i].accuracy / 10));
-      print("time: ${widget.list[i].time} -> ${widget.list[i].time / 3}");
-      print(
-          "accuarcy: ${widget.list[i].accuracy} -> ${widget.list[i].accuracy / 10}");
+      // print("time: ${widget.list[i].time} -> ${widget.list[i].time / 3}");
+      // print(
+      //     "accuarcy: ${widget.list[i].accuracy} -> ${widget.list[i].accuracy / 10}");
     }
     return list;
   }
