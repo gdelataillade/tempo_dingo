@@ -103,14 +103,16 @@ class UserModel extends Model {
   void purchaseTrack(String trackId, String artistId, int price) {
     if (_tracks.contains(trackId)) return;
     _tracks.add(trackId);
-    _artists.add(artistId);
+    if (!_artists.contains(artistId)) _artists.add(artistId);
     _highscores.add("0");
     SharedPreferences.getInstance().then((prefs) {
       prefs.setStringList('tracks', _tracks);
       prefs.setStringList('artists', _artists);
       prefs.setStringList('highscores', _highscores);
+      addOrRemoveStars(price * -1);
+      getSharedPrefs();
     });
-    getSharedPrefs();
+    notifyListeners();
   }
 
   bool isFavorite(String trackId) {
@@ -193,12 +195,5 @@ class UserModel extends Model {
         .collection('stats')
         .document('stats')
         .updateData({"nbGames": nbGames + 1});
-  }
-
-  int setPrice(int popularity) {
-    double price;
-
-    price = (popularity + 1) / 5;
-    return price.toInt() + 1;
   }
 }
