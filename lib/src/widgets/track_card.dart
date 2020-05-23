@@ -49,6 +49,7 @@ class _TrackCardState extends State<TrackCard> {
     if (widget.isProtected)
       return Tooltip(
         message: 'Not available: copyright',
+        preferBelow: true,
         child: Icon(
           Icons.copyright,
           size: 35,
