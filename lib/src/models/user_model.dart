@@ -126,12 +126,12 @@ class UserModel extends Model {
   }
 
   void addOrRemoveStars(int nb) {
+    // print("stars: $_stars = $_stars + $nb = ${_stars + nb}");
     _stars += nb;
 
     SharedPreferences.getInstance().then((prefs) {
       prefs.setInt('stars', _stars);
     });
-    // notifyListeners();
   }
 
   bool isHighscore(String nbStr, String trackId) {
@@ -180,7 +180,6 @@ class UserModel extends Model {
 
   void gameOver() {
     _isGameOver = true;
-    notifyListeners();
   }
 
   void exitGame() => _isGameOver = false;
