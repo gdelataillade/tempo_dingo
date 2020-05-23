@@ -173,8 +173,11 @@ class _Shop extends StatefulWidget {
 }
 
 class __ShopState extends State<_Shop> {
+  UserModel _userModel;
+
   void _purshaseStars(int nbStars, double price) {
     print("Purshase $nbStars stars for $price€");
+    _userModel.addOrRemoveStars(nbStars);
   }
 
   @override
@@ -192,25 +195,28 @@ class __ShopState extends State<_Shop> {
         const SizedBox(height: 10),
         Text("If you like my app, you can buy me a coffee"),
         const SizedBox(height: 15),
-        Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                _ShopItem(20, 0.49, _purshaseStars),
-                _ShopItem(50, 0.99, _purshaseStars),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                _ShopItem(100, 1.49, _purshaseStars),
-                _ShopItem(500, 4.99, _purshaseStars),
-              ],
-            ),
-          ],
-        ),
+        ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+          _userModel = model;
+          return Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  _ShopItem(20, 0.49, _purshaseStars),
+                  _ShopItem(50, 0.99, _purshaseStars),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  _ShopItem(100, 1.49, _purshaseStars),
+                  _ShopItem(500, 4.99, _purshaseStars),
+                ],
+              ),
+            ],
+          );
+        }),
       ],
     );
   }
