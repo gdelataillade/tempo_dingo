@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ArtistCard extends StatefulWidget {
@@ -62,12 +61,17 @@ class _ArtistCardState extends State<ArtistCard> {
                 ? FutureBuilder<Size>(
                     future: _calculateImageDimension(),
                     builder: (context, size) {
-                      return FittedBox(
-                        child: _image,
-                        fit: size.data.height > size.data.width
-                            ? BoxFit.fitWidth
-                            : BoxFit.fitHeight,
-                      );
+                      switch (size.connectionState) {
+                        case ConnectionState.waiting:
+                          return Image.network(widget.imgUrl);
+                        default:
+                          return FittedBox(
+                            child: _image,
+                            fit: size.data.height > size.data.width
+                                ? BoxFit.fitWidth
+                                : BoxFit.fitHeight,
+                          );
+                      }
                     },
                   )
                 : Container(color: Colors.grey),
