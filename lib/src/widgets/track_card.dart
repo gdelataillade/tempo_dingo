@@ -47,10 +47,13 @@ class _TrackCardState extends State<TrackCard> {
 
   Widget _getActionButton() {
     if (widget.isProtected)
-      return Icon(
-        Icons.copyright,
-        size: 35,
-        color: mainTheme,
+      return Tooltip(
+        message: 'Not available: copyright',
+        child: Icon(
+          Icons.copyright,
+          size: 35,
+          color: mainTheme,
+        ),
       );
     if (_isPurchased) {
       return GestureDetector(
