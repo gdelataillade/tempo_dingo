@@ -363,90 +363,60 @@ class __ArtistSearchResultsState extends State<_ArtistSearchResults> {
           child: ListView.builder(
             itemCount: (widget.artists.length / 3).round(),
             itemBuilder: (BuildContext context, int i) {
-              print("length ${widget.artists.length}");
-              print(_artistIndex);
+              // print("length ${widget.artists.length}");
+              // print(_artistIndex);
               Widget row = Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  ArtistCard(
-                    widget.artists[_artistIndex].images.length > 0
-                        ? widget.artists[_artistIndex].images.first.url
-                        : null,
-                    widget.artists[_artistIndex].name,
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ArtistScreen(model, widget.artists[i * 3]))),
+                    child: ArtistCard(
+                      widget.artists[_artistIndex].images.length > 0
+                          ? widget.artists[_artistIndex].images.first.url
+                          : null,
+                      widget.artists[_artistIndex].name,
+                    ),
                   ),
                   widget.artists.length > _artistIndex + 1
-                      ? ArtistCard(
-                          widget.artists[_artistIndex + 1].images.length > 0
-                              ? widget
-                                  .artists[_artistIndex + 1].images.first.url
-                              : null,
-                          widget.artists[_artistIndex + 1].name,
+                      ? GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ArtistScreen(
+                                      model, widget.artists[(i * 3) + 1]))),
+                          child: ArtistCard(
+                            widget.artists[_artistIndex + 1].images.length > 0
+                                ? widget
+                                    .artists[_artistIndex + 1].images.first.url
+                                : null,
+                            widget.artists[_artistIndex + 1].name,
+                          ),
                         )
                       : Container(),
                   widget.artists.length > _artistIndex + 2
-                      ? ArtistCard(
-                          widget.artists[_artistIndex + 2].images.length > 0
-                              ? widget
-                                  .artists[_artistIndex + 2].images.first.url
-                              : null,
-                          widget.artists[_artistIndex + 2].name,
+                      ? GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ArtistScreen(
+                                      model, widget.artists[(i * 3) + 2]))),
+                          child: ArtistCard(
+                            widget.artists[_artistIndex + 2].images.length > 0
+                                ? widget
+                                    .artists[_artistIndex + 2].images.first.url
+                                : null,
+                            widget.artists[_artistIndex + 2].name,
+                          ),
                         )
                       : Container(),
                 ],
               );
               _artistIndex += 3;
               return row;
-              // Widget row = Padding(
-              //   padding: const EdgeInsets.only(top: 15),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: <Widget>[
-              //       GestureDetector(
-              //         onTap: () => Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (context) =>
-              //                     ArtistScreen(model, artists[_artistIndex]))),
-              //         child: ArtistCard(
-              //           widget.artists[index].images.length > 0
-              //               ? widget.artists[index].images.first.url
-              //               : null,
-              //           artists[_artistIndex].name,
-              //         ),
-              //       ),
-              //       artists.length > _artistIndex + 1
-              //           ? GestureDetector(
-              //               onTap: () => Navigator.push(
-              //                   context,
-              //                   MaterialPageRoute(
-              //                       builder: (context) => ArtistScreen(
-              //                           model, artists[_artistIndex + 1]))),
-              //               child: ArtistCard(
-              //                   artists[_artistIndex + 1].images.length > 0
-              //                       ? artists[_artistIndex + 1].images.first.url
-              //                       : null,
-              //                   artists[_artistIndex + 1].name),
-              //             )
-              //           : Container(),
-              //       artists.length > _artistIndex + 2
-              //           ? GestureDetector(
-              //               onTap: () => Navigator.push(
-              //                   context,
-              //                   MaterialPageRoute(
-              //                       builder: (context) => ArtistScreen(
-              //                           model, artists[_artistIndex + 2]))),
-              //               child: ArtistCard(
-              //                   artists[_artistIndex + 2].images.length > 0
-              //                       ? artists[_artistIndex + 2].images.first.url
-              //                       : null,
-              //                   artists[_artistIndex + 2].name),
-              //             )
-              //           : Container(),
-              //     ],
-              //   ),
-              // );
-              // _artistIndex += 3;
-              // return row;
             },
           ),
         );
