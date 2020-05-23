@@ -1,5 +1,6 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart';
 
@@ -14,6 +15,9 @@ SpotifyRepository spotifyRepository = SpotifyRepository();
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Dismiss keyboard when hot reload (debug)
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
     return MaterialApp(
       title: 'Tempo Dingo',
       debugShowCheckedModeBanner: false,
