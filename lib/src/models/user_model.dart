@@ -134,6 +134,7 @@ class UserModel extends Model {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setInt('stars', _stars);
     });
+    notifyListeners();
   }
 
   bool isHighscore(String nbStr, String trackId) {
