@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:spotify/spotify_io.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/screens/game.dart';
 
 class PurchasePopup extends StatefulWidget {
   final UserModel userModel;
-  final String trackId;
-  final String name;
-  final String artistId;
-  final int price;
+  final Track track;
 
-  const PurchasePopup(
-    this.userModel,
-    this.trackId,
-    this.name,
-    this.artistId,
-    this.price,
-  );
+  const PurchasePopup(this.userModel, this.track);
 
   @override
   _PurchasePopupState createState() => _PurchasePopupState();
@@ -26,6 +19,15 @@ class _PurchasePopupState extends State<PurchasePopup>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation<double> scaleAnimation;
+  bool _haveEnoughStars;
+  int _price;
+
+  int setPrice(int popularity) {
+    double price;
+
+    price = (popularity + 1) / 5;
+    return price.toInt() + 1;
+  }
 
   @override
   void initState() {
@@ -38,6 +40,7 @@ class _PurchasePopupState extends State<PurchasePopup>
       setState(() {});
     });
     controller.forward();
+    _price = setPrice(widget.track.popularity);
   }
 
   @override
@@ -46,12 +49,13 @@ class _PurchasePopupState extends State<PurchasePopup>
       model: widget.userModel,
       child: ScopedModelDescendant<UserModel>(
           builder: (context, child, userModel) {
+        _haveEnoughStars = userModel.stars >= _price;
         return ScaleTransition(
           scale: scaleAnimation,
           child: AlertDialog(
             title: Center(
               child: Text(
-                "Purchase \"${widget.name}\"",
+                "Purchase \"${widget.track.name}\"",
                 style: TextStyle(fontSize: 28, color: mainTheme),
                 textAlign: TextAlign.center,
               ),
@@ -71,7 +75,7 @@ class _PurchasePopupState extends State<PurchasePopup>
                   ),
                   Row(
                     children: <Widget>[
-                      Text("It will cost you ${widget.price}"),
+                      Text("It will cost you $_price"),
                       Icon(Icons.star, color: Color.fromRGBO(248, 207, 95, 1)),
                     ],
                   ),
@@ -83,15 +87,30 @@ class _PurchasePopupState extends State<PurchasePopup>
                 children: <Widget>[
                   FlatButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text("No thanks"),
+                    child: Text(
+                      "No thanks",
+                      style: TextStyle(color: mainTheme),
+                    ),
                   ),
                   FlatButton(
                     onPressed: () {
-                      userModel.purchaseTrack(
-                          widget.trackId, widget.artistId, widget.price);
-                      Navigator.of(context).pop();
+                      if (_haveEnoughStars) {
+                        userModel.purchaseTrack(widget.track.id,
+                            widget.track.artists.first.id, _price);
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Game(userModel, widget.track)));
+                      }
                     },
-                    child: Text("Yes"),
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        color: _haveEnoughStars ? mainTheme : Colors.grey,
+                      ),
+                    ),
                   ),
                 ],
               ),

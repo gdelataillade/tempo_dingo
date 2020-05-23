@@ -316,13 +316,8 @@ class __TrackSearchResultsState extends State<_TrackSearchResults> {
                         else
                           showDialog(
                             context: context,
-                            builder: (BuildContext context) => PurchasePopup(
-                              model,
-                              track.id,
-                              track.name,
-                              track.artists.first.id,
-                              model.setPrice(track.popularity),
-                            ),
+                            builder: (BuildContext context) =>
+                                PurchasePopup(model, track),
                           );
                       },
                       child: TrackCard(

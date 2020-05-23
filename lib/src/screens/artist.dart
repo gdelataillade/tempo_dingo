@@ -188,13 +188,8 @@ class __ArtistTracksState extends State<_ArtistTracks> {
                   else
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) => PurchasePopup(
-                        model,
-                        track.id,
-                        track.name,
-                        track.artists.first.id,
-                        model.setPrice(track.popularity),
-                      ),
+                      builder: (BuildContext context) =>
+                          PurchasePopup(model, track),
                     );
                 },
                 child: TrackCard(

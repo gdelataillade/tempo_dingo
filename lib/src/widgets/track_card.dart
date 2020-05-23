@@ -157,32 +157,6 @@ class _TrackCardState extends State<TrackCard> {
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: _getActionButton(),
-                // child: _isPurchased
-                //     ? GestureDetector(
-                //         onTap: () {
-                //           if (model.vibration)
-                //             Vibrate.feedback(FeedbackType.impact);
-                //           setState(() => _isLiked = !_isLiked);
-                //           model.likeUnlikeTrack(widget.trackId);
-                //         },
-                //         child: Icon(
-                //           model.isFavorite(widget.trackId)
-                //               ? Icons.favorite
-                //               : Icons.favorite_border,
-                //           size: 35,
-                //           color: Colors.red,
-                //         ),
-                //       )
-                //     : GestureDetector(
-                //         onTap: () => print("purchase"),
-                //         child: Row(
-                //           children: <Widget>[
-                //             Text("$_price", style: TextStyle(color: mainTheme)),
-                //             Icon(Icons.star,
-                //                 color: Color.fromRGBO(248, 207, 95, 1)),
-                //           ],
-                //         ),
-                //       ),
               );
             },
           ),
