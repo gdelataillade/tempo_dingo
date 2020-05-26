@@ -337,7 +337,7 @@ class __GameOverState extends State<_GameOver> {
   Widget _build;
 
   void _countStars() {
-    if (widget.accuracy >= 90) _nbStars++;
+    if (widget.accuracy >= 85) _nbStars++;
     if (widget.accuracy >= 97) _nbStars++;
     if (widget.accuracy >= 99) _nbStars++;
     print(widget.accuracy);
@@ -353,9 +353,9 @@ class __GameOverState extends State<_GameOver> {
     // Replace empty stars by filled stars when needed
     if (_nbStars >= 1)
       _starsEarned[0] = Transform.rotate(angle: -0.4, child: _star);
-    if (_nbStars >= 2) _starsEarned[0] = _star;
+    if (_nbStars >= 2) _starsEarned[1] = _star;
     if (_nbStars == 3)
-      _starsEarned[0] = Transform.rotate(angle: 0.4, child: _star);
+      _starsEarned[2] = Transform.rotate(angle: 0.4, child: _star);
   }
 
   Widget _initBuild() {
