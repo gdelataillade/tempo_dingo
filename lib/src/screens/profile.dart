@@ -53,9 +53,9 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    _Highscores(),
-                    const SizedBox(height: 15),
                     _Shop(),
+                    const SizedBox(height: 15),
+                    _Highscores(),
                   ],
                 ),
               ),
@@ -76,7 +76,6 @@ class _Highscores extends StatefulWidget {
 
 class __HighscoresState extends State<_Highscores> {
   Widget _highscores;
-  bool _isExpanded = false;
 
   String _shortenTrackName(String name) {
     List<String> _res = name.split(" (");
@@ -127,39 +126,54 @@ class __HighscoresState extends State<_Highscores> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            setState(() => _isExpanded = !_isExpanded);
-            if (_highscores == null) _initHighscores();
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Highscores",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontFamily: 'Apple-Semibold',
-                  ),
-                ),
-                IconButton(
-                  icon:
-                      Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
-                  onPressed: () {
-                    setState(() => _isExpanded = !_isExpanded);
-                    if (_highscores == null) _initHighscores();
-                  },
-                  iconSize: 32,
-                  color: Colors.white,
-                ),
-              ],
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 50,
+          child: Text(
+            "Highscores",
+            style: TextStyle(
+              fontSize: 28,
+              fontFamily: 'Apple-Semibold',
             ),
           ),
         ),
-        _isExpanded ? _highscores : Container(),
+        ScopedModelDescendant<UserModel>(
+          builder: (context, child, model) {
+            return FutureBuilder<List<Track>>(
+              future: spotifyRepository.getTrackList(model.songs),
+              builder: (context, tracks) {
+                switch (tracks.connectionState) {
+                  case ConnectionState.waiting:
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 50, bottom: 10),
+                        child: loadingWhite);
+                  default:
+                    if (tracks.hasError) return Container();
+                    return Container(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: tracks.data.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 30,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(_shortenTrackName(tracks.data[i].name)),
+                                Text(model.highscores[i],
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                }
+              },
+            );
+          },
+        ),
       ],
     );
   }
