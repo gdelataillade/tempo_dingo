@@ -53,8 +53,9 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    _Shop(),
                     const SizedBox(height: 15),
+                    _Shop(),
+                    const SizedBox(height: 25),
                     _Highscores(),
                   ],
                 ),
@@ -75,51 +76,11 @@ class _Highscores extends StatefulWidget {
 }
 
 class __HighscoresState extends State<_Highscores> {
-  Widget _highscores;
-
   String _shortenTrackName(String name) {
     List<String> _res = name.split(" (");
     _res = _res.first.split(" -");
     _res = _res.first.split(" /");
     return _res.first;
-  }
-
-  void _initHighscores() {
-    _highscores = ScopedModelDescendant<UserModel>(
-      builder: (context, child, model) {
-        return FutureBuilder<List<Track>>(
-          future: spotifyRepository.getTrackList(model.songs),
-          builder: (context, tracks) {
-            switch (tracks.connectionState) {
-              case ConnectionState.waiting:
-                return loadingWhite;
-              default:
-                if (tracks.hasError) return Container();
-                return Container(
-                  height: 200,
-                  child: ListView.builder(
-                    itemCount: tracks.data.length,
-                    itemBuilder: (context, i) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(_shortenTrackName(tracks.data[i].name)),
-                            Text(model.highscores[i],
-                                style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-            }
-          },
-        );
-      },
-    );
   }
 
   @override
