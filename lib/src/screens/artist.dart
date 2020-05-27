@@ -4,13 +4,10 @@ import 'package:spotify/spotify_io.dart' as spotify;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 import 'package:tempo_dingo/src/widgets/purchasePopup.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
-
-SpotifyRepository repository = SpotifyRepository();
 
 class ArtistScreen extends StatefulWidget {
   final UserModel userModel;
@@ -23,7 +20,6 @@ class ArtistScreen extends StatefulWidget {
 }
 
 class _ArtistScreenState extends State<ArtistScreen> {
-  UserModel _userModel;
   ScrollController _controller;
   bool _showArtistInAppBar = false;
   Widget _tracks = LoadingScreen("Loading tracks...");
@@ -55,8 +51,6 @@ class _ArtistScreenState extends State<ArtistScreen> {
       model: widget.userModel,
       child: ScopedModelDescendant<UserModel>(
         builder: (context, child, userModel) {
-          _userModel = userModel;
-
           return Scaffold(
             appBar: AppBar(
               elevation: 1,
@@ -82,7 +76,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     ),
                     const SizedBox(height: 10),
                     FutureBuilder<List<spotify.Track>>(
-                      future: repository.getArtistTracks(
+                      future: userModel.spotifyRepository.getArtistTracks(
                           widget.artist.name, widget.artist.id),
                       builder: (context, tracks) {
                         switch (tracks.connectionState) {

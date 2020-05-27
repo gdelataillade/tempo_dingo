@@ -1,13 +1,15 @@
 import 'package:spotify/spotify_io.dart';
 
 class SpotifyRepository {
-  static var credentials = new SpotifyApiCredentials(
-      '5213b2fb597f452fbe59572ead70764c', 'ca8813b3d2174e0ab8c55069c18387b3');
-  static var spotify = new SpotifyApi(credentials);
+  SpotifyApi _spotify;
+
+  void init(SpotifyApiCredentials credentials) {
+    _spotify = SpotifyApi(credentials);
+  }
 
   Future<List<Artist>> getArtistsSearchResults(String input) async {
     final List<Artist> list = [];
-    var result = await spotify.search.get(input).first(9);
+    var result = await _spotify.search.get(input).first(9);
 
     result.forEach((pages) {
       pages.items.forEach((item) {
@@ -21,7 +23,7 @@ class SpotifyRepository {
 
   Future<List<Track>> getTrackSearchResults(String input) async {
     final List<Track> list = [];
-    var result = await spotify.search.get(input).first(20);
+    var result = await _spotify.search.get(input).first(20);
 
     result.forEach((pages) {
       pages.items.forEach((item) {
@@ -34,7 +36,7 @@ class SpotifyRepository {
   }
 
   Future<double> getTempo(String id) async {
-    var audioFeature = await spotify.audioFeatures.get(id);
+    var audioFeature = await _spotify.audioFeatures.get(id);
 
     return audioFeature.tempo;
   }
@@ -44,7 +46,7 @@ class SpotifyRepository {
     Track result;
 
     for (int i = 0; i < tracksId.length; i++) {
-      result = await spotify.tracks.get(tracksId[i]);
+      result = await _spotify.tracks.get(tracksId[i]);
       tracks.add(result);
       // print("${result.name}: ${tracksId[i]}");
     }
@@ -56,7 +58,7 @@ class SpotifyRepository {
     Artist result;
 
     for (int i = 0; i < artistsId.length; i++) {
-      result = await spotify.artists.get(artistsId[i]);
+      result = await _spotify.artists.get(artistsId[i]);
       artists.add(result);
     }
     return artists;
@@ -66,7 +68,7 @@ class SpotifyRepository {
       // , List<Track> libraryTracks
       ) async {
     List<Track> tracks = [];
-    var results = await spotify.search.get(artistName).first(50);
+    var results = await _spotify.search.get(artistName).first(50);
 
     // for (int i = 0; i < libraryTracks.length; i++) {
     //   if (libraryTracks[i].artists[0].id == artistId)
@@ -93,7 +95,7 @@ class SpotifyRepository {
     double nbResultsWanted = 20 / libraryArtists.length;
 
     for (int i = 0; i < libraryArtists.length; i++) {
-      results = await spotify.search
+      results = await _spotify.search
           .get(libraryArtists[i].name)
           .first(nbResultsWanted.toInt());
       results.forEach((pages) {

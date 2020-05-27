@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,14 +6,19 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 
-SpotifyRepository spotifyRepository = SpotifyRepository();
-
 class MyApp extends StatelessWidget {
+  Future<SpotifyApiCredentials> _getSpotifyCredentials() async {
+    print("Init spotify credentials");
+    final String _clientId = "5213b2fb597f452fbe59572ead70764c";
+    final QuerySnapshot _snapshot =
+        await Firestore.instance.collection("config").getDocuments();
+    return SpotifyApiCredentials(_clientId, _snapshot.documents.first["key"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Dismiss keyboard when hot reload (debug)
@@ -26,10 +32,19 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         backgroundColor: mainTheme,
         resizeToAvoidBottomInset: false,
-        body: ScopedModel<UserModel>(
-          model: UserModel(),
-          child: _CheckLogIn(),
-        ),
+        body: FutureBuilder<SpotifyApiCredentials>(
+            future: _getSpotifyCredentials(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: loadingWhite);
+                default:
+                  return ScopedModel<UserModel>(
+                    model: UserModel(snapshot.data),
+                    child: _CheckLogIn(),
+                  );
+              }
+            }),
       ),
     );
   }
@@ -45,7 +60,6 @@ class __CheckLogInState extends State<_CheckLogIn> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       print("Build scoped model");
-
       return FutureBuilder<void>(
         future: model.getSharedPrefs(),
         builder: (context, snapshot) {
@@ -64,7 +78,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
         return FutureBuilder<List<Track>>(
-          future: spotifyRepository.getTrackList(model.songs),
+          future: model.spotifyRepository.getTrackList(model.songs),
           builder: (context, tracks) {
             switch (tracks.connectionState) {
               case ConnectionState.waiting:
@@ -72,7 +86,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
               default:
                 if (tracks.hasError) return _Error();
                 return FutureBuilder<List<Artist>>(
-                  future: spotifyRepository.getArtistsList(model.artists),
+                  future: model.spotifyRepository.getArtistsList(model.artists),
                   builder: (context, artists) {
                     switch (artists.connectionState) {
                       case ConnectionState.waiting:
@@ -80,7 +94,8 @@ class __CheckLogInState extends State<_CheckLogIn> {
                       default:
                         if (artists.hasError) return _Error();
                         return FutureBuilder<List<Track>>(
-                          future: spotifyRepository.getTrackList(model.history),
+                          future: model.spotifyRepository
+                              .getTrackList(model.history),
                           builder: (context, history) {
                             switch (history.connectionState) {
                               case ConnectionState.waiting:

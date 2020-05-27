@@ -1,12 +1,15 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotify/spotify_io.dart';
+
 import 'package:tempo_dingo/src/config/register_config.dart' as config;
+import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import '../config/language.dart';
 
 class UserModel extends Model {
+  SpotifyRepository _spotifyRepository;
   int _stars;
   String _language;
   bool vibration = true;
@@ -21,6 +24,12 @@ class UserModel extends Model {
   int libraryTabIndex = 0;
   bool _isGameOver = false;
 
+  UserModel(SpotifyApiCredentials credentials) {
+    _spotifyRepository = SpotifyRepository();
+    _spotifyRepository.init(credentials);
+  }
+
+  SpotifyRepository get spotifyRepository => _spotifyRepository;
   int get stars => _stars;
   String get language => _language;
   List<String> get songs => _tracks;
@@ -88,6 +97,7 @@ class UserModel extends Model {
   }
 
   void addToHistory(String trackId) {
+    print("Add track to history");
     if (_history.contains(trackId)) _history.remove(trackId);
     _history.insert(0, trackId);
 
