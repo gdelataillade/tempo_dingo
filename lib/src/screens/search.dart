@@ -5,14 +5,11 @@ import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import 'package:tempo_dingo/src/screens/artist.dart';
 import 'package:tempo_dingo/src/screens/game.dart';
 import 'package:tempo_dingo/src/widgets/artist_card.dart';
 import 'package:tempo_dingo/src/widgets/purchasePopup.dart';
 import 'package:tempo_dingo/src/widgets/track_card.dart';
-
-SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class SearchTab extends StatefulWidget {
   final List<Track> tracks;
@@ -26,6 +23,7 @@ class SearchTab extends StatefulWidget {
 }
 
 class _SearchTabState extends State<SearchTab> {
+  UserModel _userModel;
   TextEditingController _controller = TextEditingController();
   String _search = "";
   bool _showHistory = true;
@@ -36,11 +34,11 @@ class _SearchTabState extends State<SearchTab> {
 
   void _makeSearch() {
     _trackResults.clear();
-    spotifyRepository.getTrackSearchResults(_search).then((res) {
+    _userModel.spotifyRepository.getTrackSearchResults(_search).then((res) {
       setState(() => _trackResults = res);
     });
     _artistResults.clear();
-    spotifyRepository.getArtistsSearchResults(_search).then((res) {
+    _userModel.spotifyRepository.getArtistsSearchResults(_search).then((res) {
       setState(() => _artistResults = res);
     });
   }
@@ -71,6 +69,7 @@ class _SearchTabState extends State<SearchTab> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, model) {
+        _userModel = model;
         return Container(
           color: mainTheme,
           padding: const EdgeInsets.only(left: 20, right: 20),
@@ -79,7 +78,7 @@ class _SearchTabState extends State<SearchTab> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  model.intl('search'),
+                  _userModel.intl('search'),
                   style: Theme.of(context).textTheme.headline,
                 ),
               ),

@@ -12,9 +12,6 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/resources/spotify_repository.dart';
-
-SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class Game extends StatefulWidget {
   final UserModel userModel;
@@ -28,6 +25,7 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   UserModel _userModel;
+  bool _isInitialized = false;
 
   int _tapCount = 0;
   double _realTempo = 0;
@@ -114,13 +112,18 @@ class _GameState extends State<Game> {
     return _res.first;
   }
 
-  @override
-  void initState() {
-    spotifyRepository.getTempo(widget.track.id).then((tempo) {
+  void _initModel() {
+    _userModel.addToHistory(widget.track.id);
+    _userModel.spotifyRepository.getTempo(widget.track.id).then((tempo) {
       setState(() {
         _realTempo = tempo;
+        _isInitialized = true;
       });
     });
+  }
+
+  @override
+  void initState() {
     _timer =
         Timer.periodic(Duration(seconds: 1), (Timer t) => _checkGameOver());
     super.initState();
@@ -144,7 +147,7 @@ class _GameState extends State<Game> {
         child: ScopedModelDescendant<UserModel>(
           builder: (context, child, userModel) {
             _userModel = userModel;
-            _userModel.addToHistory(widget.track.id);
+            if (!_isInitialized) _initModel();
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -340,8 +343,8 @@ class __GameOverState extends State<_GameOver> {
     if (widget.accuracy >= 85) _nbStars++;
     if (widget.accuracy >= 97) _nbStars++;
     if (widget.accuracy >= 99) _nbStars++;
-    print(widget.accuracy);
-    print(_nbStars);
+    // print(widget.accuracy);
+    // print(_nbStars);
   }
 
   void _rotateStars() {

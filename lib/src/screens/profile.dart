@@ -4,9 +4,6 @@ import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';
-import 'package:tempo_dingo/src/resources/spotify_repository.dart';
-
-SpotifyRepository spotifyRepository = SpotifyRepository();
 
 class Profile extends StatefulWidget {
   final UserModel userModel;
@@ -101,7 +98,7 @@ class __HighscoresState extends State<_Highscores> {
         ScopedModelDescendant<UserModel>(
           builder: (context, child, model) {
             return FutureBuilder<List<Track>>(
-              future: spotifyRepository.getTrackList(model.songs),
+              future: model.spotifyRepository.getTrackList(model.songs),
               builder: (context, tracks) {
                 switch (tracks.connectionState) {
                   case ConnectionState.waiting:
