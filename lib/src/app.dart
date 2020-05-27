@@ -13,7 +13,7 @@ import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 class MyApp extends StatelessWidget {
   Future<SpotifyApiCredentials> _getSpotifyCredentials() async {
     print("Init spotify credentials");
-    final String _clientId = "5213b2fb597f452fbe59572ead70764c";
+    final String _clientId = "f3ac271ff9d540b3a69f9e4b58c2d0d5";
     final QuerySnapshot _snapshot =
         await Firestore.instance.collection("config").getDocuments();
     return SpotifyApiCredentials(_clientId, _snapshot.documents.first["key"]);
