@@ -6,6 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:spotify/spotify_io.dart';
 
 import 'package:tempo_dingo/src/models/user_model.dart';
+import 'package:tempo_dingo/src/screens/intro.dart';
 import 'package:tempo_dingo/src/tab_view.dart';
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/widgets/loading_screen.dart';
@@ -67,6 +68,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
             case ConnectionState.waiting:
               return Center(child: loadingWhite);
             default:
+              // return Intro();
               return _tabsFutureBuilders();
           }
         },
