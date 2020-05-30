@@ -47,9 +47,7 @@ class __GenreSelectionState extends State<_GenreSelection> {
   }
 
   void _notEnoughSelected() {
-    setState(() {
-      _showErrorMessage = true;
-    });
+    setState(() => _showErrorMessage = true);
   }
 
   void _dismissIntro() => _userModel.introFinished();
@@ -92,7 +90,7 @@ class __GenreSelectionState extends State<_GenreSelection> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Select your favorite genres",
+                  "Select your favorite music",
                   style: TextStyle(fontSize: 30),
                 ),
               ),
