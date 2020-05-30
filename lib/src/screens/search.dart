@@ -115,6 +115,14 @@ class __SearchInputState extends State<_SearchInput> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(const Radius.circular(5)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 0.5,
+                blurRadius: 3,
+                offset: Offset(1, 1),
+              ),
+            ],
           ),
           child: TextField(
             autocorrect: false,

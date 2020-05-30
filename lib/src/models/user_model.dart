@@ -45,6 +45,7 @@ class UserModel extends Model {
   Future<void> getSharedPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
+    // Reset prefs:
     // await _prefs.clear();
 
     // Stars prefs
