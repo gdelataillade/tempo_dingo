@@ -4,7 +4,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify/spotify_io.dart';
 
-import 'package:tempo_dingo/src/config/register_config.dart' as config;
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import '../config/language.dart';
 
@@ -45,8 +44,7 @@ class UserModel extends Model {
   Future<void> getSharedPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
-    // Reset prefs:
-    // await _prefs.clear();
+    await _prefs.clear();
 
     // Stars prefs
     _stars = _prefs.getInt('stars');
@@ -58,14 +56,14 @@ class UserModel extends Model {
     // Tracks prefs
     _tracks = _prefs.getStringList('tracks');
     if (_tracks == null) {
-      _tracks = config.library["tracks"];
+      _tracks = [];
       _prefs.setStringList('tracks', _tracks);
     }
 
     // Artists prefs
     _artists = _prefs.getStringList('artists');
     if (_artists == null) {
-      _artists = config.library["artists"];
+      _artists = [];
       _prefs.setStringList('artists', _artists);
     }
 
@@ -106,11 +104,17 @@ class UserModel extends Model {
     }
   }
 
-  void introFinished() {
+  Future _customizeLibrary(List<bool> genres, int nbSelected) {
+    // override library
+  }
+
+  void introFinished(List<bool> genres, int nbSelected) async {
     _showIntro = false;
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool('showIntro', false);
     });
+    print("notify");
+    await _customizeLibrary(genres, nbSelected);
     notifyListeners();
   }
 
@@ -226,3 +230,12 @@ class UserModel extends Model {
         .updateData({"nbGames": nbGames + 1});
   }
 }
+
+const List<String> genres = [
+  "pop",
+  "rock",
+  "electro",
+  "rap",
+  "metal",
+  "raggae",
+];

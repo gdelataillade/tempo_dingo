@@ -50,7 +50,9 @@ class __GenreSelectionState extends State<_GenreSelection> {
     setState(() => _showErrorMessage = true);
   }
 
-  void _dismissIntro() => _userModel.introFinished();
+  void _completeIntro() {
+    _userModel.introFinished(_isSelectedList, _nbSelected);
+  }
 
   @override
   void initState() {
@@ -101,21 +103,21 @@ class __GenreSelectionState extends State<_GenreSelection> {
                 children: <Widget>[
                   _GenderCard(
                     _genreImages[0],
-                    "Pop",
+                    "${genres[0][0].toUpperCase()}${genres[0].substring(1)}",
                     _isSelectedList[0],
                     0,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[1],
-                    "Rock",
+                    "${genres[1][0].toUpperCase()}${genres[1].substring(1)}",
                     _isSelectedList[1],
                     1,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[2],
-                    "Electro",
+                    "${genres[2][0].toUpperCase()}${genres[2].substring(1)}",
                     _isSelectedList[2],
                     2,
                     _selectGenre,
@@ -129,21 +131,21 @@ class __GenreSelectionState extends State<_GenreSelection> {
                 children: <Widget>[
                   _GenderCard(
                     _genreImages[3],
-                    "Rap",
+                    "${genres[3][0].toUpperCase()}${genres[3].substring(1)}",
                     _isSelectedList[3],
                     3,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[4],
-                    "Metal",
+                    "${genres[4][0].toUpperCase()}${genres[4].substring(1)}",
                     _isSelectedList[4],
                     4,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[5],
-                    "Raggae",
+                    "${genres[5][0].toUpperCase()}${genres[5].substring(1)}",
                     _isSelectedList[5],
                     5,
                     _selectGenre,
@@ -156,7 +158,7 @@ class __GenreSelectionState extends State<_GenreSelection> {
                   : const SizedBox(height: 19),
               _nbSelected < 2
                   ? DarkButton("Next", _notEnoughSelected)
-                  : Button("Next", _dismissIntro, false),
+                  : Button("Next", _completeIntro, false),
             ],
           ),
         );
