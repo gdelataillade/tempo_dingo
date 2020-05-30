@@ -68,8 +68,7 @@ class __CheckLogInState extends State<_CheckLogIn> {
             case ConnectionState.waiting:
               return Center(child: loadingWhite);
             default:
-              // return Intro();
-              return _tabsFutureBuilders();
+              return model.showIntro ? Intro() : _tabsFutureBuilders();
           }
         },
       );
