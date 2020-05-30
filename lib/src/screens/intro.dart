@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/widgets/button.dart';
 import 'package:vibrate/vibrate.dart';
 
@@ -25,22 +27,33 @@ class _GenreSelection extends StatefulWidget {
 }
 
 class __GenreSelectionState extends State<_GenreSelection> {
-  List<Image> _genreImages = [];
+  UserModel _userModel;
+  List<Widget> _genreImages = [];
   List<bool> _isSelectedList = List<bool>.filled(9, false);
   int _nbSelected = 0;
+  bool _showErrorMessage = false;
+  final String _errorMessage = "Please select at least 2 genres.";
 
   void _selectGenre(int index) {
+    Vibrate.feedback(FeedbackType.selection);
     setState(() {
       if (_isSelectedList[index] == true)
         _nbSelected--;
       else
         _nbSelected++;
       _isSelectedList[index] = !_isSelectedList[index];
+      _showErrorMessage = false;
     });
   }
 
   void _navigate() {
     // scoped model
+  }
+
+  void _notEnoughSelected() {
+    setState(() {
+      _showErrorMessage = true;
+    });
   }
 
   @override
@@ -54,130 +67,110 @@ class __GenreSelectionState extends State<_GenreSelection> {
           'https://i.scdn.co/image/3a8476a71714e7718a41a1157c40f93abb8cc750'),
       Image.network(// rap
           'https://i.scdn.co/image/56f4762485066b4ef867b96e16775f2b5b4db277'),
-      Image.network(// metal
-          'https://i.scdn.co/image/5931700f9515dd6587230130beb615e0549e47dc'),
-      Image.network(// raggae
-          'https://i.scdn.co/image/b5aae2067db80f694a980e596e7f49618c1206c9'),
-      Image.network(// classic
-          'https://i.scdn.co/image/a2ec08fe69ecec2748fbc764aede8f1b03ae8f88'),
-      Image.network(// movies
-          'https://i.scdn.co/image/bde64350466df4aa41efb9b8b766deef6c46fd08'),
-      Image.network(// variete fr
-          'https://i.scdn.co/image/dc5d92726318342e300e4ba1344561680c401734'),
+      FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Image.network(// metal
+            'https://i.scdn.co/image/5931700f9515dd6587230130beb615e0549e47dc'),
+      ),
+      FittedBox(
+        fit: BoxFit.fitHeight,
+        child: Image.network(// raggae
+            'https://i.scdn.co/image/c935305719f26d05c9d9b51b5b838d5448b44a27'),
+      ),
     ];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30),
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 20),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Select your favorite genres",
-              style: TextStyle(fontSize: 30),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        _userModel = model;
+        return Padding(
+          padding: const EdgeInsets.only(left: 30, right: 30),
+          child: Column(
             children: <Widget>[
-              _GenderCard(
-                _genreImages[0],
-                "Pop",
-                _isSelectedList[0],
-                0,
-                _selectGenre,
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Select your favorite genres",
+                  style: TextStyle(fontSize: 30),
+                ),
               ),
-              _GenderCard(
-                _genreImages[1],
-                "Rock",
-                _isSelectedList[1],
-                1,
-                _selectGenre,
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _GenderCard(
+                    _genreImages[0],
+                    "Pop",
+                    _isSelectedList[0],
+                    0,
+                    _selectGenre,
+                  ),
+                  _GenderCard(
+                    _genreImages[1],
+                    "Rock",
+                    _isSelectedList[1],
+                    1,
+                    _selectGenre,
+                  ),
+                  _GenderCard(
+                    _genreImages[2],
+                    "Electro",
+                    _isSelectedList[2],
+                    2,
+                    _selectGenre,
+                  ),
+                ],
               ),
-              _GenderCard(
-                _genreImages[2],
-                "Electro",
-                _isSelectedList[2],
-                2,
-                _selectGenre,
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _GenderCard(
+                    _genreImages[3],
+                    "Rap",
+                    _isSelectedList[3],
+                    3,
+                    _selectGenre,
+                  ),
+                  _GenderCard(
+                    _genreImages[4],
+                    "Metal",
+                    _isSelectedList[4],
+                    4,
+                    _selectGenre,
+                  ),
+                  _GenderCard(
+                    _genreImages[5],
+                    "Raggae",
+                    _isSelectedList[5],
+                    5,
+                    _selectGenre,
+                  ),
+                ],
               ),
+              const SizedBox(height: 40),
+              _showErrorMessage
+                  ? Text(_errorMessage, style: TextStyle(color: Colors.red))
+                  : Container(),
+              _nbSelected < 2
+                  ? DarkButton("Next", _notEnoughSelected)
+                  : Button("Next", () {}, false),
             ],
           ),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _GenderCard(
-                _genreImages[3],
-                "Rap",
-                _isSelectedList[3],
-                3,
-                _selectGenre,
-              ),
-              _GenderCard(
-                _genreImages[4],
-                "Metal",
-                _isSelectedList[4],
-                4,
-                _selectGenre,
-              ),
-              _GenderCard(
-                _genreImages[5],
-                "Raggae",
-                _isSelectedList[5],
-                5,
-                _selectGenre,
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _GenderCard(
-                _genreImages[6],
-                "Classic",
-                _isSelectedList[6],
-                6,
-                _selectGenre,
-              ),
-              _GenderCard(
-                _genreImages[7],
-                "Movies",
-                _isSelectedList[7],
-                7,
-                _selectGenre,
-              ),
-              _GenderCard(
-                _genreImages[8],
-                "Variété 🇫🇷",
-                _isSelectedList[8],
-                8,
-                _selectGenre,
-              ),
-            ],
-          ),
-          const SizedBox(height: 40),
-          _nbSelected < 2
-              ? DarkButton("Next", () {})
-              : Button("Next", () {}, false),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class _GenderCard extends StatefulWidget {
-  final Image image;
+  final Widget image;
   final String artist;
   final bool isSelected;
   final int index;
@@ -208,10 +201,7 @@ class __GenderCardState extends State<_GenderCard> {
     return Column(
       children: <Widget>[
         GestureDetector(
-          onTap: () {
-            Vibrate.feedback(FeedbackType.selection);
-            widget.selectGenre(widget.index);
-          },
+          onTap: () => widget.selectGenre(widget.index),
           child: Container(
             width: 100,
             height: 100,
