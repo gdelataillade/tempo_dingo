@@ -32,7 +32,7 @@ class __GenreSelectionState extends State<_GenreSelection> {
   List<bool> _isSelectedList = List<bool>.filled(9, false);
   int _nbSelected = 0;
   bool _showErrorMessage = false;
-  final String _errorMessage = "Please select at least 2 genres.";
+  final String _errorMessage = "Please select at least 2 genres";
 
   void _selectGenre(int index) {
     Vibrate.feedback(FeedbackType.selection);
@@ -46,15 +46,13 @@ class __GenreSelectionState extends State<_GenreSelection> {
     });
   }
 
-  void _navigate() {
-    // scoped model
-  }
-
   void _notEnoughSelected() {
     setState(() {
       _showErrorMessage = true;
     });
   }
+
+  void _dismissIntro() => _userModel.introFinished();
 
   @override
   void initState() {
@@ -154,13 +152,13 @@ class __GenreSelectionState extends State<_GenreSelection> {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               _showErrorMessage
                   ? Text(_errorMessage, style: TextStyle(color: Colors.red))
-                  : Container(),
+                  : const SizedBox(height: 19),
               _nbSelected < 2
                   ? DarkButton("Next", _notEnoughSelected)
-                  : Button("Next", () {}, false),
+                  : Button("Next", _dismissIntro, false),
             ],
           ),
         );

@@ -23,6 +23,7 @@ class UserModel extends Model {
   int tabViewIndex = 1;
   int libraryTabIndex = 0;
   bool _isGameOver = false;
+  bool _showIntro;
 
   UserModel(SpotifyApiCredentials credentials) {
     _spotifyRepository = SpotifyRepository();
@@ -39,6 +40,7 @@ class UserModel extends Model {
   List<String> get highscores => _highscores;
   bool get darkTheme => _darkTheme;
   bool get isGameOver => _isGameOver;
+  bool get showIntro => _showIntro;
 
   Future<void> getSharedPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -94,6 +96,21 @@ class UserModel extends Model {
       for (var i = 0; i < _tracks.length; i++) _highscores.add('0');
       _prefs.setStringList('highscores', _highscores);
     }
+
+    // Is first visit
+    _showIntro = _prefs.getBool('showIntro');
+    if (_showIntro == null) {
+      _showIntro = true;
+      _prefs.setBool('showIntro', true);
+    }
+  }
+
+  void introFinished() {
+    _showIntro = false;
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool('showIntro', false);
+    });
+    notifyListeners();
   }
 
   void addToHistory(String trackId) {
