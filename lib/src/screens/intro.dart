@@ -54,6 +54,8 @@ class __GenreSelectionState extends State<_GenreSelection> {
     _userModel.introFinished(_isSelectedList, _nbSelected);
   }
 
+  String _capitalize(String s) => '${s[0].toUpperCase()}${s.substring(1)}';
+
   @override
   void initState() {
     _genreImages = [
@@ -103,21 +105,21 @@ class __GenreSelectionState extends State<_GenreSelection> {
                 children: <Widget>[
                   _GenderCard(
                     _genreImages[0],
-                    "${genres[0][0].toUpperCase()}${genres[0].substring(1)}",
+                    "${_capitalize(genres[0])}",
                     _isSelectedList[0],
                     0,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[1],
-                    "${genres[1][0].toUpperCase()}${genres[1].substring(1)}",
+                    "${_capitalize(genres[1])}",
                     _isSelectedList[1],
                     1,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[2],
-                    "${genres[2][0].toUpperCase()}${genres[2].substring(1)}",
+                    "${_capitalize(genres[2])}",
                     _isSelectedList[2],
                     2,
                     _selectGenre,
@@ -131,21 +133,21 @@ class __GenreSelectionState extends State<_GenreSelection> {
                 children: <Widget>[
                   _GenderCard(
                     _genreImages[3],
-                    "${genres[3][0].toUpperCase()}${genres[3].substring(1)}",
+                    "${_capitalize(genres[3])}",
                     _isSelectedList[3],
                     3,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[4],
-                    "${genres[4][0].toUpperCase()}${genres[4].substring(1)}",
+                    "${_capitalize(genres[4])}",
                     _isSelectedList[4],
                     4,
                     _selectGenre,
                   ),
                   _GenderCard(
                     _genreImages[5],
-                    "${genres[5][0].toUpperCase()}${genres[5].substring(1)}",
+                    "${_capitalize(genres[5])}",
                     _isSelectedList[5],
                     5,
                     _selectGenre,
