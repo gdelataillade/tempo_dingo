@@ -49,7 +49,7 @@ class UserModel extends Model {
     // Stars prefs
     _stars = _prefs.getInt('stars');
     if (_stars == null) {
-      _stars = 11;
+      _stars = 15;
       _prefs.setInt('stars', _stars);
     }
 
@@ -104,8 +104,12 @@ class UserModel extends Model {
     }
   }
 
-  Future _customizeLibrary(List<bool> genres, int nbSelected) {
+  void _customizeLibrary(List<bool> genres, int nbSelected) {
     // override library
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setStringList('tracks', _tracks);
+      prefs.setStringList('artists', _artists);
+    });
   }
 
   void introFinished(List<bool> genres, int nbSelected) async {
@@ -114,7 +118,7 @@ class UserModel extends Model {
       prefs.setBool('showIntro', false);
     });
     print("notify");
-    await _customizeLibrary(genres, nbSelected);
+    _customizeLibrary(genres, nbSelected);
     notifyListeners();
   }
 
