@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify/spotify.dart';
+import 'package:tempo_dingo/src/config/custom_library.dart';
 
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import '../config/language.dart';
@@ -105,7 +106,14 @@ class UserModel extends Model {
   }
 
   void _customizeLibrary(List<bool> genres, int nbSelected) {
-    // override library
+    for (var i = 0; i < genres.length; i++) {
+      if (genres[i]) {
+        _tracks = _tracks..addAll(customTracks[i]);
+        _artists = _artists..addAll(customArtists[i]);
+      }
+    }
+    shuffleList(_tracks);
+    shuffleList(_artists);
     SharedPreferences.getInstance().then((prefs) {
       prefs.setStringList('tracks', _tracks);
       prefs.setStringList('artists', _artists);

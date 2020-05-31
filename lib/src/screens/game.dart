@@ -124,6 +124,8 @@ class _GameState extends State<Game> {
 
   @override
   void initState() {
+    // print(widget.track.id);
+    // print(widget.track.artists.first.id);
     _timer =
         Timer.periodic(Duration(seconds: 1), (Timer t) => _checkGameOver());
     super.initState();

@@ -79,3 +79,21 @@ const List<String> raggaeArtists = [
   "0oea1hwGMfUxZbLxJc1XUN", // Peter Tosh
   "312pFk2xpEwYWLGPehc4Nu", // John Holt
 ];
+
+const List<dynamic> customTracks = [
+  popTracks,
+  rockTracks,
+  electroTracks,
+  rapTracks,
+  metalTracks,
+  raggaeTracks,
+];
+
+const List<dynamic> customArtists = [
+  popArtists,
+  rockArtists,
+  electroArtists,
+  rapArtists,
+  metalArtists,
+  raggaeArtists,
+];
