@@ -154,13 +154,17 @@ class __GenreSelectionState extends State<_GenreSelection> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              // const SizedBox(height: 30),
+              Spacer(),
               _showErrorMessage
                   ? Text(_errorMessage, style: TextStyle(color: Colors.red))
                   : const SizedBox(height: 19),
-              _nbSelected < 2
-                  ? DarkButton("Next", _notEnoughSelected)
-                  : Button("Next", _completeIntro, false),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: _nbSelected < 2
+                    ? DarkButton("Next", _notEnoughSelected)
+                    : Button("Next", _completeIntro, false),
+              ),
             ],
           ),
         );
