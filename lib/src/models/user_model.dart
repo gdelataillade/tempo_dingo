@@ -106,11 +106,19 @@ class UserModel extends Model {
   }
 
   void _customizeLibrary(List<bool> genres, int nbSelected) {
+    Random random = Random();
+
     for (var i = 0; i < genres.length; i++) {
       if (genres[i]) {
         _tracks = _tracks..addAll(customTracks[i]);
         _artists = _artists..addAll(customArtists[i]);
       }
+    }
+    // Shorten library to a maximum of 10 tracks
+    while (_tracks.length > 10) {
+      int randomIndex = random.nextInt(_tracks.length);
+      _tracks.removeAt(randomIndex);
+      _artists.removeAt(randomIndex);
     }
     shuffleList(_tracks);
     shuffleList(_artists);
