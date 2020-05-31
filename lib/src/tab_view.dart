@@ -32,7 +32,7 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   void _onChangeTab() {
     if (_currentTabIndex != _tabController.index) {
       Vibrate.feedback(FeedbackType.selection);
-      setState(() => _currentTabIndex = _tabController.index);
+      _currentTabIndex = _tabController.index;
       _userModel.tabViewIndex = _tabController.index;
     }
   }
