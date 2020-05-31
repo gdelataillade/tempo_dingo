@@ -16,8 +16,9 @@ class MyApp extends StatelessWidget {
     print("Init spotify credentials");
     final String _clientId = "f3ac271ff9d540b3a69f9e4b58c2d0d5";
     final QuerySnapshot _snapshot =
-        await Firestore.instance.collection("config").getDocuments();
-    return SpotifyApiCredentials(_clientId, _snapshot.documents.first["key"]);
+        await Firestore.instance.collection("spotify").getDocuments();
+    return SpotifyApiCredentials(
+        _clientId, _snapshot.documents.first["secret"]);
   }
 
   @override
