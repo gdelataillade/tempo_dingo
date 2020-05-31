@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:spotify/spotify_io.dart' as spotify;
+import 'package:spotify/spotify.dart' as spotify;
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibrate/vibrate.dart';

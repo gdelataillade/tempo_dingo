@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:spotify/spotify_io.dart' as spotify;
+import 'package:spotify/spotify.dart' as spotify;
 
 import 'package:tempo_dingo/src/config/theme_config.dart';
 import 'package:tempo_dingo/src/models/user_model.dart';

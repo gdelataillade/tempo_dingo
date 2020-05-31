@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:spotify/spotify_io.dart';
+import 'package:spotify/spotify.dart';
 
 import 'package:tempo_dingo/src/models/user_model.dart';
 import 'package:tempo_dingo/src/screens/home.dart';

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotify/spotify_io.dart';
+import 'package:spotify/spotify.dart';
 
 import 'package:tempo_dingo/src/resources/spotify_repository.dart';
 import '../config/language.dart';
@@ -44,7 +44,7 @@ class UserModel extends Model {
   Future<void> getSharedPrefs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
-    await _prefs.clear();
+    // await _prefs.clear();
 
     // Stars prefs
     _stars = _prefs.getInt('stars');

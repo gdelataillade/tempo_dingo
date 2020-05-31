@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -17,7 +17,7 @@ dependencies:
   firebase_auth: ^0.15.4
   rxdart: ^0.18.0
   http: ^0.12.0+1
-  spotify: ^0.2.0
+  spotify: ^0.3.3
   email_validator: ^1.0.4
   flutter_email_sender: ^2.2.2
   random_string: ^2.0.1
