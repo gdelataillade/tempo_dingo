@@ -26,21 +26,22 @@ class TabView extends StatefulWidget {
 class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   UserModel _userModel;
   TabController _tabController;
-  VoidCallback _onChangeTab;
+  // VoidCallback _onChangeTab;
   int _currentTabIndex = 1;
+
+  void _onChangeTab() {
+    if (_currentTabIndex != _tabController.index) {
+      Vibrate.feedback(FeedbackType.selection);
+      setState(() => _currentTabIndex = _tabController.index);
+      _userModel.tabViewIndex = _tabController.index;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController =
         TabController(length: 3, vsync: this, initialIndex: _currentTabIndex);
-    _onChangeTab = () {
-      if (_currentTabIndex != _tabController.index) {
-        Vibrate.feedback(FeedbackType.selection);
-        setState(() => _currentTabIndex = _tabController.index);
-        _userModel.tabViewIndex = _tabController.index;
-      }
-    };
     _tabController.addListener(_onChangeTab);
   }
 
