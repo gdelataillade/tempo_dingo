@@ -125,7 +125,9 @@ class UserModel extends Model {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setStringList('tracks', _tracks);
       prefs.setStringList('artists', _artists);
+      prefs.remove('highscores');
     });
+    getSharedPrefs();
   }
 
   void introFinished(List<bool> genres, int nbSelected) async {
