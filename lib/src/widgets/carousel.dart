@@ -29,7 +29,7 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
       builder: (context, child, model) {
         _userModel = model;
         return Container(
-          height: 350,
+          height: MediaQuery.of(context).size.width * 0.8 + 60,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -40,8 +40,7 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
               return Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: Container(
-                  width: 280,
-                  height: 350,
+                  width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(const Radius.circular(20)),
                   ),
@@ -66,8 +65,9 @@ class _CarouselState extends State<Carousel> with TickerProviderStateMixin {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
-                            child: Image.network(track.album.images.first.url,
-                                width: MediaQuery.of(context).size.width),
+                            child: Image.network(
+                              track.album.images.first.url,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 5),
