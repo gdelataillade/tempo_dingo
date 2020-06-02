@@ -148,6 +148,7 @@ class UserModel extends Model {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setStringList('history', _history);
     });
+    notifyListeners();
   }
 
   bool isPurshased(String trackId) {
