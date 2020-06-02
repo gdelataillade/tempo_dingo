@@ -160,7 +160,7 @@ class _GameState extends State<Game> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "${_accuracy.round()}% ${_shortenTrackName(widget.track.name)}",
+                    "${_shortenTrackName(widget.track.name)}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -259,8 +259,8 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 300,
-        height: 300,
+        width: 250,
+        height: 250,
         child: CustomPaint(
           foregroundPainter: _MyPainter(
             completePercent: _percentage,
@@ -290,12 +290,12 @@ class __TapAreaState extends State<_TapArea> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 320,
-      width: 355,
+      height: 255,
+      width: 385,
       child: Center(
         child: MaterialButton(
-          height: 320,
-          minWidth: 355,
+          height: 255,
+          minWidth: 385,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           onPressed: () => widget.tap(),
