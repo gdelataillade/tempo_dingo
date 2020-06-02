@@ -326,8 +326,7 @@ class __GameOverState extends State<_GameOver> {
   int _nbStars = 0;
   bool _isLiked;
   bool _isHighscore;
-
-  Widget _build;
+  bool _isFirstBuild = true;
 
   void _countStars() {
     if (widget.accuracy >= 85) _nbStars++;
@@ -351,13 +350,25 @@ class __GameOverState extends State<_GameOver> {
       _starsEarned[2] = Transform.rotate(angle: 0.4, child: _star);
   }
 
-  Widget _initBuild() {
+  @override
+  void initState() {
+    print("Init game over");
+    _countStars();
+    _rotateStars();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(
       builder: (context, child, userModel) {
-        userModel.pushGameStats();
-        userModel.addOrRemoveStars(_nbStars);
-        _isHighscore = userModel.isHighscore(
-            widget.accuracy.toStringAsFixed(3), widget.trackId);
+        if (_isFirstBuild) {
+          userModel.pushGameStats();
+          userModel.addOrRemoveStars(_nbStars);
+          _isHighscore = userModel.isHighscore(
+              widget.accuracy.toStringAsFixed(3), widget.trackId);
+          _isFirstBuild = false;
+        }
         _isLiked = userModel.isFavorite(widget.trackId);
         // print("length: ${widget.accuracyList.length}");
         return Column(
@@ -418,18 +429,6 @@ class __GameOverState extends State<_GameOver> {
       },
     );
   }
-
-  @override
-  void initState() {
-    print("Init game over");
-    _countStars();
-    _rotateStars();
-    _build = _initBuild();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => _build;
 }
 
 class ChartItem {

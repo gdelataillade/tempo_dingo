@@ -201,9 +201,7 @@ class UserModel extends Model {
       _highscores[_index] = nbStr;
       SharedPreferences.getInstance().then((prefs) {
         prefs.setStringList('highscores', _highscores);
-        return true;
       });
-
       return true;
     }
     return false;
