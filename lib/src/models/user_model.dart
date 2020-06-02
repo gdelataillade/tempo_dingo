@@ -188,7 +188,7 @@ class UserModel extends Model {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setInt('stars', _stars);
     });
-    notifyListeners();
+    // notifyListeners();
   }
 
   bool isHighscore(String nbStr, String trackId) {
@@ -250,6 +250,7 @@ class UserModel extends Model {
         .collection('stats')
         .document('stats')
         .updateData({"nbGames": nbGames + 1});
+    print("Db write: ${nbGames + 1} games");
   }
 }
 
