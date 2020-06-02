@@ -25,9 +25,7 @@ class _ProfileState extends State<Profile> {
         builder: (context, child, model) {
           _userModel = model;
           return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-            ),
+            appBar: AppBar(elevation: 0),
             backgroundColor: mainTheme,
             body: SingleChildScrollView(
               child: Padding(
@@ -46,7 +44,7 @@ class _ProfileState extends State<Profile> {
                         Icon(
                           Icons.star,
                           color: Color.fromRGBO(248, 207, 95, 1),
-                          size: 50,
+                          size: 55,
                         ),
                       ],
                     ),
@@ -108,7 +106,7 @@ class __HighscoresState extends State<_Highscores> {
                   default:
                     if (tracks.hasError) return Container();
                     return Container(
-                      height: 200,
+                      height: tracks.data.length * 30.0,
                       child: ListView.builder(
                         itemCount: tracks.data.length,
                         itemBuilder: (context, i) {
