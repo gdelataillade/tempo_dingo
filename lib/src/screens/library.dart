@@ -182,7 +182,7 @@ class __ArtistsState extends State<_Artists> {
       builder: (context, child, userModel) {
         return Scrollbar(
           child: ListView.builder(
-            padding: const EdgeInsets.only(left: 25, right: 25),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             itemCount: (widget.artists.length / 3).round(),
             itemBuilder: (BuildContext context, int index) {
               Widget row = Padding(
@@ -191,11 +191,14 @@ class __ArtistsState extends State<_Artists> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ArtistScreen(
-                                  userModel, widget.artists[index]))),
+                      onTap: () {
+                        print(index);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ArtistScreen(
+                                    userModel, widget.artists[index * 3])));
+                      },
                       child: ArtistCard(artists[_artistIndex].images.first.url,
                           artists[_artistIndex].name),
                     ),
@@ -205,7 +208,8 @@ class __ArtistsState extends State<_Artists> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ArtistScreen(
-                                        userModel, widget.artists[index]))),
+                                        userModel,
+                                        widget.artists[index * 3 + 1]))),
                             child: ArtistCard(
                                 artists[_artistIndex + 1].images.first.url,
                                 artists[_artistIndex + 1].name),
@@ -217,7 +221,8 @@ class __ArtistsState extends State<_Artists> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ArtistScreen(
-                                        userModel, widget.artists[index]))),
+                                        userModel,
+                                        widget.artists[index * 3 + 2]))),
                             child: ArtistCard(
                                 artists[_artistIndex + 2].images.first.url,
                                 artists[_artistIndex + 2].name),
