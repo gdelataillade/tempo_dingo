@@ -13,7 +13,7 @@ import 'package:tempo_dingo/src/widgets/loading_screen.dart';
 
 class MyApp extends StatelessWidget {
   Future<SpotifyApiCredentials> _getSpotifyCredentials() async {
-    print("Init spotify credentials");
+    print("Read db: Init spotify credentials...");
     final String _clientId = "f3ac271ff9d540b3a69f9e4b58c2d0d5";
     final QuerySnapshot _snapshot =
         await Firestore.instance.collection("spotify").getDocuments();
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Center(child: loadingWhite);
+                  return LoadingScreen("Connecting to Spotify...");
                 default:
                   return ScopedModel<UserModel>(
                     model: UserModel(snapshot.data),

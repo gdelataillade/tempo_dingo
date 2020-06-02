@@ -150,34 +150,34 @@ class _GameState extends State<Game> {
           builder: (context, child, userModel) {
             _userModel = userModel;
             if (!_isInitialized) _initModel();
-            return SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 35, left: 35, top: 5),
-                    child: _AlbumProgressiveBar(
-                        widget.track, _tapCount > 0 && !_userModel.isGameOver),
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, left: 20, top: 3),
+                  child: _AlbumProgressiveBar(
+                      widget.track, _tapCount > 0 && !_userModel.isGameOver),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "${_shortenTrackName(widget.track.name)}",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontFamily: 'Apple-Bold',
                   ),
-                  const SizedBox(height: 15),
-                  Text(
-                    "${_shortenTrackName(widget.track.name)}",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontFamily: 'Apple-Bold',
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    widget.track.artists.first.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 10),
-                  _userModel.isGameOver
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  widget.track.artists.first.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: _userModel.isGameOver
                       ? _GameOver(
                           _accuracy,
                           _playAgain,
@@ -185,8 +185,9 @@ class _GameState extends State<Game> {
                           _accuracyList,
                         )
                       : _TapArea(_tap),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+              ],
             );
           },
         ),
@@ -258,19 +259,14 @@ class __AlbumProgressiveBarState extends State<_AlbumProgressiveBar>
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 250,
-        height: 250,
-        child: CustomPaint(
-          foregroundPainter: _MyPainter(
-            completePercent: _percentage,
-            width: 3.0,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(300)),
-            child: Image.network(widget.track.album.images.first.url,
-                width: MediaQuery.of(context).size.width),
-          ),
+      child: CustomPaint(
+        foregroundPainter: _MyPainter(
+          completePercent: _percentage,
+          width: 3.0,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(250)),
+          child: Image.network(widget.track.album.images.first.url, width: 250),
         ),
       ),
     );
@@ -289,23 +285,15 @@ class _TapArea extends StatefulWidget {
 class __TapAreaState extends State<_TapArea> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 255,
-      width: 385,
-      child: Center(
-        child: MaterialButton(
-          height: 255,
-          minWidth: 385,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          onPressed: () => widget.tap(),
-          child: Text(
-            "Tap the screen",
-            style: TextStyle(
-              color: Color.fromRGBO(77, 83, 105, 0.5),
-              fontFamily: 'Apple-Semibold',
-            ),
-          ),
+    return MaterialButton(
+      minWidth: MediaQuery.of(context).size.width - 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
+      onPressed: () => widget.tap(),
+      child: Text(
+        "Tap here",
+        style: TextStyle(
+          color: Color.fromRGBO(77, 83, 105, 0.5),
+          fontFamily: 'Apple-Semibold',
         ),
       ),
     );
@@ -331,9 +319,9 @@ class _GameOver extends StatefulWidget {
 
 class __GameOverState extends State<_GameOver> {
   static final Color _yellow = Color.fromRGBO(248, 207, 95, 1);
-  static final Widget _star = Icon(Icons.star, size: 45, color: _yellow);
+  static final Widget _star = Icon(Icons.star, size: 70, color: _yellow);
   static final Widget _starBorder =
-      Icon(Icons.star_border, size: 45, color: _yellow);
+      Icon(Icons.star_border, size: 70, color: _yellow);
   List<Widget> _starsEarned = [];
   int _nbStars = 0;
   bool _isLiked;
@@ -378,18 +366,20 @@ class __GameOverState extends State<_GameOver> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 7),
+                  padding: const EdgeInsets.only(top: 25),
                   child: _starsEarned[0],
                 ),
                 _starsEarned[1],
                 Padding(
-                  padding: const EdgeInsets.only(top: 7),
+                  padding: const EdgeInsets.only(top: 25),
                   child: _starsEarned[2],
                 ),
               ],
             ),
+            const SizedBox(height: 15),
             Text("Score: ${widget.accuracy.toStringAsFixed(3)}%"),
             _isHighscore ? Text("New highscore!") : Container(),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -397,7 +387,7 @@ class __GameOverState extends State<_GameOver> {
                   onPressed: widget.playAgain,
                   icon: Icon(FeatherIcons.repeat),
                   color: Colors.white,
-                  iconSize: 30,
+                  iconSize: 50,
                 ),
                 // IconButton(
                 //   onPressed: () {
@@ -418,11 +408,11 @@ class __GameOverState extends State<_GameOver> {
                       ? Icon(Icons.favorite)
                       : Icon(Icons.favorite_border),
                   color: Colors.red,
-                  iconSize: 32,
+                  iconSize: 55,
                 ),
               ],
             ),
-            LineChartSample2(widget.accuracyList),
+            // LineChartSample2(widget.accuracyList),
           ],
         );
       },
@@ -431,7 +421,7 @@ class __GameOverState extends State<_GameOver> {
 
   @override
   void initState() {
-    // print("Init game over");
+    print("Init game over");
     _countStars();
     _rotateStars();
     _build = _initBuild();
@@ -613,7 +603,7 @@ class _MyPainter extends CustomPainter {
     double arcAngle = 2 * pi * (completePercent / 100);
 
     canvas.drawArc(
-        Rect.fromLTRB(0, 0, 300, 300), -pi / 2, arcAngle, false, complete);
+        Rect.fromLTRB(0, 0, 250, 250), -pi / 2, arcAngle, false, complete);
   }
 
   @override
