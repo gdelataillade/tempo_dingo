@@ -31,7 +31,7 @@ class _ProfileState extends State<Profile> {
             backgroundColor: mainTheme,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 35, right: 35),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
